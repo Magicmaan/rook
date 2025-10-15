@@ -1,9 +1,14 @@
 use ratatui::{
     DefaultTerminal,
     crossterm::{event, terminal},
+    layout::Position,
 };
 
-use crate::{events::Event, model, ui::ui::UI};
+use crate::{
+    events::Event,
+    model,
+    ui::ui::{UI, UISection},
+};
 
 pub struct App {
     model: model::Model,
@@ -104,21 +109,45 @@ impl App {
                         continue;
                     }
 
-                    let result = crate::matcher::sort_applications(
-                        &mut self.model.data.applications,
-                        query,
-                    );
+                    let result =
+                        crate::matcher::sort_applications(&mut self.model.data.applications, query);
                     self.model.search.results = result;
+                    self.model.ui.result_list_state.select(Some(0));
                 }
 
                 Event::NavigateLeft(x) => {
-                    if self.model.ui.caret_position - x > 0 {
+                    if (self.model.ui.caret_position - x + 1) > 0 {
                         self.model.ui.caret_position -= x;
                     }
                 }
                 Event::NavigateRight(x) => {
-                    if self.model.ui.caret_position + x < self.model.search.query.len() {
+                    if self.model.ui.caret_position + x < self.model.search.query.len() + 1 {
                         self.model.ui.caret_position += x;
+                    }
+                }
+                Event::NavigateDown(x) => {
+                    let current = self.model.ui.result_list_state.selected().unwrap_or(0);
+                    let max_index = self.model.search.results.len().saturating_sub(1);
+                    let new_index = current.saturating_add(x as usize);
+
+                    if self.model.settings.ui.results.loopback && new_index > max_index {
+                        self.model.ui.result_list_state.select(Some(0));
+                    } else {
+                        self.model
+                            .ui
+                            .result_list_state
+                            .select(Some(new_index.min(max_index)));
+                    }
+                }
+                Event::NavigateUp(x) => {
+                    let current = self.model.ui.result_list_state.selected().unwrap_or(0);
+                    let max_index = self.model.search.results.len().saturating_sub(1);
+                    let new_index = current.saturating_sub(x as usize);
+
+                    if self.model.settings.ui.results.loopback && current < x as usize {
+                        self.model.ui.result_list_state.select(Some(max_index));
+                    } else {
+                        self.model.ui.result_list_state.select(Some(new_index));
                     }
                 }
                 Event::NavigateHome => {
@@ -127,6 +156,23 @@ impl App {
                 Event::NavigateEnd => {
                     self.model.ui.caret_position = self.model.search.query.len();
                 }
+                Event::AppExecute(index) => {
+                    if let Some(app) = self.model.data.applications.get(
+                        self.model
+                            .search
+                            .results
+                            .get(index)
+                            .map(|(_, idx)| *idx)
+                            .unwrap_or(0),
+                    ) {
+                        if let Err(e) = app.launch() {
+                            eprintln!("Failed to launch application {}: {}", app.name, e);
+                        } else {
+                            println!("Launched application: {}", app.name);
+                        }
+                    }
+                }
+
                 _ => {}
             }
         }
@@ -139,6 +185,32 @@ impl App {
             if let event::Event::Key(key) = event::read().unwrap() {
                 events.extend(self.handle_key_event(key));
             }
+            // if let event::Event::Mouse(mouse) = event::read().unwrap() {
+            //     events.extend(self.handle_mouse_event(mouse));
+            // }
+        }
+        events
+    }
+    fn handle_mouse_event(&mut self, mouse_event: event::MouseEvent) -> Vec<Event> {
+        let mut events = Vec::new();
+        match mouse_event.kind {
+            event::MouseEventKind::Down(_) => {
+                self.model.mouse.pressed = true;
+                events.push(Event::MousePress(mouse_event.column, mouse_event.row));
+            }
+            event::MouseEventKind::Up(_) => {
+                self.model.mouse.pressed = false;
+            }
+            event::MouseEventKind::Moved => {
+                events.push(Event::MouseMove(mouse_event.column, mouse_event.row));
+            }
+            event::MouseEventKind::ScrollUp => {
+                events.push(Event::MouseScrollUp(mouse_event.column, mouse_event.row));
+            }
+            event::MouseEventKind::ScrollDown => {
+                events.push(Event::MouseScrollDown(mouse_event.column, mouse_event.row));
+            }
+            _ => { /* Other mouse events can be handled here */ }
         }
         events
     }
@@ -159,12 +231,22 @@ impl App {
                     }
                     event::KeyCode::Backspace => {
                         events.push(Event::SearchRemove(-1));
+                        // if always search, execute the search event immediately
+                        if self.model.settings.search.always_search {
+                            events.push(Event::SearchExecute);
+                        }
                     }
                     event::KeyCode::Delete => {
                         events.push(Event::SearchRemove(1));
+                        // if always search, execute the search event immediately
+                        if self.model.settings.search.always_search {
+                            events.push(Event::SearchExecute);
+                        }
                     }
                     event::KeyCode::Enter => {
-                        events.push(Event::SearchExecute);
+                        events.push(Event::AppExecute(
+                            self.model.ui.result_list_state.selected().unwrap_or(0),
+                        ));
                     }
                     event::KeyCode::Esc => {
                         events.push(Event::SearchCancel);
@@ -181,6 +263,18 @@ impl App {
                     event::KeyCode::Down => {
                         events.push(Event::NavigateDown(1));
                     }
+                    event::KeyCode::Tab => {
+                        events.push(Event::NavigateDown(1));
+                    }
+                    event::KeyCode::BackTab => {
+                        events.push(Event::NavigateUp(1));
+                    }
+                    event::KeyCode::PageUp => {
+                        events.push(Event::NavigateUp(1));
+                    }
+                    event::KeyCode::PageDown => {
+                        events.push(Event::NavigateDown(1));
+                    }
                     event::KeyCode::Home => {
                         events.push(Event::NavigateHome);
                     }
@@ -188,14 +282,30 @@ impl App {
                         events.push(Event::NavigateEnd);
                     }
                     _ => {
-                        events.push(Event::SearchAdd(match key_event.code {
+                        let key = match key_event.code {
                             event::KeyCode::Char(c) => c,
                             _ => '\0',
-                        }));
-                        // if always search, execute the search event immediately
-                        if self.model.settings.search.always_search {
-                            events.push(Event::SearchExecute);
+                        };
+
+                        let modifiers = key_event.modifiers;
+                        if modifiers.contains(event::KeyModifiers::CONTROL)
+                            || matches!(key, '1'..='9')
+                        {
+                            println!("Executing application for key: {:?}", key_event);
+                            let idx = if matches!(key, '1'..='9') {
+                                (key as u8 - b'1') as usize
+                            } else {
+                                0
+                            };
+                            events.push(Event::AppExecute(idx));
+                        } else {
+                            events.push(Event::SearchAdd(key));
+                            // if always search, execute the search event immediately
+                            if self.model.settings.search.always_search {
+                                events.push(Event::SearchExecute);
+                            }
                         }
+                        // println!("Key Pressed: {:?}", key_event);
                     }
                 }
             }

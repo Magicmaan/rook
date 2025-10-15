@@ -2,11 +2,15 @@ use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Style},
+    text::{Line, Span},
     widgets::{Block, Borders, Padding, Paragraph, Widget},
 };
 use std::time::SystemTime;
 
-use crate::{model, settings::UISearchSettings};
+use crate::{
+    model,
+    settings::{Settings, UISearchSettings},
+};
 #[derive(Clone, Default)]
 pub struct SearchBox {
     query: String,
@@ -15,11 +19,7 @@ pub struct SearchBox {
 }
 
 impl SearchBox {
-    pub fn new(
-        query: String,
-        caret_position: Option<usize>,
-        settings: UISearchSettings,
-    ) -> Self {
+    pub fn new(query: String, caret_position: Option<usize>, settings: UISearchSettings) -> Self {
         Self {
             query: query.clone(),
             caret_position: caret_position.unwrap_or(query.len()),
@@ -30,9 +30,12 @@ impl SearchBox {
 
 impl Widget for SearchBox {
     fn render(self, area: Rect, buf: &mut Buffer) {
+        let theme = Settings::new().ui.theme.clone();
         let block = Block::bordered()
             .title("Search")
-            .padding(Padding::new(2, 2, 0, 0));
+            .border_type(theme.get_border_type("search"))
+            .padding(Padding::new(2, 2, 0, 0))
+            .style(theme.get_default_style(Some(crate::ui::ui::UISection::Search)));
         // block.render(area, buf);
         let start = SystemTime::now();
         let since_epoch = start
@@ -60,32 +63,30 @@ impl Widget for SearchBox {
 
         let inner_area = block.inner(area);
 
-        let text_layout = Layout::horizontal([
-            Constraint::Length((self.settings.pre_query.chars().count() + 1) as u16),
-            Constraint::Length(before_caret.chars().count() as u16),
-            Constraint::Length(caret.chars().count() as u16),
-            Constraint::Length(after_caret.chars().count() as u16),
-            Constraint::Fill(1),
+        // construct the line with styled spans
+        // query = "hello world", caret_position = 5
+        // before_caret = "hello", after_caret = " world"
+        let line = Line::from(vec![
+            Span::styled(
+                self.settings.pre_query.as_str(),
+                Style::default().fg(Color::Blue),
+            ),
+            Span::raw(" "),
+            Span::styled(before_caret, Style::default().fg(Color::White)),
+            Span::styled(
+                if flash_caret { " " } else { &caret },
+                Style::default().fg(Color::Yellow),
+            ),
+            Span::styled(after_caret, Style::default().fg(Color::White)),
         ]);
-        let text_chunks = text_layout.split(inner_area);
-
-        let prepend_paragraph =
-            Paragraph::new(self.settings.pre_query).style(Style::default().fg(Color::White));
-        let pre_query_paragraph =
-            Paragraph::new(before_caret).style(Style::default().fg(Color::White));
-        let caret_paragraph = Paragraph::new(if flash_caret { " " } else { &caret })
-            .style(Style::default().fg(Color::Yellow));
-        let post_query_paragraph =
-            Paragraph::new(after_caret).style(Style::default().fg(Color::White));
-        // let paragraph = Paragraph::new(line).style(Style::default().fg(Color::Black));
 
         // paragraph.render(inner_area, buf);
         block.render(area, buf);
 
-        prepend_paragraph.render(text_chunks[0], buf);
-        pre_query_paragraph.render(text_chunks[1], buf);
-        caret_paragraph.render(text_chunks[2], buf);
-        post_query_paragraph.render(text_chunks[3], buf);
+        let paragraph = Paragraph::new(line)
+            .style(theme.get_default_style(Some(crate::ui::ui::UISection::Search)));
+        paragraph.render(inner_area, buf);
+
         // paragraph.render(inner_area, buf);
     }
 }

@@ -17,6 +17,7 @@ pub enum Event {
     SearchFocus,
     SearchExecute,
     SearchCancel,
+    AppExecute(usize), // index in applications
     //
     NavigateDown(usize),  // number of lines
     NavigateUp(usize),    // number of lines
@@ -26,4 +27,11 @@ pub enum Event {
     NavigateEnd,
     Select,
     Back,
+    MouseMove(u16, u16),        // x, y
+    MousePress(u16, u16),       // x, y
+    MouseDoubleClick(u16, u16), // x, y
+    MouseScrollUp(u16, u16),    // x, y
+    MouseScrollDown(u16, u16),  // x, y
+
+    Tick,
 }

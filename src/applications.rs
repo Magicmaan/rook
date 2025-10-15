@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
-use xdg::BaseDirectories; // add "xdg = \"*\"" to Cargo.toml // add "ini" crate or parse by hand
+use xdg::BaseDirectories;
+
+use crate::app::App; // add "xdg = \"*\"" to Cargo.toml // add "ini" crate or parse by hand
 
 #[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Application {
@@ -14,6 +16,57 @@ pub struct Application {
     pub terminal: bool,
     pub mime_types: Vec<String>,
 }
+impl Application {
+    pub fn launch(&self) -> Result<(), std::io::Error> {
+        // run the application using std::process::Command
+        let exec_parts: Vec<&str> = self.exec.split_whitespace().collect();
+        if exec_parts.is_empty() {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "Invalid exec command",
+            ));
+        }
+        let command = exec_parts[0];
+        let args = &exec_parts[1..];
+
+        let mut cmd = std::process::Command::new(command);
+        cmd.args(args);
+
+        if self.terminal {
+            // if terminal is true, run in a terminal emulator
+            // use x-terminal-emulator if available, otherwise fallback to xterm
+            let terminal_emulator =
+                std::env::var("TERMINAL").unwrap_or_else(|_| "x-terminal-emulator".into());
+            let mut terminal_cmd = std::process::Command::new(terminal_emulator);
+            terminal_cmd.arg("-e").arg(command);
+            for arg in args {
+                terminal_cmd.arg(arg);
+            }
+            match terminal_cmd.spawn() {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::Other,
+                        format!("Failed to launch terminal: {}", e),
+                    ));
+                }
+            }
+        } else {
+            match cmd.spawn() {
+                Ok(_) => Ok(()),
+                Err(e) => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::Other,
+                        format!(
+                            "Failed to launch application: {} \nExecutable Path: {}",
+                            e, self.exec
+                        ),
+                    ));
+                }
+            }
+        }
+    }
+}
 
 pub fn find_desktop_files() -> Vec<Application> {
     let xdg = BaseDirectories::with_prefix("");
@@ -23,7 +76,7 @@ pub fn find_desktop_files() -> Vec<Application> {
         .get_data_dirs()
         .iter()
         .chain(std::iter::once(&xdg.get_data_home().unwrap()))
-        // .chain(std::iter::once(&PathBuf::from("/usr/share/")))
+    // .chain(std::iter::once(&PathBuf::from("/usr/share/")))
     {
         let apps_dir = dir.join("applications");
         if apps_dir.is_dir() {
@@ -54,7 +107,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
     let mut options: HashMap<String, String> = HashMap::new();
     for line in content.lines() {
         // ignore comments and empty lines
-        if line.starts_with('#') || line.trim().is_empty(){
+        if line.starts_with('#') || line.trim().is_empty() {
             continue;
         }
         // only parse main section
@@ -77,11 +130,16 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
                 options.insert(k.trim().into(), v.trim().into());
             }
         }
-        
     }
 
-
     let application_name: String = parse_executable_name(
+        options
+            .get("Exec")
+            .cloned()
+            .unwrap_or_else(|| "example-command".into())
+            .as_str(),
+    );
+    let executable = parse_executable_args(
         options
             .get("Exec")
             .cloned()
@@ -94,10 +152,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
             .cloned()
             .unwrap_or_else(|| "Unknown".into()),
         application_name: application_name.into(),
-        exec: options
-            .get("Exec")
-            .cloned()
-            .unwrap_or_else(|| "example-command".into()),
+        exec: executable,
         icon: options.get("Icon").cloned(),
         comment: options.get("Comment").cloned(),
         categories: options
@@ -117,6 +172,11 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
 
 fn parse_executable_name(exec: &str) -> String {
     exec.split_whitespace().next().unwrap_or(exec).to_string()
+}
+
+fn parse_executable_args(exec: &str) -> String {
+    let parts: Vec<&str> = exec.split_whitespace().collect();
+    parts[0].to_string()
 }
 
 #[cfg(test)]
