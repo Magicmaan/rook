@@ -1,14 +1,6 @@
-use ratatui::{
-    DefaultTerminal,
-    crossterm::{event, terminal},
-    layout::Position,
-};
+use ratatui::{DefaultTerminal, crossterm::event};
 
-use crate::{
-    events::Event,
-    model,
-    ui::ui::{UI, UISection},
-};
+use crate::{events::Event, model::model, ui::ui::UI};
 
 pub struct App {
     model: model::Model,
@@ -31,6 +23,7 @@ impl App {
 
         let applications = crate::applications::find_desktop_files();
         self.model.data.applications = applications;
+        self.model.ui.executing_item = None;
 
         while self.model.is_running() {
             let pre_time = std::time::Instant::now();
@@ -106,11 +99,13 @@ impl App {
                     let query = self.model.search.query.trim();
                     // ignore empty queries
                     if query.is_empty() {
-                        continue;
+                        self.model.search.results.clear();
                     }
 
-                    let result =
-                        crate::matcher::sort_applications(&mut self.model.data.applications, query);
+                    let result = crate::model::search::sort_applications(
+                        &mut self.model.data.applications,
+                        query,
+                    );
                     self.model.search.results = result;
                     self.model.ui.result_list_state.select(Some(0));
                 }
@@ -157,6 +152,8 @@ impl App {
                     self.model.ui.caret_position = self.model.search.query.len();
                 }
                 Event::AppExecute(index) => {
+                    // Execute the selected application
+                    // if is valid index
                     if let Some(app) = self.model.data.applications.get(
                         self.model
                             .search
@@ -165,6 +162,7 @@ impl App {
                             .map(|(_, idx)| *idx)
                             .unwrap_or(0),
                     ) {
+                        self.model.ui.executing_item = Some(index);
                         if let Err(e) = app.launch() {
                             eprintln!("Failed to launch application {}: {}", app.name, e);
                         } else {
@@ -188,32 +186,21 @@ impl App {
             // if let event::Event::Mouse(mouse) = event::read().unwrap() {
             //     events.extend(self.handle_mouse_event(mouse));
             // }
+            // Drain any additional immediately-available events without blocking
+            while event::poll(std::time::Duration::from_millis(0)).unwrap() {
+                if let Ok(ev) = event::read() {
+                    match ev {
+                        event::Event::Key(k) => events.extend(self.handle_key_event(k)),
+
+                        event::Event::Resize(_, _) => { /* handle resize if needed */ }
+                        _ => {}
+                    }
+                }
+            }
         }
         events
     }
-    fn handle_mouse_event(&mut self, mouse_event: event::MouseEvent) -> Vec<Event> {
-        let mut events = Vec::new();
-        match mouse_event.kind {
-            event::MouseEventKind::Down(_) => {
-                self.model.mouse.pressed = true;
-                events.push(Event::MousePress(mouse_event.column, mouse_event.row));
-            }
-            event::MouseEventKind::Up(_) => {
-                self.model.mouse.pressed = false;
-            }
-            event::MouseEventKind::Moved => {
-                events.push(Event::MouseMove(mouse_event.column, mouse_event.row));
-            }
-            event::MouseEventKind::ScrollUp => {
-                events.push(Event::MouseScrollUp(mouse_event.column, mouse_event.row));
-            }
-            event::MouseEventKind::ScrollDown => {
-                events.push(Event::MouseScrollDown(mouse_event.column, mouse_event.row));
-            }
-            _ => { /* Other mouse events can be handled here */ }
-        }
-        events
-    }
+
     fn handle_key_event(&mut self, key_event: event::KeyEvent) -> Vec<Event> {
         // TODO! use config to map keys to actions
         let mut events = Vec::new();

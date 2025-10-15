@@ -3,8 +3,6 @@ use std::fs;
 use std::path::PathBuf;
 use xdg::BaseDirectories;
 
-use crate::app::App; // add "xdg = \"*\"" to Cargo.toml // add "ini" crate or parse by hand
-
 #[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Application {
     pub name: String,
@@ -181,7 +179,6 @@ fn parse_executable_args(exec: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::app::App;
 
     use super::*;
 

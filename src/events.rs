@@ -1,4 +1,4 @@
-use ratatui::crossterm::event::{KeyCode, KeyEvent};
+use ratatui::crossterm::event::KeyEvent;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Event {

@@ -1,10 +1,9 @@
 use std::collections::HashMap;
-use std::str::FromStr;
 
 use ratatui::{style::Color, widgets::BorderType};
 
-use crate::ui::{ui::UISection, util::IconMode};
-
+use crate::model::ui::UISection;
+use crate::ui::util::IconMode;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct KeybindSettings {
     pub quit: String,
@@ -52,16 +51,18 @@ pub struct UIResultsSettings {
     pub numbered: bool,            // whether to show numbers next to results
     pub number_mode: IconMode,     // icon mode for numbers
     pub loopback: bool,            // whether to loop back when navigating results
+    pub fade_color: bool,          // whether to fade text color towards the bottom
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
         Self {
             max_results: 20,
-            show_scores: true,
-            numbered: true,
-            open_through_number: true,
-            number_mode: IconMode::Small,
-            loopback: true,
+            show_scores: true,            // show fuzzy scores next to results
+            numbered: true,               // show numbers next to results (upto 10)
+            open_through_number: true,    // CTRL + number to open
+            number_mode: IconMode::Small, // icon mode for numbers
+            loopback: true,               // loop back when navigating results
+            fade_color: true,             // fade text color towards the bottom. REQUIRES RGB COLORS
         }
     }
 }
@@ -100,6 +101,7 @@ pub struct ThemeSettings {
     pub foreground: Color,
     pub highlight: Color,
     pub muted: Color,
+    pub muted_dark: Color,
     pub accent: Color,
     pub caret: Color,
     pub border: Color,
@@ -113,12 +115,14 @@ pub struct ThemeSettings {
     pub search_accent: Option<Color>,
     pub search_highlight: Option<Color>,
     pub search_muted: Option<Color>,
+    pub search_muted_dark: Option<Color>,
     pub search_caret: Option<Color>,
     pub search_border: Option<Color>,
 
     pub results_background: Option<Color>,
     pub results_foreground: Option<Color>,
     pub results_muted: Option<Color>,
+    pub results_muted_dark: Option<Color>,
     pub results_highlight: Option<Color>,
     pub results_accent: Option<Color>,
     pub results_caret: Option<Color>,
@@ -135,18 +139,20 @@ impl Default for ThemeSettings {
             foreground: Color::White,
             highlight: Color::Yellow,
             muted: Color::DarkGray,
+            muted_dark: Color::Black,
             accent: Color::Cyan,
             caret: Color::White,
             border: Color::Blue,
 
-            text: Color::White,
-            text_muted: Color::DarkGray,
+            text: Color::Rgb(200, 200, 200),
+            text_muted: Color::Rgb(150, 150, 150),
             text_accent: Color::Cyan,
 
             search_background: None,
             search_foreground: None,
             search_highlight: None,
             search_muted: None,
+            search_muted_dark: None,
             search_accent: None,
             search_caret: None,
             search_border: None,
@@ -154,6 +160,7 @@ impl Default for ThemeSettings {
             results_background: None,
             results_foreground: None,
             results_muted: None,
+            results_muted_dark: None,
             results_highlight: None,
             results_accent: None,
             results_caret: None,
@@ -172,10 +179,6 @@ impl ThemeSettings {
             "results" => self.results_border_type.unwrap_or(self.border_type),
             _ => self.border_type,
         }
-    }
-
-    pub fn unwrap_color(color: &str, default: Color) -> Color {
-        Color::from_str(color).unwrap_or(default)
     }
 
     pub fn get_colors(&self, section: Option<UISection>) -> HashMap<&str, Color> {
@@ -204,6 +207,13 @@ impl ThemeSettings {
                     "muted",
                     self.search_muted.clone().unwrap_or(self.muted.clone()),
                 );
+                colors.insert(
+                    "muted_dark",
+                    self.search_muted_dark
+                        .clone()
+                        .unwrap_or(self.muted_dark.clone()),
+                );
+
                 colors.insert(
                     "accent",
                     self.search_accent.clone().unwrap_or(self.accent.clone()),
@@ -241,6 +251,12 @@ impl ThemeSettings {
                     self.results_muted.clone().unwrap_or(self.muted.clone()),
                 );
                 colors.insert(
+                    "muted_dark",
+                    self.results_muted_dark
+                        .clone()
+                        .unwrap_or(self.muted_dark.clone()),
+                );
+                colors.insert(
                     "accent",
                     self.results_accent.clone().unwrap_or(self.accent.clone()),
                 );
@@ -258,6 +274,7 @@ impl ThemeSettings {
                 colors.insert("foreground", self.foreground.clone());
                 colors.insert("highlight", self.highlight.clone());
                 colors.insert("muted", self.muted.clone());
+                colors.insert("muted_dark", self.muted_dark.clone());
                 colors.insert("accent", self.accent.clone());
                 colors.insert("caret", self.caret.clone());
                 colors.insert("border", self.border.clone());

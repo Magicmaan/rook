@@ -1,16 +1,13 @@
 use ratatui::{
     buffer::Buffer,
-    layout::{Constraint, Direction, Layout, Rect},
+    layout::Rect,
     style::{Color, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Padding, Paragraph, Widget},
+    widgets::{Block, Padding, Paragraph, Widget},
 };
 use std::time::SystemTime;
 
-use crate::{
-    model,
-    settings::{Settings, UISearchSettings},
-};
+use crate::model::settings::{Settings, UISearchSettings};
 #[derive(Clone, Default)]
 pub struct SearchBox {
     query: String,
@@ -35,23 +32,22 @@ impl Widget for SearchBox {
             .title("Search")
             .border_type(theme.get_border_type("search"))
             .padding(Padding::new(2, 2, 0, 0))
-            .style(theme.get_default_style(Some(crate::ui::ui::UISection::Search)));
+            .style(theme.get_default_style(Some(crate::model::ui::UISection::Search)));
         // block.render(area, buf);
         let start = SystemTime::now();
         let since_epoch = start
             .duration_since(SystemTime::UNIX_EPOCH)
             .expect("Time went backwards");
-        let caret = "_";
 
         let mut line = "".to_string();
         line.push_str(self.settings.pre_query.as_str());
         line.push(' ');
 
-        let mut caret_query = self.query.clone();
+        let caret_query = self.query.clone();
         let (before_caret, after_caret) =
             caret_query.split_at(self.caret_position.min(caret_query.len()));
 
-        let mut caret = self.settings.caret.clone();
+        let caret = self.settings.caret.clone();
         let mut flash_caret = false;
         // let mut caret_query = before_caret.to_string();
         if self.settings.caret_visible {
@@ -84,7 +80,7 @@ impl Widget for SearchBox {
         block.render(area, buf);
 
         let paragraph = Paragraph::new(line)
-            .style(theme.get_default_style(Some(crate::ui::ui::UISection::Search)));
+            .style(theme.get_default_style(Some(crate::model::ui::UISection::Search)));
         paragraph.render(inner_area, buf);
 
         // paragraph.render(inner_area, buf);
