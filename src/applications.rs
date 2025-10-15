@@ -1,0 +1,136 @@
+use std::collections::HashMap;
+use std::fs;
+use std::path::PathBuf;
+use xdg::BaseDirectories; // add "xdg = \"*\"" to Cargo.toml // add "ini" crate or parse by hand
+
+#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Application {
+    pub name: String,
+    pub application_name: Option<String>,
+    pub exec: String,
+    pub icon: Option<String>,
+    pub comment: Option<String>,
+    pub categories: Vec<String>,
+    pub terminal: bool,
+    pub mime_types: Vec<String>,
+}
+
+pub fn find_desktop_files() -> Vec<Application> {
+    let xdg = BaseDirectories::with_prefix("");
+    let mut apps = Vec::new();
+    // standard dirs: $XDG_DATA_HOME/applications, /usr/share/applications, ~/.local/share/applications
+    for dir in xdg
+        .get_data_dirs()
+        .iter()
+        .chain(std::iter::once(&xdg.get_data_home().unwrap()))
+        // .chain(std::iter::once(&PathBuf::from("/usr/share/")))
+    {
+        let apps_dir = dir.join("applications");
+        if apps_dir.is_dir() {
+            if let Ok(entries) = fs::read_dir(apps_dir) {
+                for e in entries.flatten() {
+                    // for each file in the directory
+                    // i.e. /usr/share/applications/example.desktop
+                    let p = e.path();
+                    if p.extension().and_then(|s| s.to_str()) == Some("desktop") {
+                        let app = parse_desktop_file(&p);
+                        apps.push(app);
+                    }
+                }
+            }
+        }
+    }
+    apps
+}
+
+pub fn parse_desktop_file(path: &PathBuf) -> Application {
+    // parse a .desktop file at path
+    let content: String = fs::read_to_string(path).expect("Failed to read desktop file");
+
+    // map to a hashmap of key-value pairs
+    // only parse the [Desktop Entry] section for now
+    // some desktop files have alternate sections like [Desktop Action ...]
+    // we will ignore those for now
+    let mut options: HashMap<String, String> = HashMap::new();
+    for line in content.lines() {
+        // ignore comments and empty lines
+        if line.starts_with('#') || line.trim().is_empty(){
+            continue;
+        }
+        // only parse main section
+        if line.starts_with('[') && line.ends_with(']') {
+            if line != "[Desktop Entry]" {
+                break; // only parse the main section
+            } else {
+                continue;
+            }
+        }
+        let (k, v) = line.split_once('=').unwrap_or((line, ""));
+        match k.trim() {
+            // MimeType = <mime_type>;<mime_type>;...
+            "MimeType" => {
+                let types: Vec<String> = v.split(';').map(|s| s.trim().into()).collect();
+                options.insert("MimeType".into(), types.join(";"));
+                continue;
+            }
+            _ => {
+                options.insert(k.trim().into(), v.trim().into());
+            }
+        }
+        
+    }
+
+
+    let application_name: String = parse_executable_name(
+        options
+            .get("Exec")
+            .cloned()
+            .unwrap_or_else(|| "example-command".into())
+            .as_str(),
+    );
+    Application {
+        name: options
+            .get("Name")
+            .cloned()
+            .unwrap_or_else(|| "Unknown".into()),
+        application_name: application_name.into(),
+        exec: options
+            .get("Exec")
+            .cloned()
+            .unwrap_or_else(|| "example-command".into()),
+        icon: options.get("Icon").cloned(),
+        comment: options.get("Comment").cloned(),
+        categories: options
+            .get("Categories")
+            .map(|s| s.split(';').map(|s| s.trim().into()).collect())
+            .unwrap_or_default(),
+        terminal: options
+            .get("Terminal")
+            .map(|s| s == "true")
+            .unwrap_or(false),
+        mime_types: options
+            .get("MimeType")
+            .map(|s| s.split(';').map(|s| s.trim().into()).collect())
+            .unwrap_or_default(),
+    }
+}
+
+fn parse_executable_name(exec: &str) -> String {
+    exec.split_whitespace().next().unwrap_or(exec).to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::app::App;
+
+    use super::*;
+
+    #[test]
+    fn test_find_desktop_files() {
+        let files: Vec<Application> = find_desktop_files();
+        assert!(!files.is_empty());
+        for f in files {
+            println!("{:?}", f.name);
+        }
+    }
+}
