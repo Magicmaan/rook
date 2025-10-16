@@ -1,6 +1,6 @@
 use crate::model::input::{KeyboardState, MouseState};
 use crate::model::search::{SearchData, SearchState};
-use crate::model::settings::Settings;
+use crate::settings::settings::Settings;
 
 use crate::model::ui::UIState;
 

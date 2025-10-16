@@ -7,7 +7,7 @@ use ratatui::{
 };
 use std::time::SystemTime;
 
-use crate::model::settings::{Settings, UISearchSettings};
+use crate::settings::settings::{Settings, UISearchSettings};
 #[derive(Clone, Default)]
 pub struct SearchBox {
     query: String,

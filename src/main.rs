@@ -2,6 +2,7 @@ mod app;
 mod applications;
 mod events;
 mod model;
+mod settings;
 mod ui;
 
 use ratatui::Terminal;

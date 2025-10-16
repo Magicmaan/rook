@@ -1,13 +1,14 @@
 use ratatui::layout::Rect;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UISection {
     Search,
     Results,
     Tooltip,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UIState {
     pub tick: u64,
     pub delta_time: i32, // in ms

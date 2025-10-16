@@ -173,6 +173,9 @@ fn parse_executable_name(exec: &str) -> String {
 }
 
 fn parse_executable_args(exec: &str) -> String {
+    // TODO! handle field codes like %U, %u, %F, %f, %i, %c, %k
+    // for now, just return the command without field codes
+    // this doesn't work for things like SQL lite browser
     let parts: Vec<&str> = exec.split_whitespace().collect();
     parts[0].to_string()
 }

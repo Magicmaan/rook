@@ -1,0 +1,86 @@
+[search]
+always_search = true # search immediately on query change
+
+[keybinds]
+quit = "q"
+search = "enter"
+left = "left"
+right = "right"
+up = "up"
+down = "down"
+
+[ui]
+# UI Settings
+[ui.search]
+pre_query = ">>" # Text before the query input i.e. ">> query"
+caret = "▋" # Caret character i.e. "query▋"
+caret_blink_rate = 500 # Caret blink rate in milliseconds
+caret_visible = true # Whether the caret is visible
+
+[ui.results]
+max_results = 20 # Maximum number of results to display
+show_scores = true # Show fuzzy match scores
+open_through_number = true # Open results by number Ctrl+1-9
+numbered = true # Show numbers next to results
+number_mode = "Small" # Circle ❶, Small ➀, Normal 1, Subscript ₁
+loopback = true # Loop navigation from last to first result
+fade_color = true # Fade color at bottom of list (REQUIRES RGB COLORS)
+
+[ui.tooltip]
+enabled = true
+max_width = 50
+max_height = 10
+delay = 500
+
+[ui.layout]
+sections = ["Search", "Results", "Tooltip"] # order of sections
+
+# Theme settings
+# Can be:
+# ANSI colors (Black, Red, Green, etc)
+# ANSI index colors (0-255)
+# RGB colors in the format "r,g,b" (e.g. "255,0,0" for red)
+# see available colors here https://ratatui.rs/examples/style/colors/ and https://ratatui.rs/examples/style/colors_rgb/
+[ui.theme]
+background = "Reset"
+foreground = "White"
+highlight = "Yellow"
+muted = "DarkGray"
+muted_dark = "Black"
+accent = "Cyan"
+caret = "White"
+border = "Blue"
+text = "200,200,200" # lighter gray RGB
+text_muted = "150,150,150" # light gray RGB
+text_accent = "Cyan"
+border_type = "Rounded"
+
+# Optional color overrides for specific UI sections
+# do not delete any fields, just set them to "" to use the default from [ui.theme]
+[ui.theme.search]
+background = ""
+foreground = ""
+highlight = ""
+muted = ""
+muted_dark = ""
+accent = ""
+caret = ""
+border = ""
+text = "" # lighter gray RGB
+text_muted = "" # light gray RGB
+text_accent = ""
+border_type = ""
+
+[ui.theme.results]
+background = ""
+foreground = ""
+highlight = ""
+muted = ""
+muted_dark = ""
+accent = ""
+caret = ""
+border = ""
+text = "" # lighter gray RGB
+text_muted = "" # light gray RGB
+text_accent = ""
+border_type = ""

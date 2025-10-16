@@ -1,6 +1,6 @@
 use crate::model::ui::UIState;
 
-use crate::model::settings::{Settings, UIResultsSettings};
+use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::number_to_icon;
 use ratatui::{
     buffer::Buffer,
