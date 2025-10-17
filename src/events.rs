@@ -17,7 +17,7 @@ pub enum Event {
     SearchFocus,
     SearchExecute,
     SearchCancel,
-    AppExecute(usize), // index in applications
+    ItemExecute(usize), // index in applications
     //
     NavigateDown(usize),  // number of lines
     NavigateUp(usize),    // number of lines

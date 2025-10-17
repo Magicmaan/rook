@@ -1,3 +1,4 @@
+use crate::model::model::Model;
 use crate::model::ui::UIState;
 
 use crate::settings::settings::{Settings, UIResultsSettings};
@@ -16,19 +17,15 @@ use crate::model::ui::UISection;
 pub struct ResultsBox {
     results: Vec<(u16, usize)>,
     data: crate::model::search::SearchData,
-    settings: UIResultsSettings,
+    settings: Settings,
 }
 
 impl ResultsBox {
-    pub fn new(
-        results: Vec<(u16, usize)>,
-        data: &crate::model::search::SearchData,
-        settings: UIResultsSettings,
-    ) -> Self {
+    pub fn new(model: &Model) -> Self {
         Self {
-            results,
-            data: data.clone(),
-            settings,
+            results: model.search.results.clone(),
+            data: model.data.clone(),
+            settings: model.settings.clone(),
         }
     }
 
@@ -58,7 +55,8 @@ impl StatefulWidget for ResultsBox {
     type State = UIState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let theme = Settings::new().ui.theme.clone();
+        let results_settings: UIResultsSettings = self.settings.ui.results.clone();
+        let theme = self.settings.ui.theme.clone();
         let block = Block::bordered()
             .border_style(Style::default())
             .border_type(theme.get_border_type("results"))
@@ -84,7 +82,7 @@ impl StatefulWidget for ResultsBox {
 
                 // get number icon
                 // mode configurable in settings
-                let mut prepend_icon = number_to_icon(i, self.settings.number_mode);
+                let mut prepend_icon = number_to_icon(i, results_settings.number_mode);
                 let executing_item = state.executing_item;
                 if executing_item.is_some() && i == executing_item.unwrap() + 1 {
                     let tick = state.tick;
@@ -101,14 +99,14 @@ impl StatefulWidget for ResultsBox {
                     // prepend_icon = "XXXX".to_string();
                 }
                 // if number icon, reduce padding for name
-                if self.settings.numbered && !prepend_icon.is_empty() {
+                if results_settings.numbered && !prepend_icon.is_empty() {
                     name_width = name_width.saturating_sub(prepend_icon.len() + 1); // +1 for space
                 }
                 let padded_name = format!("{:<width$}", app.name, width = name_width);
 
                 let mut text_color = theme.get_color("text", Some(UISection::Results));
                 let mut muted_color = theme.get_color("text_muted", Some(UISection::Results));
-                if self.settings.fade_color && available_height > 10 {
+                if results_settings.fade_color && available_height > 10 {
                     text_color = self.calculate_color_fade(
                         text_color,
                         i.saturating_sub(state.result_list_state.offset()),
@@ -123,7 +121,7 @@ impl StatefulWidget for ResultsBox {
 
                 // construct line
                 let line = Line::from(vec![
-                    if self.settings.numbered {
+                    if results_settings.numbered {
                         // number index
                         Span::styled(
                             format!("{} ", prepend_icon),
@@ -134,7 +132,7 @@ impl StatefulWidget for ResultsBox {
                         Span::raw("")
                     },
                     Span::styled(padded_name.clone(), Style::default().fg(text_color)), // name
-                    if self.settings.show_scores {
+                    if results_settings.show_scores {
                         Span::styled(score_text.clone(), Style::default().fg(muted_color))
                     } else {
                         Span::raw("")

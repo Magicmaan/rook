@@ -3,31 +3,37 @@ use ratatui::{
     layout::Rect,
     style::{Color, Style},
     text::{Line, Span},
-    widgets::{Block, Padding, Paragraph, Widget},
+    widgets::{Block, Padding, Paragraph, StatefulWidget, Widget},
 };
 use std::time::SystemTime;
 
-use crate::settings::settings::{Settings, UISearchSettings};
+use crate::{
+    model::model::Model,
+    settings::settings::{Settings, UISearchSettings},
+};
 #[derive(Clone, Default)]
 pub struct SearchBox {
     query: String,
     caret_position: usize,
-    settings: UISearchSettings,
+    settings: Settings,
 }
 
 impl SearchBox {
-    pub fn new(query: String, caret_position: Option<usize>, settings: UISearchSettings) -> Self {
+    pub fn new(model: &Model) -> Self {
         Self {
-            query: query.clone(),
-            caret_position: caret_position.unwrap_or(query.len()),
-            settings,
+            query: model.search.query.clone(),
+            caret_position: model.ui.caret_position,
+            settings: model.settings.clone(),
         }
     }
 }
 
-impl Widget for SearchBox {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let theme = Settings::new().ui.theme.clone();
+impl StatefulWidget for SearchBox {
+    type State = crate::model::ui::UIState;
+
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+        let theme = self.settings.ui.theme.clone();
+        let search_settings: UISearchSettings = self.settings.ui.search.clone();
         let block = Block::bordered()
             .title("Search")
             .border_type(theme.get_border_type("search"))
@@ -40,18 +46,18 @@ impl Widget for SearchBox {
             .expect("Time went backwards");
 
         let mut line = "".to_string();
-        line.push_str(self.settings.pre_query.as_str());
+        line.push_str(search_settings.pre_query.as_str());
         line.push(' ');
 
         let caret_query = self.query.clone();
         let (before_caret, after_caret) =
             caret_query.split_at(self.caret_position.min(caret_query.len()));
 
-        let caret = self.settings.caret.clone();
+        let caret = search_settings.caret.clone();
         let mut flash_caret = false;
         // let mut caret_query = before_caret.to_string();
-        if self.settings.caret_visible {
-            if (since_epoch.as_millis() as u64 / self.settings.caret_blink_rate) % 2 == 0 {
+        if search_settings.caret_visible {
+            if (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate) % 2 == 0 {
                 flash_caret = true;
             }
         }
@@ -64,7 +70,7 @@ impl Widget for SearchBox {
         // before_caret = "hello", after_caret = " world"
         let line = Line::from(vec![
             Span::styled(
-                self.settings.pre_query.as_str(),
+                search_settings.pre_query.as_str(),
                 Style::default().fg(Color::Blue),
             ),
             Span::raw(" "),

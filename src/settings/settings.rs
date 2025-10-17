@@ -512,10 +512,13 @@ impl Settings {
         let config_file = path.join("rook").join("settings.toml");
 
         if config_file.exists() {
+            println!("loading settings from {:?}", config_file);
+            return Self::read_settings(config_file);
         } else {
             println!("no config file found at {:?}", config_file);
             println!("generating default settings");
-            Self::populate_settings(config_file);
+            Self::populate_settings(config_file.clone());
+            Self::read_settings(config_file);
         }
 
         Self::default()
@@ -609,45 +612,6 @@ where
         None => Ok(None),
     }
 }
-
-// fn serialize_optional_border_type<S>(
-//     border_type: &Option<BorderType>,
-//     serializer: S,
-// ) -> Result<S::Ok, S::Error>
-// where
-//     S: Serializer,
-// {
-//     match border_type {
-//         Some(bt) => {
-//             let s = match bt {
-//                 BorderType::Plain => "Plain",
-//                 BorderType::Rounded => "Rounded",
-//                 BorderType::Double => "Double",
-//                 BorderType::Thick => "Thick",
-//                 _ => "Rounded", // default fallback
-//             };
-//             serializer.serialize_some(s)
-//         }
-//         None => serializer.serialize_none(),
-//     }
-// }
-
-// fn deserialize_optional_border_type<'de, D>(deserializer: D) -> Result<Option<BorderType>, D::Error>
-// where
-//     D: Deserializer<'de>,
-// {
-//     let opt = Option::<String>::deserialize(deserializer)?;
-//     match opt {
-//         Some(s) => match s.as_str() {
-//             "Plain" => Ok(Some(BorderType::Plain)),
-//             "Rounded" => Ok(Some(BorderType::Rounded)),
-//             "Double" => Ok(Some(BorderType::Double)),
-//             "Thick" => Ok(Some(BorderType::Thick)),
-//             _ => Ok(Some(BorderType::Rounded)), // default fallback
-//         },
-//         None => Ok(None),
-//     }
-// }
 
 #[cfg(test)]
 mod tests {

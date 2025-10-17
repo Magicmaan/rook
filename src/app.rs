@@ -151,7 +151,7 @@ impl App {
                 Event::NavigateEnd => {
                     self.model.ui.caret_position = self.model.search.query.len();
                 }
-                Event::AppExecute(index) => {
+                Event::ItemExecute(index) => {
                     // Execute the selected application
                     // if is valid index
                     if let Some(app) = self.model.data.applications.get(
@@ -169,6 +169,7 @@ impl App {
                             println!("Launched application: {}", app.name);
                         }
                     }
+                    c
                 }
 
                 _ => {}
@@ -231,7 +232,7 @@ impl App {
                         }
                     }
                     event::KeyCode::Enter => {
-                        events.push(Event::AppExecute(
+                        events.push(Event::ItemExecute(
                             self.model.ui.result_list_state.selected().unwrap_or(0),
                         ));
                     }
@@ -284,7 +285,7 @@ impl App {
                             } else {
                                 0
                             };
-                            events.push(Event::AppExecute(idx));
+                            events.push(Event::ItemExecute(idx));
                         } else {
                             events.push(Event::SearchAdd(key));
                             // if always search, execute the search event immediately

@@ -2,6 +2,7 @@ mod app;
 mod applications;
 mod events;
 mod model;
+mod modules;
 mod settings;
 mod ui;
 
