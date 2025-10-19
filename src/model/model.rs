@@ -2,7 +2,7 @@ use crate::model::input::{KeyboardState, MouseState};
 use crate::model::search::{SearchData, SearchState};
 use crate::settings::settings::Settings;
 
-use crate::model::ui::UIState;
+use crate::model::ui::ModuleState;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum RunState {
@@ -21,11 +21,6 @@ pub struct Model {
 
     pub mouse: MouseState,
     pub keyboard: KeyboardState,
-    pub search: SearchState,
-
-    pub ui: UIState,
-    pub settings: Settings,
-    pub data: SearchData,
 }
 
 impl Model {

@@ -34,6 +34,7 @@ delay = 500
 
 [ui.layout]
 sections = ["Search", "Results", "Tooltip"] # order of sections
+gap = 1 # gap between sections
 
 # Theme settings
 # Can be:

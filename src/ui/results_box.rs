@@ -1,8 +1,11 @@
 use crate::model::model::Model;
-use crate::model::ui::UIState;
+use crate::model::ui::ModuleState;
 
+use crate::settings;
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::number_to_icon;
+use ratatui::symbols;
+use ratatui::widgets::Borders;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -13,20 +16,14 @@ use ratatui::{
 
 use crate::model::ui::UISection;
 
-#[derive(Clone, Default)]
-pub struct ResultsBox {
-    results: Vec<(u16, usize)>,
-    data: crate::model::search::SearchData,
-    settings: Settings,
+#[derive(Clone)]
+pub struct ResultsBox<'a> {
+    settings: &'a Settings,
 }
 
-impl ResultsBox {
-    pub fn new(model: &Model) -> Self {
-        Self {
-            results: model.search.results.clone(),
-            data: model.data.clone(),
-            settings: model.settings.clone(),
-        }
+impl<'a> ResultsBox<'a> {
+    pub fn new(settings: &'a Settings) -> Self {
+        Self { settings }
     }
 
     fn calculate_color_fade(&self, start_color: Color, position: usize, height: usize) -> Color {
@@ -49,19 +46,54 @@ impl ResultsBox {
             start_color
         }
     }
+
+    fn get_loading_spinner(&self, tick: u64) -> String {
+        let remainder = tick % 4;
+        if remainder == 0 {
+            "◜".to_string()
+        } else if remainder == 1 {
+            "◝".to_string()
+        } else if remainder == 2 {
+            "◞".to_string()
+        } else {
+            "◟".to_string()
+        }
+    }
 }
 
-impl StatefulWidget for ResultsBox {
-    type State = UIState;
+impl<'a> StatefulWidget for ResultsBox<'a> {
+    type State = ModuleState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let results_settings: UIResultsSettings = self.settings.ui.results.clone();
         let theme = self.settings.ui.theme.clone();
+
+        // if gap is 0, use the connected border set
+        // look at: https://ratatui.rs/recipes/layout/collapse-borders/
+        // i.e.
+        // │       │
+        // ├───────┤
+        // │       │
+        let gap = self.settings.ui.layout.gap;
+        let borders = self
+            .settings
+            .ui
+            .theme
+            .get_border_type("results")
+            .to_border_set();
+        // replace top left and top right with vertical connectors
+        let collapsed_borders = symbols::border::Set {
+            top_left: symbols::line::NORMAL.vertical_right,
+            top_right: symbols::line::NORMAL.vertical_left,
+            ..borders
+        };
         let block = Block::bordered()
+            .border_set(if gap > 0 { borders } else { collapsed_borders })
             .border_style(Style::default())
-            .border_type(theme.get_border_type("results"))
+            // .border_type(theme.get_border_type("results"))
+            .borders(Borders::ALL)
             // .title("Search")
-            .padding(Padding::new(1, 1, 1, 1));
+            .padding(Padding::new(2, 2, 1, 1));
 
         // block.render(area, buf);
         let inner_area = block.inner(area);
@@ -69,43 +101,39 @@ impl StatefulWidget for ResultsBox {
         let available_height = inner_area.height as usize;
 
         let mut i = 1;
-        let items = self
+        let items = state
+            .search
             .results
             .iter()
             .map(|(score, idx)| {
                 // space out sections to fit the width
-                let app = &self.data.applications[*idx];
-                let width = inner_area.width as usize;
+                let app = &state.data.applications[*idx];
+
                 let score_text = format!("{}", score);
-                // pad score to end i.e. "App Name       123"
-                let mut name_width = width.saturating_sub(score_text.len() - 1);
 
                 // get number icon
                 // mode configurable in settings
                 let mut prepend_icon = number_to_icon(i, results_settings.number_mode);
                 let executing_item = state.executing_item;
+                // if executing, use loading spinner
                 if executing_item.is_some() && i == executing_item.unwrap() + 1 {
-                    let tick = state.tick;
-                    let remainder = tick % 4;
-                    if remainder == 0 {
-                        prepend_icon = "◜".to_string();
-                    } else if remainder == 1 {
-                        prepend_icon = "◝".to_string();
-                    } else if remainder == 2 {
-                        prepend_icon = "◞".to_string();
-                    } else {
-                        prepend_icon = "◟".to_string();
-                    }
-                    // prepend_icon = "XXXX".to_string();
+                    prepend_icon = self.get_loading_spinner(state.tick);
                 }
-                // if number icon, reduce padding for name
-                if results_settings.numbered && !prepend_icon.is_empty() {
+
+                // pad score to end i.e. "App Name       123"
+                let line_width = inner_area.width as usize;
+                let mut name_width = line_width.saturating_sub(score_text.len() - 1);
+                if prepend_icon.trim().len() == 0 {
+                    name_width = name_width.saturating_sub(4); // extra space if no icon
+                } else {
                     name_width = name_width.saturating_sub(prepend_icon.len() + 1); // +1 for space
                 }
                 let padded_name = format!("{:<width$}", app.name, width = name_width);
 
                 let mut text_color = theme.get_color("text", Some(UISection::Results));
                 let mut muted_color = theme.get_color("text_muted", Some(UISection::Results));
+
+                // calculate list color fade
                 if results_settings.fade_color && available_height > 10 {
                     text_color = self.calculate_color_fade(
                         text_color,
@@ -121,16 +149,11 @@ impl StatefulWidget for ResultsBox {
 
                 // construct line
                 let line = Line::from(vec![
-                    if results_settings.numbered {
-                        // number index
-                        Span::styled(
-                            format!("{} ", prepend_icon),
-                            Style::default()
-                                .fg(theme.get_color("accent", Some(UISection::Results))),
-                        )
-                    } else {
-                        Span::raw("")
-                    },
+                    // number index
+                    Span::styled(
+                        format!("{} ", prepend_icon),
+                        Style::default().fg(theme.get_color("accent", Some(UISection::Results))),
+                    ),
                     Span::styled(padded_name.clone(), Style::default().fg(text_color)), // name
                     if results_settings.show_scores {
                         Span::styled(score_text.clone(), Style::default().fg(muted_color))

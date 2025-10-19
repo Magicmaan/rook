@@ -91,12 +91,14 @@ impl Default for UITooltipSettings {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UILayoutSettings {
-    sections: Vec<UISection>, // order of layout sections
+    pub sections: Vec<UISection>, // order of layout sections
+    pub gap: u16,                 // gap between sections
 }
 impl Default for UILayoutSettings {
     fn default() -> Self {
         Self {
             sections: vec![UISection::Search, UISection::Results, UISection::Tooltip],
+            gap: 1,
         }
     }
 }

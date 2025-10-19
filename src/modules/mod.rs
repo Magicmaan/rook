@@ -1,2 +1,2 @@
-mod applications;
-mod module;
+pub mod applications;
+pub mod module;
