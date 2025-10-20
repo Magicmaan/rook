@@ -1,14 +1,5 @@
-use std::collections::HashMap;
-
-use config::Config;
-use dirs::config_dir;
-use ratatui::style::Style;
 use ratatui::{style::Color, widgets::BorderType};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::path::PathBuf;
-
-use crate::model::module::UISection;
-use crate::ui::util::IconMode;
+use serde::{Deserialize, Deserializer, Serializer};
 
 // helper functions for serializing/deserializing ratatui types
 // stupid Color and BorderType don't implement Serialize/Deserialize >:(

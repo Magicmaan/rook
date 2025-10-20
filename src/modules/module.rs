@@ -1,13 +1,7 @@
-use ratatui::{
-    crossterm::event,
-    widgets::{StatefulWidget, Widget},
-};
 
 use crate::{
-    events::{self, Event, process_events},
+    events::Event,
     model::model::Model,
-    settings::{self, settings::Settings},
-    ui::{results_box::ResultsBox, search_box::SearchBox},
 };
 
 /// A trait that defines the core functionality for application modules.

@@ -1,8 +1,4 @@
-use crate::model::module::UISection;
-use crate::{
-    model::model::Model,
-    settings::settings::{Settings, UISearchSettings},
-};
+use crate::settings::settings::{Settings, UISearchSettings};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -43,7 +39,7 @@ impl<'a> StatefulWidget for SearchBox<'a> {
                 Borders::TOP | Borders::LEFT | Borders::RIGHT
             })
             .padding(Padding::new(2, 2, 0, 0))
-            .style(theme.get_default_style(Some(crate::model::module::UISection::Search)));
+            .style(theme.get_default_style());
         let inner_area = block.inner(area);
 
         // splice the query to insert the caret
@@ -90,8 +86,7 @@ impl<'a> StatefulWidget for SearchBox<'a> {
         // paragraph.render(inner_area, buf);
         block.render(area, buf);
 
-        let paragraph = Paragraph::new(line)
-            .style(theme.get_default_style(Some(crate::model::module::UISection::Search)));
+        let paragraph = Paragraph::new(line).style(theme.get_default_style());
         paragraph.render(inner_area, buf);
 
         // paragraph.render(inner_area, buf);

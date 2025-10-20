@@ -1,7 +1,5 @@
-use crate::model::model::Model;
 use crate::model::module::ModuleState;
 
-use crate::settings;
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::number_to_icon;
 use ratatui::symbols;
@@ -14,7 +12,6 @@ use ratatui::{
     widgets::{Block, List, ListItem, Padding, StatefulWidget, Widget},
 };
 
-use crate::model::module::UISection;
 
 #[derive(Clone)]
 pub struct ResultsBox<'a> {

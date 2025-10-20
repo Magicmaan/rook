@@ -1,8 +1,5 @@
 use crate::model::input::{KeyboardState, MouseState};
-use crate::model::search::{SearchData, SearchState};
-use crate::settings::settings::Settings;
 
-use crate::model::module::ModuleState;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum RunState {

@@ -1,17 +1,14 @@
-use std::collections::HashMap;
-
 use config::Config;
 use dirs::config_dir;
-use ratatui::backend;
 use ratatui::style::Style;
 use ratatui::{style::Color, widgets::BorderType};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::model::module::UISection;
 use crate::settings::serialise::{
     deserialize_border_type, deserialize_color, deserialize_optional_border_type,
-    deserialize_optional_color, serialize_optional_border_type, serialize_optional_color,
+    deserialize_optional_color, serialize_optional_border_type,
 };
 use crate::ui::util::IconMode;
 
@@ -461,7 +458,7 @@ impl ThemeSettings {
     //     colors
     // }
 
-    pub fn get_default_style(&self, section: Option<UISection>) -> Style {
+    pub fn get_default_style(&self) -> Style {
         Style::default()
             .bg(self.background.clone())
             .fg(self.foreground.clone())
@@ -568,7 +565,6 @@ impl Settings {
 
 #[cfg(test)]
 mod tests {
-    use config::Config;
 
     use super::*;
 

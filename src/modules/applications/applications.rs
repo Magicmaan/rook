@@ -1,9 +1,6 @@
 use ratatui::{
     Frame,
-    crossterm::event,
-    layout::{Constraint, Layout, Rect},
-    style::Style,
-    widgets::{Block, StatefulWidget},
+    layout::Rect,
 };
 
 use crate::{
@@ -13,7 +10,7 @@ use crate::{
         module::ModuleState,
     },
     modules::module::Module,
-    ui::{results_box::ResultsBox, search_box::SearchBox},
+    ui::search_box::SearchBox,
 };
 use std::rc::Rc;
 

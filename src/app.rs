@@ -3,8 +3,8 @@ use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
 
 use crate::events::process_events;
+use crate::model::model;
 use crate::modules::module::Module;
-use crate::{events::Event, model::model, ui::ui::UI};
 use std::rc::Rc;
 
 pub struct App {
@@ -59,7 +59,7 @@ impl App {
                 let gap = self.settings.ui.layout.gap;
 
                 let root = Block::new()
-                    .style(ui_settings.theme.get_default_style(None))
+                    .style(ui_settings.theme.get_default_style())
                     .padding(Padding::new(2, 2, 1, 1));
                 let area = root.inner(frame.area());
 
