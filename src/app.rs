@@ -16,6 +16,8 @@ pub struct App {
 
 impl App {
     pub fn new(terminal: DefaultTerminal) -> Self {
+        log::info!("Initializing application...");
+
         let model = model::Model::default();
         let settings = crate::settings::settings::Settings::new();
         let modules = crate::modules::applications::applications::ApplicationModule::new(&settings);
@@ -91,7 +93,7 @@ impl App {
 
     fn update(&mut self) {
         let mut events: Vec<event::Event> = Vec::new();
-        if event::poll(std::time::Duration::from_millis(250)).unwrap() {
+        if event::poll(std::time::Duration::from_millis(16)).unwrap() {
             events.push(event::read().unwrap());
         }
         // Update the app state

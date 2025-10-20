@@ -13,7 +13,7 @@ down = "down"
 # UI Settings
 [ui.search]
 pre_query = ">>" # Text before the query input i.e. ">> query"
-caret = "▋" # Caret character i.e. "query▋"
+caret_text = "▋" # Caret character i.e. "query▋"
 caret_blink_rate = 500 # Caret blink rate in milliseconds
 caret_visible = true # Whether the caret is visible
 
@@ -25,6 +25,7 @@ numbered = true # Show numbers next to results
 number_mode = "Small" # Circle ❶, Small ➀, Normal 1, Subscript ₁
 loopback = true # Loop navigation from last to first result
 fade_color = true # Fade color at bottom of list (REQUIRES RGB COLORS)
+fade_previous_results = true # Visually overwrite previous results
 
 [ui.tooltip]
 enabled = true
@@ -49,7 +50,6 @@ highlight = "Yellow"
 muted = "DarkGray"
 muted_dark = "Black"
 accent = "Cyan"
-caret = "White"
 border = "Blue"
 text = "200,200,200" # lighter gray RGB
 text_muted = "150,150,150" # light gray RGB
@@ -65,8 +65,9 @@ highlight = ""
 muted = ""
 muted_dark = ""
 accent = ""
-caret = ""
 border = ""
+pre_query_text = "255,0,0" # light gray RGB
+caret = "255,0,0" # light gray RGB
 text = "" # lighter gray RGB
 text_muted = "" # light gray RGB
 text_accent = ""
@@ -79,7 +80,6 @@ highlight = ""
 muted = ""
 muted_dark = ""
 accent = ""
-caret = ""
 border = ""
 text = "" # lighter gray RGB
 text_muted = "" # light gray RGB

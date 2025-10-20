@@ -10,7 +10,7 @@ use crate::{
     events::{self, Event, Search},
     model::{
         model::{Model, RunState},
-        ui::ModuleState,
+        module::ModuleState,
     },
     modules::module::Module,
     ui::{results_box::ResultsBox, search_box::SearchBox},
@@ -51,7 +51,7 @@ impl Module for ApplicationModule {
                     }
                 }
                 events::NavigateDirection::Down => {
-                    let current = self.state.result_list_state.selected().unwrap_or(0);
+                    let current = self.state.get_selected_result_index();
                     let max_index = self.state.search.results.len().saturating_sub(1);
                     let new_index = current.saturating_add(*amount as usize);
 
@@ -64,7 +64,7 @@ impl Module for ApplicationModule {
                     }
                 }
                 events::NavigateDirection::Up => {
-                    let current = self.state.result_list_state.selected().unwrap_or(0);
+                    let current = self.state.get_selected_result_index();
                     let max_index = self.state.search.results.len().saturating_sub(1);
                     let new_index = current.saturating_sub(*amount as usize);
 
@@ -131,8 +131,11 @@ impl Module for ApplicationModule {
                         &mut self.state.data.applications,
                         query,
                     );
+                    self.state.search.previous_query = query.to_string();
+                    self.state.search.previous_results = result.clone();
                     self.state.search.results = result;
                     self.state.result_list_state.select(Some(0));
+                    self.state.search.last_search_tick = self.state.tick;
                 }
                 _ => {}
             }

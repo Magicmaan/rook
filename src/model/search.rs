@@ -3,6 +3,9 @@ pub struct SearchState {
     pub searching: bool,
     pub query: String,
     pub results: Vec<(u16, usize)>, // (score, index in applications)
+    pub last_search_tick: u64,
+    pub previous_query: String,
+    pub previous_results: Vec<(u16, usize)>,
 }
 impl SearchState {
     pub fn split_at_caret(&self, caret_position: usize) -> (&str, &str) {

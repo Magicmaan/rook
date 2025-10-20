@@ -1,14 +1,17 @@
+use ratatui::style::Color;
+use rust_search::SearchBuilder;
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use xdg::BaseDirectories;
 
-#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Application {
     pub name: String,
     pub application_name: Option<String>,
     pub exec: String,
     pub icon: Option<String>,
+    // pub icon_ascii: Option<String>,
     pub comment: Option<String>,
     pub categories: Vec<String>,
     pub terminal: bool,
@@ -69,6 +72,7 @@ impl Application {
 pub fn find_desktop_files() -> Vec<Application> {
     let xdg = BaseDirectories::with_prefix("");
     let mut apps = Vec::new();
+
     // standard dirs: $XDG_DATA_HOME/applications, /usr/share/applications, ~/.local/share/applications
     for dir in xdg
         .get_data_dirs()

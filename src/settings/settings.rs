@@ -2,14 +2,21 @@ use std::collections::HashMap;
 
 use config::Config;
 use dirs::config_dir;
+use ratatui::backend;
 use ratatui::style::Style;
 use ratatui::{style::Color, widgets::BorderType};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::path::PathBuf;
 
-use crate::model::ui::UISection;
+use crate::model::module::UISection;
+use crate::settings::serialise::{
+    deserialize_border_type, deserialize_color, deserialize_optional_border_type,
+    deserialize_optional_color, serialize_optional_border_type, serialize_optional_color,
+};
 use crate::ui::util::IconMode;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+
 pub struct KeybindSettings {
     pub quit: String,
     pub search: String,
@@ -34,7 +41,7 @@ impl Default for KeybindSettings {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UISearchSettings {
     pub pre_query: String,     // text before the query input
-    pub caret: String,         // caret character
+    pub caret_text: String,    // caret character
     pub caret_blink_rate: u64, // in ms
     pub caret_visible: bool, // if disabled, remove blinking, caret, and care movement    // if true, search as you type
 }
@@ -42,7 +49,7 @@ impl Default for UISearchSettings {
     fn default() -> Self {
         Self {
             pre_query: ">>".into(),
-            caret: "▋".into(),
+            caret_text: "▋".into(),
             caret_blink_rate: 500,
             caret_visible: true,
         }
@@ -57,6 +64,7 @@ pub struct UIResultsSettings {
     pub number_mode: IconMode,     // icon mode for numbers
     pub loopback: bool,            // whether to loop back when navigating results
     pub fade_color: bool,          // whether to fade text color towards the bottom
+    pub fade_previous_results: bool,
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
@@ -68,6 +76,7 @@ impl Default for UIResultsSettings {
             number_mode: IconMode::Small, // icon mode for numbers
             loopback: true,               // loop back when navigating results
             fade_color: true,             // fade text color towards the bottom. REQUIRES RGB COLORS
+            fade_previous_results: false,
         }
     }
 }
@@ -117,8 +126,6 @@ pub struct ThemeSettings {
     #[serde(deserialize_with = "deserialize_color")]
     pub accent: Color,
     #[serde(deserialize_with = "deserialize_color")]
-    pub caret: Color,
-    #[serde(deserialize_with = "deserialize_color")]
     pub border: Color,
 
     #[serde(deserialize_with = "deserialize_color")]
@@ -154,6 +161,14 @@ pub struct SearchThemeSettings {
     pub caret: Option<Color>,
     #[serde(deserialize_with = "deserialize_optional_color")]
     pub border: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub pre_query_text: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text_muted: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text_accent: Option<Color>,
 
     #[serde(
         serialize_with = "serialize_optional_border_type",
@@ -177,10 +192,16 @@ pub struct ResultsThemeSettings {
     pub muted_dark: Option<Color>,
     #[serde(deserialize_with = "deserialize_optional_color")]
     pub accent: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
-    pub caret: Option<Color>,
+
     #[serde(deserialize_with = "deserialize_optional_color")]
     pub border: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text_muted: Option<Color>,
+    #[serde(deserialize_with = "deserialize_optional_color")]
+    pub text_accent: Option<Color>,
+
     #[serde(
         serialize_with = "serialize_optional_border_type",
         deserialize_with = "deserialize_optional_border_type"
@@ -197,7 +218,7 @@ impl Default for ThemeSettings {
             muted: Color::DarkGray,
             muted_dark: Color::Black,
             accent: Color::Cyan,
-            caret: Color::White,
+
             border: Color::Blue,
 
             text: Color::Rgb(200, 200, 200),
@@ -211,8 +232,12 @@ impl Default for ThemeSettings {
                 highlight: None,
                 muted: None,
                 muted_dark: None,
+                pre_query_text: None,
+                text: None,
+                text_muted: None,
+                text_accent: None,
                 accent: None,
-                caret: None,
+                caret: Some(Color::Yellow),
                 border: None,
                 border_type: None,
             },
@@ -223,127 +248,16 @@ impl Default for ThemeSettings {
                 highlight: None,
                 muted: None,
                 muted_dark: None,
+                text: None,
+                text_muted: None,
+                text_accent: None,
                 accent: None,
-                caret: None,
+
                 border: None,
                 border_type: None,
             },
         }
     }
-}
-
-fn serialize_color<S>(color: &Color, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let s = match color {
-        Color::Reset => "Reset",
-        Color::Black => "Black",
-        Color::Red => "Red",
-        Color::Green => "Green",
-        Color::Yellow => "Yellow",
-        Color::Blue => "Blue",
-        Color::Magenta => "Magenta",
-        Color::Cyan => "Cyan",
-        Color::Gray => "Gray",
-        Color::DarkGray => "DarkGray",
-        Color::LightRed => "LightRed",
-        Color::LightGreen => "LightGreen",
-        Color::LightYellow => "LightYellow",
-        Color::LightBlue => "LightBlue",
-        Color::LightMagenta => "LightMagenta",
-        Color::LightCyan => "LightCyan",
-        Color::White => "White",
-        Color::Rgb(r, g, b) => {
-            return serializer.serialize_str(&format!("Rgb({},{},{})", r, g, b));
-        }
-        Color::Indexed(i) => return serializer.serialize_str(&format!("Indexed({})", i)),
-    };
-    serializer.serialize_str(s)
-}
-
-fn deserialize_color<'de, D>(deserializer: D) -> Result<Color, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    println!("Deserializing color: {}", s);
-    match s.as_str() {
-        "Reset" => Ok(Color::Reset),
-        "Black" => Ok(Color::Black),
-        "Red" => Ok(Color::Red),
-        "Green" => Ok(Color::Green),
-        "Yellow" => Ok(Color::Yellow),
-        "Blue" => Ok(Color::Blue),
-        "Magenta" => Ok(Color::Magenta),
-        "Cyan" => Ok(Color::Cyan),
-        "Gray" => Ok(Color::Gray),
-        "DarkGray" => Ok(Color::DarkGray),
-        "LightRed" => Ok(Color::LightRed),
-        "LightGreen" => Ok(Color::LightGreen),
-        "LightYellow" => Ok(Color::LightYellow),
-        "LightBlue" => Ok(Color::LightBlue),
-        "LightMagenta" => Ok(Color::LightMagenta),
-        "LightCyan" => Ok(Color::LightCyan),
-        "White" => Ok(Color::White),
-        s if s.starts_with("Rgb(") && s.ends_with(")") => {
-            let inner = &s[4..s.len() - 1];
-            let parts: Vec<&str> = inner.split(',').collect();
-            if parts.len() == 3 {
-                let r = parts[0].parse().map_err(serde::de::Error::custom)?;
-                let g = parts[1].parse().map_err(serde::de::Error::custom)?;
-                let b = parts[2].parse().map_err(serde::de::Error::custom)?;
-                Ok(Color::Rgb(r, g, b))
-            } else {
-                Err(serde::de::Error::custom("Invalid RGB format"))
-            }
-        }
-        s if s.starts_with("Indexed(") && s.ends_with(")") => {
-            let inner = &s[8..s.len() - 1];
-            let index = inner.parse().map_err(serde::de::Error::custom)?;
-            Ok(Color::Indexed(index))
-        }
-        _ => Ok(Color::Reset), // default fallback
-    }
-}
-
-fn serialize_optional_color<S>(color: &Option<Color>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    match color {
-        Some(c) => serialize_color(c, serializer),
-        None => serializer.serialize_none(),
-    }
-}
-
-fn deserialize_optional_color<'de, D>(deserializer: D) -> Result<Option<Color>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let opt = Option::<String>::deserialize(deserializer)?;
-    println!("Deserializing optional color: {:?}", opt);
-    match opt {
-        Some(s) if !s.is_empty() => Ok(Some(deserialize_color(
-            serde::de::value::StringDeserializer::new(s),
-        )?)),
-        Some(_) => Ok(None),
-        None => Ok(None),
-    }
-}
-
-fn serialize_border_type<S>(border_type: &BorderType, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let s = match border_type {
-        BorderType::Plain => "Plain",
-        BorderType::Rounded => "Rounded",
-        BorderType::Double => "Double",
-        BorderType::Thick => "Thick",
-        _ => "Rounded", // default fallback
-    };
-    serializer.serialize_str(s)
 }
 
 impl ThemeSettings {
@@ -355,127 +269,202 @@ impl ThemeSettings {
         }
     }
 
-    pub fn get_color(&self, color_name: &str, section: Option<UISection>) -> Color {
-        let colors = self.get_colors(section);
-        *colors.get(color_name).unwrap_or(&Color::White)
-    }
-
-    pub fn get_colors(&self, section: Option<UISection>) -> HashMap<&str, Color> {
-        let mut colors: HashMap<&str, Color> = HashMap::new();
-        match section {
-            Some(UISection::Search) => {
-                colors.insert(
-                    "background",
-                    self.search
-                        .background
-                        .clone()
-                        .unwrap_or(self.background.clone()),
-                );
-                colors.insert(
-                    "foreground",
-                    self.search
-                        .foreground
-                        .clone()
-                        .unwrap_or(self.foreground.clone()),
-                );
-                colors.insert(
-                    "highlight",
-                    self.search
-                        .highlight
-                        .clone()
-                        .unwrap_or(self.highlight.clone()),
-                );
-                colors.insert(
-                    "muted",
-                    self.search.muted.clone().unwrap_or(self.muted.clone()),
-                );
-                colors.insert(
-                    "muted_dark",
-                    self.search
-                        .muted_dark
-                        .clone()
-                        .unwrap_or(self.muted_dark.clone()),
-                );
-
-                colors.insert(
-                    "accent",
-                    self.search.accent.clone().unwrap_or(self.accent.clone()),
-                );
-                colors.insert(
-                    "caret",
-                    self.search.caret.clone().unwrap_or(self.caret.clone()),
-                );
-                colors.insert(
-                    "border",
-                    self.search.border.clone().unwrap_or(self.border.clone()),
-                );
-            }
-            Some(UISection::Results) => {
-                colors.insert(
-                    "background",
-                    self.results
-                        .background
-                        .clone()
-                        .unwrap_or(self.background.clone()),
-                );
-                colors.insert(
-                    "foreground",
-                    self.results
-                        .foreground
-                        .clone()
-                        .unwrap_or(self.foreground.clone()),
-                );
-                colors.insert(
-                    "highlight",
-                    self.results
-                        .highlight
-                        .clone()
-                        .unwrap_or(self.highlight.clone()),
-                );
-                colors.insert(
-                    "muted",
-                    self.results.muted.clone().unwrap_or(self.muted.clone()),
-                );
-                colors.insert(
-                    "muted_dark",
-                    self.results
-                        .muted_dark
-                        .clone()
-                        .unwrap_or(self.muted_dark.clone()),
-                );
-                colors.insert(
-                    "accent",
-                    self.results.accent.clone().unwrap_or(self.accent.clone()),
-                );
-                colors.insert(
-                    "caret",
-                    self.results.caret.clone().unwrap_or(self.caret.clone()),
-                );
-                colors.insert(
-                    "border",
-                    self.results.border.clone().unwrap_or(self.border.clone()),
-                );
-            }
-            _ => {
-                colors.insert("background", self.background.clone());
-                colors.insert("foreground", self.foreground.clone());
-                colors.insert("highlight", self.highlight.clone());
-                colors.insert("muted", self.muted.clone());
-                colors.insert("muted_dark", self.muted_dark.clone());
-                colors.insert("accent", self.accent.clone());
-                colors.insert("caret", self.caret.clone());
-                colors.insert("border", self.border.clone());
-            }
+    pub fn get_search_colors(&self) -> SearchThemeSettings {
+        SearchThemeSettings {
+            background: Some(self.search.background.unwrap_or(self.background.clone())),
+            foreground: Some(self.search.foreground.unwrap_or(self.foreground.clone())),
+            highlight: Some(self.search.highlight.unwrap_or(self.highlight.clone())),
+            muted: Some(self.search.muted.unwrap_or(self.muted.clone())),
+            muted_dark: Some(self.search.muted_dark.unwrap_or(self.muted_dark.clone())),
+            accent: Some(self.search.accent.unwrap_or(self.accent.clone())),
+            caret: Some(self.search.caret.unwrap_or(Color::Yellow)),
+            border: Some(self.search.border.unwrap_or(Color::Blue)),
+            pre_query_text: Some(
+                self.search
+                    .pre_query_text
+                    .unwrap_or(Color::Rgb(200, 200, 200)),
+            ),
+            text: Some(self.search.text.unwrap_or(Color::Rgb(200, 200, 200))),
+            text_muted: Some(self.search.text_muted.unwrap_or(Color::Rgb(150, 150, 150))),
+            text_accent: Some(self.search.text_accent.unwrap_or(Color::Cyan)),
+            border_type: Some(BorderType::Rounded),
         }
-
-        colors
     }
+    pub fn get_results_colors(&self) -> ResultsThemeSettings {
+        ResultsThemeSettings {
+            background: Some(self.results.background.unwrap_or(self.background.clone())),
+            foreground: Some(self.results.foreground.unwrap_or(self.foreground.clone())),
+            highlight: Some(self.results.highlight.unwrap_or(self.highlight.clone())),
+            muted: Some(self.results.muted.unwrap_or(self.muted.clone())),
+            muted_dark: Some(self.results.muted_dark.unwrap_or(self.muted_dark.clone())),
+            accent: Some(self.results.accent.unwrap_or(self.accent.clone())),
+            border: Some(self.results.border.unwrap_or(Color::Blue)),
+            text: Some(self.results.text.unwrap_or(Color::Rgb(200, 200, 200))),
+            text_muted: Some(self.results.text_muted.unwrap_or(Color::Rgb(150, 150, 150))),
+            text_accent: Some(self.results.text_accent.unwrap_or(Color::Cyan)),
+            border_type: Some(BorderType::Rounded),
+        }
+    }
+
+    // pub fn get_color(&self, color_name: &str, section: Option<UISection>) -> Color {
+    //     let colors = self.get_colors(section);
+    //     *colors.get(color_name).unwrap_or(&Color::White)
+    // }
+
+    // pub fn get_colors(&self, section: Option<UISection>) -> HashMap<&str, Color> {
+    //     let mut colors: HashMap<&str, Color> = HashMap::new();
+    //     match section {
+    //         Some(UISection::Search) => {
+    //             colors.insert(
+    //                 "background",
+    //                 self.search
+    //                     .background
+    //                     .clone()
+    //                     .unwrap_or(self.background.clone()),
+    //             );
+    //             colors.insert(
+    //                 "foreground",
+    //                 self.search
+    //                     .foreground
+    //                     .clone()
+    //                     .unwrap_or(self.foreground.clone()),
+    //             );
+    //             colors.insert(
+    //                 "highlight",
+    //                 self.search
+    //                     .highlight
+    //                     .clone()
+    //                     .unwrap_or(self.highlight.clone()),
+    //             );
+    //             colors.insert(
+    //                 "muted",
+    //                 self.search.muted.clone().unwrap_or(self.muted.clone()),
+    //             );
+    //             colors.insert(
+    //                 "muted_dark",
+    //                 self.search
+    //                     .muted_dark
+    //                     .clone()
+    //                     .unwrap_or(self.muted_dark.clone()),
+    //             );
+
+    //             colors.insert(
+    //                 "accent",
+    //                 self.search.accent.clone().unwrap_or(self.accent.clone()),
+    //             );
+
+    //             colors.insert(
+    //                 "border",
+    //                 self.search.border.clone().unwrap_or(self.border.clone()),
+    //             );
+    //             colors.insert(
+    //                 "pre_query_text",
+    //                 self.search
+    //                     .pre_query_text
+    //                     .clone()
+    //                     .unwrap_or(self.text.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text",
+    //                 self.search.text.clone().unwrap_or(self.text.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text_muted",
+    //                 self.search
+    //                     .text_muted
+    //                     .clone()
+    //                     .unwrap_or(self.text_muted.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text_accent",
+    //                 self.search
+    //                     .text_accent
+    //                     .clone()
+    //                     .unwrap_or(self.text_accent.clone()),
+    //             );
+    //         }
+    //         Some(UISection::Results) => {
+    //             colors.insert(
+    //                 "background",
+    //                 self.results
+    //                     .background
+    //                     .clone()
+    //                     .unwrap_or(self.background.clone()),
+    //             );
+    //             colors.insert(
+    //                 "foreground",
+    //                 self.results
+    //                     .foreground
+    //                     .clone()
+    //                     .unwrap_or(self.foreground.clone()),
+    //             );
+    //             colors.insert(
+    //                 "highlight",
+    //                 self.results
+    //                     .highlight
+    //                     .clone()
+    //                     .unwrap_or(self.highlight.clone()),
+    //             );
+    //             colors.insert(
+    //                 "muted",
+    //                 self.results.muted.clone().unwrap_or(self.muted.clone()),
+    //             );
+    //             colors.insert(
+    //                 "muted_dark",
+    //                 self.results
+    //                     .muted_dark
+    //                     .clone()
+    //                     .unwrap_or(self.muted_dark.clone()),
+    //             );
+    //             colors.insert(
+    //                 "accent",
+    //                 self.results.accent.clone().unwrap_or(self.accent.clone()),
+    //             );
+
+    //             colors.insert(
+    //                 "border",
+    //                 self.results.border.clone().unwrap_or(self.border.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text",
+    //                 self.results.text.clone().unwrap_or(self.text.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text_muted",
+    //                 self.results
+    //                     .text_muted
+    //                     .clone()
+    //                     .unwrap_or(self.text_muted.clone()),
+    //             );
+    //             colors.insert(
+    //                 "text_accent",
+    //                 self.results
+    //                     .text_accent
+    //                     .clone()
+    //                     .unwrap_or(self.text_accent.clone()),
+    //             );
+    //         }
+    //         _ => {
+    //             colors.insert("background", self.background.clone());
+    //             colors.insert("foreground", self.foreground.clone());
+    //             colors.insert("highlight", self.highlight.clone());
+    //             colors.insert("muted", self.muted.clone());
+    //             colors.insert("muted_dark", self.muted_dark.clone());
+    //             colors.insert("accent", self.accent.clone());
+    //             colors.insert("border", self.border.clone());
+    //             colors.insert("text", self.text.clone());
+    //             colors.insert("text_muted", self.text_muted.clone());
+    //             colors.insert("text_accent", self.text_accent.clone());
+    //         }
+    //     }
+
+    //     colors
+    // }
 
     pub fn get_default_style(&self, section: Option<UISection>) -> Style {
-        let colors = self.get_colors(section);
         Style::default()
-            .bg(*colors.get("background").unwrap_or(&Color::Reset))
-            .fg(*colors.get("foreground").unwrap_or(&Color::White))
+            .bg(self.background.clone())
+            .fg(self.foreground.clone())
     }
 }
 
@@ -527,14 +516,29 @@ impl Settings {
     }
 
     fn read_settings(_config_file: PathBuf) -> Self {
+        log::info!("Reading settings from {:?}", _config_file);
         let settings = Config::builder()
             .add_source(config::File::with_name(_config_file.to_str().unwrap()))
             .build()
-            .expect("Could not build config");
+            .unwrap_or_else(|e| {
+                log::error!("Could not build config from file {:?}: {}", _config_file, e);
+                panic!("Could not build config from file {:?}: {}", _config_file, e)
+            });
 
-        let structure: Settings = settings
-            .try_deserialize()
-            .expect("Could not deserialize to Settings struct");
+        let structure: Settings = settings.try_deserialize().unwrap_or_else(|e| {
+            log::error!(
+                "Could not deserialize config file {:?} into Settings struct: {}",
+                _config_file,
+                e
+            );
+            panic!(
+                "Could not deserialize config file {:?} into Settings struct: {}",
+                _config_file, e
+            )
+        });
+        log::trace!("Deserialized settings: {:?}", structure);
+
+        log::info!("Successfully built config from file {:?}", _config_file);
         structure
     }
 
@@ -559,59 +563,6 @@ impl Settings {
 
         std::fs::copy(&default_settings_path, &config_file)
             .expect("Could not copy default settings");
-    }
-}
-
-fn deserialize_border_type<'de, D>(deserializer: D) -> Result<BorderType, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    match s.as_str() {
-        "Plain" => Ok(BorderType::Plain),
-        "Rounded" => Ok(BorderType::Rounded),
-        "Double" => Ok(BorderType::Double),
-        "Thick" => Ok(BorderType::Thick),
-        _ => Ok(BorderType::Rounded), // default fallback
-    }
-}
-
-fn serialize_optional_border_type<S>(
-    border_type: &Option<BorderType>,
-    serializer: S,
-) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    match border_type {
-        Some(bt) => {
-            let s = match bt {
-                BorderType::Plain => "Plain",
-                BorderType::Rounded => "Rounded",
-                BorderType::Double => "Double",
-                BorderType::Thick => "Thick",
-                _ => "Rounded", // default fallback
-            };
-            serializer.serialize_some(s)
-        }
-        None => serializer.serialize_none(),
-    }
-}
-
-fn deserialize_optional_border_type<'de, D>(deserializer: D) -> Result<Option<BorderType>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let opt = Option::<String>::deserialize(deserializer)?;
-    match opt {
-        Some(s) => match s.as_str() {
-            "Plain" => Ok(Some(BorderType::Plain)),
-            "Rounded" => Ok(Some(BorderType::Rounded)),
-            "Double" => Ok(Some(BorderType::Double)),
-            "Thick" => Ok(Some(BorderType::Thick)),
-            _ => Ok(Some(BorderType::Rounded)), // default fallback
-        },
-        None => Ok(None),
     }
 }
 

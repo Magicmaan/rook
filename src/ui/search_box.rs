@@ -1,3 +1,4 @@
+use crate::model::module::UISection;
 use crate::{
     model::model::Model,
     settings::settings::{Settings, UISearchSettings},
@@ -23,10 +24,11 @@ impl<'a> SearchBox<'a> {
 }
 
 impl<'a> StatefulWidget for SearchBox<'a> {
-    type State = crate::model::ui::ModuleState;
+    type State = crate::model::module::ModuleState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let theme = self.settings.ui.theme.clone();
+        let search_theme = theme.get_search_colors();
         let gap = self.settings.ui.layout.gap;
         let search_settings: UISearchSettings = self.settings.ui.search.clone();
 
@@ -41,7 +43,7 @@ impl<'a> StatefulWidget for SearchBox<'a> {
                 Borders::TOP | Borders::LEFT | Borders::RIGHT
             })
             .padding(Padding::new(2, 2, 0, 0))
-            .style(theme.get_default_style(Some(crate::model::ui::UISection::Search)));
+            .style(theme.get_default_style(Some(crate::model::module::UISection::Search)));
         let inner_area = block.inner(area);
 
         // splice the query to insert the caret
@@ -50,7 +52,7 @@ impl<'a> StatefulWidget for SearchBox<'a> {
             caret_query.split_at(state.caret_position.min(caret_query.len()));
 
         // get caret, and blink state
-        let caret = search_settings.caret.clone();
+        let caret = search_settings.caret_text.clone();
         let mut flash_caret = false;
         let start = SystemTime::now();
         let since_epoch = start
@@ -70,11 +72,14 @@ impl<'a> StatefulWidget for SearchBox<'a> {
             // pre_query span
             Span::styled(
                 search_settings.pre_query.as_str(),
-                Style::default().fg(Color::Blue),
+                Style::default().fg(search_theme.pre_query_text.unwrap()),
             ),
             Span::raw(" "),
             // query span with caret
-            Span::styled(before_caret, Style::default().fg(Color::White)),
+            Span::styled(
+                before_caret,
+                Style::default().fg(search_theme.caret.unwrap()),
+            ),
             Span::styled(
                 if flash_caret { " " } else { &caret },
                 Style::default().fg(Color::Yellow),
@@ -86,7 +91,7 @@ impl<'a> StatefulWidget for SearchBox<'a> {
         block.render(area, buf);
 
         let paragraph = Paragraph::new(line)
-            .style(theme.get_default_style(Some(crate::model::ui::UISection::Search)));
+            .style(theme.get_default_style(Some(crate::model::module::UISection::Search)));
         paragraph.render(inner_area, buf);
 
         // paragraph.render(inner_area, buf);

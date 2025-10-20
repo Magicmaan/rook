@@ -29,3 +29,9 @@ pub struct ModuleState {
     pub sections: Vec<(UISection, Rect)>,
     pub executing_item: Option<usize>, // index in results
 }
+
+impl ModuleState {
+    pub fn get_selected_result_index(&self) -> usize {
+        self.result_list_state.selected().unwrap_or(0)
+    }
+}

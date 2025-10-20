@@ -7,13 +7,12 @@ use ratatui::{style::Color, widgets::BorderType};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::path::PathBuf;
 
-use crate::model::ui::UISection;
+use crate::model::module::UISection;
 use crate::ui::util::IconMode;
 
 // helper functions for serializing/deserializing ratatui types
 // stupid Color and BorderType don't implement Serialize/Deserialize >:(
 // used in settings structs
-
 
 // deserialize BorderType from string
 pub fn deserialize_border_type<'de, D>(deserializer: D) -> Result<BorderType, D::Error>
@@ -96,23 +95,41 @@ where
         "LightMagenta" => Ok(Color::LightMagenta),
         "LightCyan" => Ok(Color::LightCyan),
         "White" => Ok(Color::White),
-        s if s.starts_with("Rgb(") && s.ends_with(")") => {
-            let inner = &s[4..s.len() - 1];
-            let parts: Vec<&str> = inner.split(',').collect();
-            if parts.len() == 3 {
-                let r = parts[0].parse().map_err(serde::de::Error::custom)?;
-                let g = parts[1].parse().map_err(serde::de::Error::custom)?;
-                let b = parts[2].parse().map_err(serde::de::Error::custom)?;
-                Ok(Color::Rgb(r, g, b))
+        // rgb color in format "r,g,b"
+        s if s.chars().next().unwrap_or('a').is_numeric() => {
+            // Indexed color
+            if s.contains(",") {
+                let parts: Vec<&str> = s.split(',').collect();
+                if parts.len() == 3 {
+                    let r = parts[0].parse().map_err(serde::de::Error::custom)?;
+                    let g = parts[1].parse().map_err(serde::de::Error::custom)?;
+                    let b = parts[2].parse().map_err(serde::de::Error::custom)?;
+                    return Ok(Color::Rgb(r, g, b));
+                } else {
+                    return Err(serde::de::Error::custom("Invalid RGB format"));
+                }
             } else {
-                Err(serde::de::Error::custom("Invalid RGB format"))
+                return Ok(Color::Red); // fallback for single number
             }
+            // Ok(Color::Indexed(index))
         }
-        s if s.starts_with("Indexed(") && s.ends_with(")") => {
-            let inner = &s[8..s.len() - 1];
-            let index = inner.parse().map_err(serde::de::Error::custom)?;
-            Ok(Color::Indexed(index))
-        }
+        // _s if s.starts_with("Rgb(") && s.ends_with(")") => {
+        //     let inner = &s[4..s.len() - 1];
+        //     let parts: Vec<&str> = inner.split(',').collect();
+        //     if parts.len() == 3 {
+        //         let r = parts[0].parse().map_err(serde::de::Error::custom)?;
+        //         let g = parts[1].parse().map_err(serde::de::Error::custom)?;
+        //         let b = parts[2].parse().map_err(serde::de::Error::custom)?;
+        //         Ok(Color::Rgb(r, g, b))
+        //     } else {
+        //         Err(serde::de::Error::custom("Invalid RGB format"))
+        //     }
+        // }
+        // s if s.starts_with("Indexed(") && s.ends_with(")") => {
+        //     let inner = &s[8..s.len() - 1];
+        //     let index = inner.parse().map_err(serde::de::Error::custom)?;
+        //     Ok(Color::Indexed(index))
+        // }
         _ => Ok(Color::Reset), // default fallback
     }
 }
