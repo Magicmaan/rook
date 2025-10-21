@@ -30,6 +30,9 @@ impl Application {
 
         let mut cmd = std::process::Command::new(command);
         cmd.args(args);
+        // prevent the child process from printing to stdout
+        cmd.stdout(std::process::Stdio::null());
+        cmd.stderr(std::process::Stdio::null());
 
         if self.terminal {
             // if terminal is true, run in a terminal emulator

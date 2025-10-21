@@ -76,7 +76,9 @@ impl UIState {
     pub fn get_results(&self) -> &Vec<Result> {
         &self.result_box_state.results
     }
-
+    pub fn set_search_post_fix(&mut self, query: String) {
+        self.search_box_state.post_fix = query;
+    }
     pub fn set_search_query(&mut self, query: String) {
         self.search_box_state.query = query;
     }

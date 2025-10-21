@@ -83,6 +83,7 @@ impl Module for ApplicationModule {
             .ui
             .set_search_query(self.state.search.query.clone());
 
+        // self.state.ui.set_search_post_fix("boom".to_string());
         &mut self.state.ui
     }
 }

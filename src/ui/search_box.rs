@@ -14,6 +14,7 @@ use std::time::SystemTime;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct SearchBoxState {
+    pub post_fix: String,
     pub query: String,
     pub caret_position: usize,
 }
@@ -113,6 +114,11 @@ impl StatefulWidget for SearchBox {
                 Style::default().fg(search_theme.caret.unwrap()),
             ),
             Span::styled(after_caret, Style::default().fg(search_theme.text.unwrap())),
+            Span::raw(" "),
+            Span::styled(
+                state.post_fix.as_str(),
+                Style::default().fg(search_theme.text_muted.unwrap()),
+            ),
             Span::styled(
                 " ".repeat(search_settings.pre_query.chars().count()),
                 Style::default().fg(Color::Reset),
