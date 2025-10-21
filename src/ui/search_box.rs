@@ -1,4 +1,8 @@
-use crate::settings::settings::{Settings, UISearchSettings};
+use crate::{
+    model::module::UISection,
+    settings::settings::{Settings, UISearchSettings},
+};
+use ratatui::widgets::Borders;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -6,21 +10,29 @@ use ratatui::{
     text::{Line, Span},
     widgets::{Block, Padding, Paragraph, StatefulWidget, Widget},
 };
-use ratatui::{layout::Alignment, widgets::Borders};
 use std::time::SystemTime;
-#[derive(Clone)]
-pub struct SearchBox<'a> {
-    settings: &'a Settings,
+
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+pub struct SearchBoxState {
+    pub query: String,
+    pub caret_position: usize,
 }
 
-impl<'a> SearchBox<'a> {
-    pub fn new(settings: &'a Settings) -> Self {
-        Self { settings }
+#[derive(Clone)]
+pub struct SearchBox {
+    settings: Settings,
+}
+
+impl SearchBox {
+    pub fn new(settings: &Settings) -> Self {
+        Self {
+            settings: settings.clone(),
+        }
     }
 }
 
-impl<'a> StatefulWidget for SearchBox<'a> {
-    type State = crate::model::module::ModuleState;
+impl StatefulWidget for SearchBox {
+    type State = SearchBoxState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let theme = self.settings.ui.theme.clone();
@@ -28,9 +40,11 @@ impl<'a> StatefulWidget for SearchBox<'a> {
         let gap = self.settings.ui.layout.gap;
         let search_settings: UISearchSettings = self.settings.ui.search.clone();
 
+        let padding = self.settings.ui.search.padding;
         let block = Block::bordered()
-            .title("Rook")
-            .title_alignment(Alignment::Center)
+            .title(self.settings.ui.layout.title.as_str())
+            .title_alignment(self.settings.ui.layout.title_alignment)
+            .title_style(Style::default().fg(self.settings.ui.theme.title))
             .border_type(theme.get_border_type("search"))
             // if no gap, remove bottom border
             .borders(if gap > 0 {
@@ -38,12 +52,30 @@ impl<'a> StatefulWidget for SearchBox<'a> {
             } else {
                 Borders::TOP | Borders::LEFT | Borders::RIGHT
             })
-            .padding(Padding::new(2, 2, 0, 0))
-            .style(theme.get_default_style());
+            .border_style(
+                self.settings
+                    .ui
+                    .theme
+                    .get_default_border_style(Some(UISection::Search)),
+            )
+            .padding(Padding::new(
+                padding.saturating_mul(2).max(2),
+                padding.saturating_mul(2).max(2),
+                padding,
+                padding,
+            ))
+            .style(theme.get_default_style(Some(UISection::Search)));
         let inner_area = block.inner(area);
 
+        // render container
+        block.render(area, buf);
+
+        //
+        // Search Box text rendering
+        //
+
         // splice the query to insert the caret
-        let caret_query = state.search.query.clone();
+        let caret_query = state.query.clone();
         let (before_caret, after_caret) =
             caret_query.split_at(state.caret_position.min(caret_query.len()));
 
@@ -74,19 +106,23 @@ impl<'a> StatefulWidget for SearchBox<'a> {
             // query span with caret
             Span::styled(
                 before_caret,
-                Style::default().fg(search_theme.caret.unwrap()),
+                Style::default().fg(search_theme.text.unwrap()),
             ),
             Span::styled(
                 if flash_caret { " " } else { &caret },
-                Style::default().fg(Color::Yellow),
+                Style::default().fg(search_theme.caret.unwrap()),
             ),
-            Span::styled(after_caret, Style::default().fg(Color::White)),
+            Span::styled(after_caret, Style::default().fg(search_theme.text.unwrap())),
+            Span::styled(
+                " ".repeat(search_settings.pre_query.chars().count()),
+                Style::default().fg(Color::Reset),
+            ),
         ]);
 
-        // paragraph.render(inner_area, buf);
-        block.render(area, buf);
+        let paragraph = Paragraph::new(line)
+            .alignment(self.settings.ui.search.text_alignment)
+            .style(Style::default().bg(search_theme.background.unwrap()));
 
-        let paragraph = Paragraph::new(line).style(theme.get_default_style());
         paragraph.render(inner_area, buf);
 
         // paragraph.render(inner_area, buf);

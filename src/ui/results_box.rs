@@ -1,9 +1,9 @@
-use crate::model::module::ModuleState;
+use crate::model::module::{Result, UISection};
 
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::number_to_icon;
 use ratatui::symbols;
-use ratatui::widgets::Borders;
+use ratatui::widgets::{Borders, ListState};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -12,15 +12,27 @@ use ratatui::{
     widgets::{Block, List, ListItem, Padding, StatefulWidget, Widget},
 };
 
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+pub struct ResultBoxState {
+    pub results: Vec<Result>,
+    pub previous_results: Vec<Result>,
 
-#[derive(Clone)]
-pub struct ResultsBox<'a> {
-    settings: &'a Settings,
+    pub executing_item: Option<usize>,
+    pub list_state: ListState,
+    pub last_search_tick: u64,
+    pub tick: u64,
 }
 
-impl<'a> ResultsBox<'a> {
-    pub fn new(settings: &'a Settings) -> Self {
-        Self { settings }
+#[derive(Clone)]
+pub struct ResultsBox {
+    settings: Settings,
+}
+
+impl ResultsBox {
+    pub fn new(settings: &Settings) -> Self {
+        Self {
+            settings: settings.clone(),
+        }
     }
 
     fn multiply_color(&self, color: Color, mult: f64) -> Color {
@@ -36,7 +48,7 @@ impl<'a> ResultsBox<'a> {
     }
 
     fn calculate_color_fade(&self, start_color: Color, position: usize, height: usize) -> Color {
-        if let Color::Rgb(r, g, b) = start_color {
+        if let Color::Rgb(_, _, _) = start_color {
             log::trace!(
                 "Calculating color fade for position {} of {}",
                 position,
@@ -51,11 +63,7 @@ impl<'a> ResultsBox<'a> {
                         0.25,
                         (diff as f32 / height as f32).min(0.1).max(1.0),
                     );
-                Color::Rgb(
-                    (brightness * r as f32) as u8,
-                    (brightness * g as f32) as u8,
-                    (brightness * b as f32) as u8,
-                )
+                self.multiply_color(start_color, brightness as f64)
             } else {
                 start_color
             }
@@ -84,8 +92,8 @@ impl<'a> ResultsBox<'a> {
     }
 }
 
-impl<'a> StatefulWidget for ResultsBox<'a> {
-    type State = ModuleState;
+impl StatefulWidget for ResultsBox {
+    type State = ResultBoxState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let results_settings: UIResultsSettings = self.settings.ui.results.clone();
@@ -99,6 +107,7 @@ impl<'a> StatefulWidget for ResultsBox<'a> {
         // ├───────┤
         // │       │
         let gap = self.settings.ui.layout.gap;
+        let padding = results_settings.padding;
         let borders = self
             .settings
             .ui
@@ -113,45 +122,40 @@ impl<'a> StatefulWidget for ResultsBox<'a> {
         };
         let block = Block::bordered()
             .border_set(if gap > 0 { borders } else { collapsed_borders })
-            .border_style(Style::default())
+            .border_style(
+                self.settings
+                    .ui
+                    .theme
+                    .get_default_border_style(Some(UISection::Results)),
+            )
             // .border_type(theme.get_border_type("results"))
             .borders(Borders::ALL)
             // .title("Search")
-            .padding(Padding::new(2, 2, 1, 1));
+            .padding(Padding::new(
+                padding.saturating_mul(2).max(1),
+                padding.saturating_mul(2).max(1),
+                padding,
+                padding,
+            ))
+            .style(theme.get_default_style(Some(UISection::Results)));
 
         // block.render(area, buf);
         let inner_area = block.inner(area);
 
         let available_height = inner_area.height as usize;
 
-        // some random easing function to slow down the fade
-        let time_since_search = ((state.tick.saturating_sub(state.search.last_search_tick) as f32)
-            .powf(2.0)
-            .powf(1.5)
-            / 8.0) as u64;
-
-        let mut results: Vec<(u16, usize)> = state.search.results.clone();
-
-        if self.settings.ui.results.fade_previous_results
-            && time_since_search < results.len() as u64
-        {
-            if results.len() > 0 {
-                let _ = results.split_off((time_since_search as usize).max(results.len() - 1));
-                let mut previous = state.search.previous_results.clone();
-                if previous.len() > 0 {
-                    previous = previous.split_off(time_since_search as usize);
-                }
-
-                results.extend_from_slice(&previous)
-            }
-        }
+        let results: &Vec<(Result)> = &state.results;
 
         let mut i = 1;
         let items = results
             .iter()
-            .map(|(score, idx)| {
+            // .map(|(score, idx)| {
+            .map(|r| {
+                let result = &r.result;
+                let score = &r.score;
+
                 // space out sections to fit the width
-                let app = &state.data.applications[*idx];
+                // let app = &state.data.applications[*idx];
 
                 let score_text = format!("{}", score);
 
@@ -172,7 +176,7 @@ impl<'a> StatefulWidget for ResultsBox<'a> {
                 } else {
                     name_width = name_width.saturating_sub(prepend_icon.len() + 1); // +1 for space
                 }
-                let padded_name = format!("{:<width$}", app.name, width = name_width);
+                let padded_name = format!("{:<width$}", result, width = name_width);
 
                 let mut text_color = results_theme.text.unwrap();
                 let mut muted_color = results_theme.text_muted.unwrap();
@@ -181,32 +185,20 @@ impl<'a> StatefulWidget for ResultsBox<'a> {
                 if results_settings.fade_color && available_height >= 10 {
                     log::trace!(
                         "Applying color fade for item {} at position {} of {}",
-                        app.name,
-                        i.saturating_sub(state.result_list_state.offset()),
+                        result,
+                        i.saturating_sub(state.list_state.offset()),
                         available_height
                     );
                     text_color = self.calculate_color_fade(
                         text_color,
-                        i.saturating_sub(state.result_list_state.offset()),
+                        i.saturating_sub(state.list_state.offset()),
                         available_height,
                     );
                     muted_color = self.calculate_color_fade(
                         muted_color,
-                        i.saturating_sub(state.result_list_state.offset()),
+                        i.saturating_sub(state.list_state.offset()),
                         available_height,
                     );
-                }
-
-                if self.settings.ui.results.fade_previous_results {
-                    if i == time_since_search as usize {
-                        text_color = Color::Rgb(0, 0, 255); // highlight newest result in blue
-                    } else if i > time_since_search as usize {
-                        text_color = self.multiply_color(
-                            text_color,
-                            1.0 - (time_since_search.max(10) as f64 / 10.0),
-                        );
-                        muted_color = self.multiply_color(muted_color, 0.25);
-                    }
                 }
 
                 // construct line
@@ -231,10 +223,10 @@ impl<'a> StatefulWidget for ResultsBox<'a> {
         let list = List::new(items)
             .style(Style::default().fg(Color::White))
             .highlight_symbol("")
-            .highlight_style(Style::default().bg(Color::Blue));
+            .highlight_style(Style::default().bg(results_theme.highlight.unwrap()));
 
-        // list.render(inner_area, buf);
-        StatefulWidget::render(list, inner_area, buf, &mut state.result_list_state);
         block.render(area, buf);
+        // list.render(inner_area, buf);
+        StatefulWidget::render(list, inner_area, buf, &mut state.list_state);
     }
 }

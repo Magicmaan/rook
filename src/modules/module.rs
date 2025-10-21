@@ -1,8 +1,4 @@
-
-use crate::{
-    events::Event,
-    model::model::Model,
-};
+use crate::model::module::UIState;
 
 /// A trait that defines the core functionality for application modules.
 ///
@@ -14,8 +10,9 @@ use crate::{
 ///
 /// * `State` - The type representing the internal state of the module
 pub trait Module {
-    /// The type representing the internal state of this module
     type State;
+    type Data;
+    /// The type representing the internal state of this module
 
     /// Updates the module based on incoming events and application state.
     ///
@@ -26,7 +23,6 @@ pub trait Module {
     ///
     /// * `events` - A vector of events to process
     /// * `app_state` - Mutable reference to the application's global state model
-    fn update(&mut self, events: &Vec<Event>, app_state: &mut Model);
 
     /// Handles navigation-related events for the module.
     ///
@@ -36,7 +32,7 @@ pub trait Module {
     /// # Arguments
     ///
     /// * `event` - The navigation event to process
-    fn update_navigation(&mut self, event: &Event);
+    // fn update_navigation(&mut self, event: &Event);
 
     /// Handles search-related events for the module.
     ///
@@ -50,8 +46,10 @@ pub trait Module {
     ///   - `Remove(isize)` - Remove characters from the search query
     ///   - `Execute` - Execute the search with the current query
     ///   - `Clear` - Clear the current search query
-    fn update_search(&mut self, event: &Event);
 
+    fn on_search(&mut self, query: &str);
+
+    fn on_execute(&mut self);
     /// Renders the module's UI elements to the terminal frame.
     ///
     /// This method is responsible for drawing the module's interface within
@@ -69,7 +67,9 @@ pub trait Module {
     ///   - `chunks[3]` - gap between results and bottom (if any) (don't render anything here)
     ///   - `chunks[4]` - Bottom area for status bars or additional info
     ///
-    fn render(&mut self, frame: &mut ratatui::Frame, chunks: std::rc::Rc<[ratatui::layout::Rect]>);
+    fn render(&mut self) -> &mut UIState;
+
+    fn get_state(&mut self) -> &mut Self::State;
 }
 
 // pub trait Update {

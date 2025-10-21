@@ -1,5 +1,6 @@
 use config::Config;
 use dirs::config_dir;
+use ratatui::layout::Alignment;
 use ratatui::style::Style;
 use ratatui::{style::Color, widgets::BorderType};
 use serde::{Deserialize, Serialize};
@@ -7,8 +8,10 @@ use std::path::PathBuf;
 
 use crate::model::module::UISection;
 use crate::settings::serialise::{
-    deserialize_border_type, deserialize_color, deserialize_optional_border_type,
-    deserialize_optional_color, serialize_optional_border_type,
+    deserialize_alignment, deserialize_border_type, deserialize_color,
+    deserialize_optional_border_type, deserialize_optional_color, serialize_alignment,
+    serialize_border_type, serialize_color, serialize_optional_border_type,
+    serialize_optional_color,
 };
 use crate::ui::util::IconMode;
 
@@ -16,7 +19,7 @@ use crate::ui::util::IconMode;
 
 pub struct KeybindSettings {
     pub quit: String,
-    pub search: String,
+    pub execute_search: String,
     pub left: String,
     pub right: String,
     pub up: String,
@@ -26,7 +29,7 @@ impl Default for KeybindSettings {
     fn default() -> Self {
         Self {
             quit: "q".into(),
-            search: "enter".into(),
+            execute_search: "enter".into(),
             left: "left".into(),
             right: "right".into(),
             up: "up".into(),
@@ -41,6 +44,12 @@ pub struct UISearchSettings {
     pub caret_text: String,    // caret character
     pub caret_blink_rate: u64, // in ms
     pub caret_visible: bool, // if disabled, remove blinking, caret, and care movement    // if true, search as you type
+    #[serde(
+        deserialize_with = "deserialize_alignment",
+        serialize_with = "serialize_alignment"
+    )]
+    pub text_alignment: Alignment, // alignment of the text: left, center, right
+    pub padding: u16,        // padding inside the search box
 }
 impl Default for UISearchSettings {
     fn default() -> Self {
@@ -49,6 +58,8 @@ impl Default for UISearchSettings {
             caret_text: "▋".into(),
             caret_blink_rate: 500,
             caret_visible: true,
+            text_alignment: Alignment::Left,
+            padding: 0,
         }
     }
 }
@@ -61,7 +72,7 @@ pub struct UIResultsSettings {
     pub number_mode: IconMode,     // icon mode for numbers
     pub loopback: bool,            // whether to loop back when navigating results
     pub fade_color: bool,          // whether to fade text color towards the bottom
-    pub fade_previous_results: bool,
+    pub padding: u16,              // padding inside the results box
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
@@ -73,7 +84,7 @@ impl Default for UIResultsSettings {
             number_mode: IconMode::Small, // icon mode for numbers
             loopback: true,               // loop back when navigating results
             fade_color: true,             // fade text color towards the bottom. REQUIRES RGB COLORS
-            fade_previous_results: false,
+            padding: 1,
         }
     }
 }
@@ -99,40 +110,83 @@ impl Default for UITooltipSettings {
 pub struct UILayoutSettings {
     pub sections: Vec<UISection>, // order of layout sections
     pub gap: u16,                 // gap between sections
+    pub padding: u16,             // padding around the entire UI
+    pub title: String,            // title of the application
+    #[serde(
+        deserialize_with = "deserialize_alignment",
+        serialize_with = "serialize_alignment"
+    )]
+    pub title_alignment: Alignment, // alignment of the title
 }
 impl Default for UILayoutSettings {
     fn default() -> Self {
         Self {
             sections: vec![UISection::Search, UISection::Results, UISection::Tooltip],
             gap: 1,
+            padding: 1,
+            title: "Rook".into(),
+            title_alignment: Alignment::Center,
         }
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ThemeSettings {
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub background: Color,
-    #[serde(deserialize_with = "deserialize_color")]
-    pub foreground: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub highlight: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub muted: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub muted_dark: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub accent: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub border: Color,
 
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub text: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub text_muted: Color,
-    #[serde(deserialize_with = "deserialize_color")]
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
     pub text_accent: Color,
+    #[serde(
+        deserialize_with = "deserialize_color",
+        serialize_with = "serialize_color"
+    )]
+    pub title: Color,
 
-    #[serde(deserialize_with = "deserialize_border_type")]
+    #[serde(
+        deserialize_with = "deserialize_border_type",
+        serialize_with = "serialize_border_type"
+    )]
     pub border_type: BorderType,
 
     search: SearchThemeSettings,
@@ -142,29 +196,60 @@ pub struct ThemeSettings {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[allow(unused)]
 pub struct SearchThemeSettings {
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub background: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
-    pub foreground: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub highlight: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub muted: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub muted_dark: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub accent: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub caret: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub border: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub pre_query_text: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text_muted: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text_accent: Option<Color>,
 
     #[serde(
@@ -177,26 +262,52 @@ pub struct SearchThemeSettings {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[allow(unused)]
 pub struct ResultsThemeSettings {
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub background: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
-    pub foreground: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub highlight: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub muted: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub muted_dark: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub accent: Option<Color>,
 
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub border: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text_muted: Option<Color>,
-    #[serde(deserialize_with = "deserialize_optional_color")]
+    #[serde(
+        deserialize_with = "deserialize_optional_color",
+        serialize_with = "serialize_optional_color"
+    )]
     pub text_accent: Option<Color>,
 
     #[serde(
@@ -210,7 +321,6 @@ impl Default for ThemeSettings {
     fn default() -> Self {
         Self {
             background: Color::Reset,
-            foreground: Color::White,
             highlight: Color::Yellow,
             muted: Color::DarkGray,
             muted_dark: Color::Black,
@@ -221,11 +331,11 @@ impl Default for ThemeSettings {
             text: Color::Rgb(200, 200, 200),
             text_muted: Color::Rgb(150, 150, 150),
             text_accent: Color::Cyan,
+            title: Color::White,
             border_type: BorderType::Rounded,
 
             search: SearchThemeSettings {
                 background: None,
-                foreground: None,
                 highlight: None,
                 muted: None,
                 muted_dark: None,
@@ -241,7 +351,6 @@ impl Default for ThemeSettings {
 
             results: ResultsThemeSettings {
                 background: None,
-                foreground: None,
                 highlight: None,
                 muted: None,
                 muted_dark: None,
@@ -269,7 +378,6 @@ impl ThemeSettings {
     pub fn get_search_colors(&self) -> SearchThemeSettings {
         SearchThemeSettings {
             background: Some(self.search.background.unwrap_or(self.background.clone())),
-            foreground: Some(self.search.foreground.unwrap_or(self.foreground.clone())),
             highlight: Some(self.search.highlight.unwrap_or(self.highlight.clone())),
             muted: Some(self.search.muted.unwrap_or(self.muted.clone())),
             muted_dark: Some(self.search.muted_dark.unwrap_or(self.muted_dark.clone())),
@@ -290,7 +398,6 @@ impl ThemeSettings {
     pub fn get_results_colors(&self) -> ResultsThemeSettings {
         ResultsThemeSettings {
             background: Some(self.results.background.unwrap_or(self.background.clone())),
-            foreground: Some(self.results.foreground.unwrap_or(self.foreground.clone())),
             highlight: Some(self.results.highlight.unwrap_or(self.highlight.clone())),
             muted: Some(self.results.muted.unwrap_or(self.muted.clone())),
             muted_dark: Some(self.results.muted_dark.unwrap_or(self.muted_dark.clone())),
@@ -303,169 +410,38 @@ impl ThemeSettings {
         }
     }
 
-    // pub fn get_color(&self, color_name: &str, section: Option<UISection>) -> Color {
-    //     let colors = self.get_colors(section);
-    //     *colors.get(color_name).unwrap_or(&Color::White)
-    // }
+    pub fn get_default_style(&self, section: Option<UISection>) -> Style {
+        match section {
+            Some(UISection::Search) => Style::default()
+                .bg(self.search.background.unwrap_or(self.background.clone()))
+                .fg(self.search.text.unwrap_or(self.text.clone())),
 
-    // pub fn get_colors(&self, section: Option<UISection>) -> HashMap<&str, Color> {
-    //     let mut colors: HashMap<&str, Color> = HashMap::new();
-    //     match section {
-    //         Some(UISection::Search) => {
-    //             colors.insert(
-    //                 "background",
-    //                 self.search
-    //                     .background
-    //                     .clone()
-    //                     .unwrap_or(self.background.clone()),
-    //             );
-    //             colors.insert(
-    //                 "foreground",
-    //                 self.search
-    //                     .foreground
-    //                     .clone()
-    //                     .unwrap_or(self.foreground.clone()),
-    //             );
-    //             colors.insert(
-    //                 "highlight",
-    //                 self.search
-    //                     .highlight
-    //                     .clone()
-    //                     .unwrap_or(self.highlight.clone()),
-    //             );
-    //             colors.insert(
-    //                 "muted",
-    //                 self.search.muted.clone().unwrap_or(self.muted.clone()),
-    //             );
-    //             colors.insert(
-    //                 "muted_dark",
-    //                 self.search
-    //                     .muted_dark
-    //                     .clone()
-    //                     .unwrap_or(self.muted_dark.clone()),
-    //             );
+            Some(UISection::Results) => Style::default()
+                .bg(self.results.background.unwrap_or(self.background.clone()))
+                .fg(self.results.text.unwrap_or(self.text.clone())),
 
-    //             colors.insert(
-    //                 "accent",
-    //                 self.search.accent.clone().unwrap_or(self.accent.clone()),
-    //             );
+            _ => Style::default()
+                .bg(self.background.clone())
+                .fg(self.text.clone()),
+        }
+    }
 
-    //             colors.insert(
-    //                 "border",
-    //                 self.search.border.clone().unwrap_or(self.border.clone()),
-    //             );
-    //             colors.insert(
-    //                 "pre_query_text",
-    //                 self.search
-    //                     .pre_query_text
-    //                     .clone()
-    //                     .unwrap_or(self.text.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text",
-    //                 self.search.text.clone().unwrap_or(self.text.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text_muted",
-    //                 self.search
-    //                     .text_muted
-    //                     .clone()
-    //                     .unwrap_or(self.text_muted.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text_accent",
-    //                 self.search
-    //                     .text_accent
-    //                     .clone()
-    //                     .unwrap_or(self.text_accent.clone()),
-    //             );
-    //         }
-    //         Some(UISection::Results) => {
-    //             colors.insert(
-    //                 "background",
-    //                 self.results
-    //                     .background
-    //                     .clone()
-    //                     .unwrap_or(self.background.clone()),
-    //             );
-    //             colors.insert(
-    //                 "foreground",
-    //                 self.results
-    //                     .foreground
-    //                     .clone()
-    //                     .unwrap_or(self.foreground.clone()),
-    //             );
-    //             colors.insert(
-    //                 "highlight",
-    //                 self.results
-    //                     .highlight
-    //                     .clone()
-    //                     .unwrap_or(self.highlight.clone()),
-    //             );
-    //             colors.insert(
-    //                 "muted",
-    //                 self.results.muted.clone().unwrap_or(self.muted.clone()),
-    //             );
-    //             colors.insert(
-    //                 "muted_dark",
-    //                 self.results
-    //                     .muted_dark
-    //                     .clone()
-    //                     .unwrap_or(self.muted_dark.clone()),
-    //             );
-    //             colors.insert(
-    //                 "accent",
-    //                 self.results.accent.clone().unwrap_or(self.accent.clone()),
-    //             );
+    pub fn get_default_border_style(&self, section: Option<UISection>) -> Style {
+        match section {
+            Some(UISection::Search) => {
+                Style::default().fg(self.search.border.unwrap_or(self.border.clone()))
+            }
 
-    //             colors.insert(
-    //                 "border",
-    //                 self.results.border.clone().unwrap_or(self.border.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text",
-    //                 self.results.text.clone().unwrap_or(self.text.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text_muted",
-    //                 self.results
-    //                     .text_muted
-    //                     .clone()
-    //                     .unwrap_or(self.text_muted.clone()),
-    //             );
-    //             colors.insert(
-    //                 "text_accent",
-    //                 self.results
-    //                     .text_accent
-    //                     .clone()
-    //                     .unwrap_or(self.text_accent.clone()),
-    //             );
-    //         }
-    //         _ => {
-    //             colors.insert("background", self.background.clone());
-    //             colors.insert("foreground", self.foreground.clone());
-    //             colors.insert("highlight", self.highlight.clone());
-    //             colors.insert("muted", self.muted.clone());
-    //             colors.insert("muted_dark", self.muted_dark.clone());
-    //             colors.insert("accent", self.accent.clone());
-    //             colors.insert("border", self.border.clone());
-    //             colors.insert("text", self.text.clone());
-    //             colors.insert("text_muted", self.text_muted.clone());
-    //             colors.insert("text_accent", self.text_accent.clone());
-    //         }
-    //     }
+            Some(UISection::Results) => {
+                Style::default().fg(self.results.border.unwrap_or(self.border.clone()))
+            }
 
-    //     colors
-    // }
-
-    pub fn get_default_style(&self) -> Style {
-        Style::default()
-            .bg(self.background.clone())
-            .fg(self.foreground.clone())
+            _ => Style::default().fg(self.border.clone()),
+        }
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UISettings {
     pub layout: UILayoutSettings,
     pub search: UISearchSettings,
@@ -486,7 +462,7 @@ impl Default for SearchSettings {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Settings {
     // Add your settings fields here
     pub search: SearchSettings,
@@ -505,7 +481,7 @@ impl Settings {
         } else {
             println!("no config file found at {:?}", config_file);
             println!("generating default settings");
-            Self::populate_settings(config_file.clone());
+            // Self::write_default_settings(config_file.clone());
             Self::read_settings(config_file);
         }
 
@@ -514,13 +490,24 @@ impl Settings {
 
     fn read_settings(_config_file: PathBuf) -> Self {
         log::info!("Reading settings from {:?}", _config_file);
+
         let settings = Config::builder()
             .add_source(config::File::with_name(_config_file.to_str().unwrap()))
+            // add default settings as fallback (errors if fields are missing)
+            .add_source(config::File::from_str(
+                &toml::to_string(&SearchSettings::default()).unwrap(),
+                config::FileFormat::Toml,
+            ))
+            .add_source(config::File::from_str(
+                &toml::to_string(&UISettings::default()).unwrap(),
+                config::FileFormat::Toml,
+            ))
+            .add_source(config::File::from_str(
+                &toml::to_string(&KeybindSettings::default()).unwrap(),
+                config::FileFormat::Toml,
+            ))
             .build()
-            .unwrap_or_else(|e| {
-                log::error!("Could not build config from file {:?}: {}", _config_file, e);
-                panic!("Could not build config from file {:?}: {}", _config_file, e)
-            });
+            .expect("Could not build config from file");
 
         let structure: Settings = settings.try_deserialize().unwrap_or_else(|e| {
             log::error!(
@@ -528,10 +515,7 @@ impl Settings {
                 _config_file,
                 e
             );
-            panic!(
-                "Could not deserialize config file {:?} into Settings struct: {}",
-                _config_file, e
-            )
+            Settings::default()
         });
         log::trace!("Deserialized settings: {:?}", structure);
 
@@ -539,18 +523,7 @@ impl Settings {
         structure
     }
 
-    fn populate_settings(config_file: PathBuf) {
-        // write default settings to file
-        let default_settings_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("src")
-            .join("settings")
-            .join("default_settings.toml");
-        if !default_settings_path.exists() {
-            panic!(
-                "Default settings file not found at {:?}",
-                default_settings_path
-            );
-        }
+    fn write_default_settings(&self, config_file: PathBuf) {
         std::fs::create_dir_all(
             config_file
                 .parent()
@@ -558,33 +531,40 @@ impl Settings {
         )
         .expect("Could not create config directory");
 
-        std::fs::copy(&default_settings_path, &config_file)
-            .expect("Could not copy default settings");
+        // create default settings string from serializing self
+        let string = toml::to_string_pretty(self).expect("Could not serialize default settings");
+        std::fs::write(&config_file, string).expect("Could not write default settings to file");
+
+        // std::fs::copy(&default_settings_path, &config_file)
+        //     .expect("Could not copy default settings");
     }
 }
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+    use ftail::Ftail;
+    use log::LevelFilter;
 
     #[test]
     fn test_write_default_settings() {
         let config_path = config_dir().expect("Could not find config directory");
         let config_file = config_path.join("rook").join("settings.toml");
-        std::fs::remove_file(&config_file).ok(); // remove if exists
-        Settings::populate_settings(config_file.clone());
-        assert!(config_file.exists());
+        let settings = Settings::default();
+        settings.write_default_settings(config_file.clone());
+
+        log::info!("Settings struct: {:#?}", settings);
     }
 
     #[test]
     fn test_read_settings() {
+        Ftail::new().console(LevelFilter::Trace).init().unwrap();
         let config_path = config_dir().expect("Could not find config directory");
         let config_file = config_path.join("rook").join("settings.toml");
         let settings = Settings::read_settings(config_file);
 
         // Option A: deserialize to a generic JSON-like value to inspect nested structure
         let value = settings;
-        println!("Settings struct: {:#?}", value);
+        log::info!("Settings struct: {:#?}", value);
     }
 }

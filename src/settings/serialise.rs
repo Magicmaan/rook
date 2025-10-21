@@ -39,7 +39,7 @@ where
             };
             serializer.serialize_some(s)
         }
-        None => serializer.serialize_none(),
+        None => serializer.serialize_str(""),
     }
 }
 
@@ -51,11 +51,11 @@ where
 {
     let opt = Option::<String>::deserialize(deserializer)?;
     match opt {
-        Some(s) => match s.as_str() {
-            "Plain" => Ok(Some(BorderType::Plain)),
-            "Rounded" => Ok(Some(BorderType::Rounded)),
-            "Double" => Ok(Some(BorderType::Double)),
-            "Thick" => Ok(Some(BorderType::Thick)),
+        Some(s) => match s.to_lowercase().as_str() {
+            "plain" => Ok(Some(BorderType::Plain)),
+            "rounded" => Ok(Some(BorderType::Rounded)),
+            "double" => Ok(Some(BorderType::Double)),
+            "thick" => Ok(Some(BorderType::Thick)),
             _ => Ok(Some(BorderType::Rounded)), // default fallback
         },
         None => Ok(None),
@@ -67,25 +67,25 @@ where
     D: Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
-    println!("Deserializing color: {}", s);
-    match s.as_str() {
-        "Reset" => Ok(Color::Reset),
-        "Black" => Ok(Color::Black),
-        "Red" => Ok(Color::Red),
-        "Green" => Ok(Color::Green),
-        "Yellow" => Ok(Color::Yellow),
-        "Blue" => Ok(Color::Blue),
-        "Magenta" => Ok(Color::Magenta),
-        "Cyan" => Ok(Color::Cyan),
-        "Gray" => Ok(Color::Gray),
-        "DarkGray" => Ok(Color::DarkGray),
-        "LightRed" => Ok(Color::LightRed),
-        "LightGreen" => Ok(Color::LightGreen),
-        "LightYellow" => Ok(Color::LightYellow),
-        "LightBlue" => Ok(Color::LightBlue),
-        "LightMagenta" => Ok(Color::LightMagenta),
-        "LightCyan" => Ok(Color::LightCyan),
-        "White" => Ok(Color::White),
+    log::info!("Deserializing color: {}", s);
+    match s.to_lowercase().as_str() {
+        "reset" => Ok(Color::Reset),
+        "black" => Ok(Color::Black),
+        "red" => Ok(Color::Red),
+        "green" => Ok(Color::Green),
+        "yellow" => Ok(Color::Yellow),
+        "blue" => Ok(Color::Blue),
+        "magenta" => Ok(Color::Magenta),
+        "cyan" => Ok(Color::Cyan),
+        "gray" => Ok(Color::Gray),
+        "darkgray" => Ok(Color::DarkGray),
+        "lightred" => Ok(Color::LightRed),
+        "lightgreen" => Ok(Color::LightGreen),
+        "lightyellow" => Ok(Color::LightYellow),
+        "lightblue" => Ok(Color::LightBlue),
+        "lightmagenta" => Ok(Color::LightMagenta),
+        "lightcyan" => Ok(Color::LightCyan),
+        "white" => Ok(Color::White),
         // rgb color in format "r,g,b"
         s if s.chars().next().unwrap_or('a').is_numeric() => {
             // Indexed color
@@ -104,23 +104,6 @@ where
             }
             // Ok(Color::Indexed(index))
         }
-        // _s if s.starts_with("Rgb(") && s.ends_with(")") => {
-        //     let inner = &s[4..s.len() - 1];
-        //     let parts: Vec<&str> = inner.split(',').collect();
-        //     if parts.len() == 3 {
-        //         let r = parts[0].parse().map_err(serde::de::Error::custom)?;
-        //         let g = parts[1].parse().map_err(serde::de::Error::custom)?;
-        //         let b = parts[2].parse().map_err(serde::de::Error::custom)?;
-        //         Ok(Color::Rgb(r, g, b))
-        //     } else {
-        //         Err(serde::de::Error::custom("Invalid RGB format"))
-        //     }
-        // }
-        // s if s.starts_with("Indexed(") && s.ends_with(")") => {
-        //     let inner = &s[8..s.len() - 1];
-        //     let index = inner.parse().map_err(serde::de::Error::custom)?;
-        //     Ok(Color::Indexed(index))
-        // }
         _ => Ok(Color::Reset), // default fallback
     }
 }
@@ -131,7 +114,7 @@ where
 {
     match color {
         Some(c) => serialize_color(c, serializer),
-        None => serializer.serialize_none(),
+        None => serializer.serialize_str(""),
     }
 }
 
@@ -140,7 +123,7 @@ where
     D: Deserializer<'de>,
 {
     let opt = Option::<String>::deserialize(deserializer)?;
-    println!("Deserializing optional color: {:?}", opt);
+    log::info!("Deserializing optional color: {:?}", opt);
     match opt {
         Some(s) if !s.is_empty() => Ok(Some(deserialize_color(
             serde::de::value::StringDeserializer::new(s),
@@ -187,9 +170,69 @@ where
         Color::LightCyan => "LightCyan",
         Color::White => "White",
         Color::Rgb(r, g, b) => {
-            return serializer.serialize_str(&format!("Rgb({},{},{})", r, g, b));
+            return serializer.serialize_str(&format!("{},{},{}", r, g, b));
         }
         Color::Indexed(i) => return serializer.serialize_str(&format!("Indexed({})", i)),
     };
     serializer.serialize_str(s)
+}
+
+pub fn serialize_alignment<S>(
+    alignment: &ratatui::layout::Alignment,
+    serializer: S,
+) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let s = match alignment {
+        ratatui::layout::Alignment::Left => "left",
+        ratatui::layout::Alignment::Center => "center",
+        ratatui::layout::Alignment::Right => "right",
+    };
+    serializer.serialize_str(s)
+}
+
+pub fn deserialize_alignment<'de, D>(
+    deserializer: D,
+) -> Result<ratatui::layout::Alignment, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    log::info!("Deserializing alignment...");
+
+    let s = String::deserialize(deserializer)?;
+    match s.to_lowercase().as_str() {
+        "left" => {
+            log::info!(
+                "Deserialized alignment from string: {} to {:?}",
+                s,
+                ratatui::layout::Alignment::Left
+            );
+            Ok(ratatui::layout::Alignment::Left)
+        }
+        "center" => {
+            log::info!(
+                "Deserialized alignment from string: {} to {:?}",
+                s,
+                ratatui::layout::Alignment::Center
+            );
+            Ok(ratatui::layout::Alignment::Center)
+        }
+        "right" => {
+            log::info!(
+                "Deserialized alignment from string: {} to {:?}",
+                s,
+                ratatui::layout::Alignment::Right
+            );
+            Ok(ratatui::layout::Alignment::Right)
+        }
+        _ => {
+            log::info!(
+                "Deserialized UNKNOWN alignment from string: {} to {:?}",
+                s,
+                ratatui::layout::Alignment::Left
+            );
+            Ok(ratatui::layout::Alignment::Left)
+        }
+    }
 }

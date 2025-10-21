@@ -2,16 +2,19 @@ use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
 
-use crate::events::process_events;
+use crate::events::{self, Event, process_events, update_navigation};
 use crate::model::model;
+use crate::model::module::ModuleState;
 use crate::modules::module::Module;
+use crate::ui::results_box::ResultsBox;
+use crate::ui::search_box::SearchBox;
 use std::rc::Rc;
 
 pub struct App {
     model: model::Model,
     settings: crate::settings::settings::Settings,
     terminal: DefaultTerminal,
-    modules: crate::modules::applications::applications::ApplicationModule,
+    modules: Box<dyn Module<State = ModuleState, Data = crate::model::module::Data>>,
 }
 
 impl App {
@@ -21,11 +24,12 @@ impl App {
         let model = model::Model::default();
         let settings = crate::settings::settings::Settings::new();
         let modules = crate::modules::applications::applications::ApplicationModule::new(&settings);
+
         Self {
             model,
             settings,
             terminal,
-            modules,
+            modules: Box::new(modules),
         }
     }
 
@@ -57,18 +61,23 @@ impl App {
             .draw(|frame| {
                 let ui_settings = &self.settings.ui;
                 let gap = self.settings.ui.layout.gap;
-
+                let padding = self.settings.ui.layout.padding;
                 let root = Block::new()
-                    .style(ui_settings.theme.get_default_style())
-                    .padding(Padding::new(2, 2, 1, 1));
-                let area = root.inner(frame.area());
+                    .style(ui_settings.theme.get_default_style(None))
+                    .padding(Padding::new(
+                        padding.saturating_mul(2),
+                        padding.saturating_mul(2),
+                        padding,
+                        padding,
+                    ));
 
+                let area = root.inner(frame.area());
                 frame.render_widget(root, frame.area());
 
-                // create layout with search box, and results
+                // create layout with search box, and result
                 // takes in gap from settings, and adds extra space in between
                 // the connection of borders is handled in results_box and search_box
-                let mut search_bar_height = 2;
+                let mut search_bar_height = 2 + ui_settings.search.padding.saturating_mul(2);
                 if gap > 0 {
                     // borders take up extra space, when no gap, their is no bottom border on search box
                     // when their is a gap, extra height must be given for centering
@@ -86,7 +95,18 @@ impl App {
                 // then allowing conditional modules
                 //i.e. if "zen" then render applications results,
                 //i.e. if "1 + 2" then render calculator results, etc.
-                self.modules.render(frame, chunks);
+                let state = self.modules.render();
+
+                frame.render_stateful_widget(
+                    SearchBox::new(&self.settings),
+                    chunks[0],
+                    &mut state.search_box_state,
+                );
+                frame.render_stateful_widget(
+                    ResultsBox::new(&self.settings),
+                    chunks[2],
+                    &mut state.result_box_state,
+                );
             })
             .unwrap();
     }
@@ -98,106 +118,80 @@ impl App {
         }
         // Update the app state
         let events = process_events(&events, &self.settings);
-        self.modules.update(&events, &mut self.model);
+        for e in events.iter() {
+            match e {
+                Event::Quit => {
+                    self.model.running_state = model::RunState::Stopped;
+                }
+                Event::Search(_) => {
+                    update_search(&e, &mut self.modules);
+                }
+                Event::Navigate(_, _) => {
+                    update_navigation(&e, &mut self.modules.as_mut().get_state(), &self.settings);
+                } // _ => {
+                //     self.modules.update(&events, &mut self.model);
+                // }
+                Event::ItemExecute => {
+                    self.modules.on_execute();
+                }
+                _ => {}
+            }
+        }
+
+        // self.modules.update(&events, &mut self.model);
     }
+}
 
-    // fn handle_key_event(&mut self, key_event: event::KeyEvent) -> Vec<Event> {
-    //     // TODO! use config to map keys to actions
-    //     let mut events = Vec::new();
-    //     match key_event.kind {
-    //         event::KeyEventKind::Press => {
-    //             events.push(Event::KeyPress(key_event));
-    //             // println!("Key Pressed: {:?}", key_event);
-    //             match key_event.code {
-    //                 event::KeyCode::Char('q') => {
-    //                     if key_event.modifiers.contains(event::KeyModifiers::CONTROL) {
-    //                         events.push(Event::Quit);
-    //                     } else {
-    //                         events.push(Event::SearchAdd('q'));
-    //                     }
-    //                 }
-    //                 event::KeyCode::Backspace => {
-    //                     events.push(Event::SearchRemove(-1));
-    //                     // if always search, execute the search event immediately
-    //                     if self.settings.search.always_search {
-    //                         events.push(Event::SearchExecute);
-    //                     }
-    //                 }
-    //                 event::KeyCode::Delete => {
-    //                     events.push(Event::SearchRemove(1));
-    //                     // if always search, execute the search event immediately
-    //                     if self.settings.search.always_search {
-    //                         events.push(Event::SearchExecute);
-    //                     }
-    //                 }
-    //                 event::KeyCode::Enter => {
-    //                     events.push(Event::ItemExecute(
-    //                         self.model.ui.result_list_state.selected().unwrap_or(0),
-    //                     ));
-    //                 }
-    //                 event::KeyCode::Esc => {
-    //                     events.push(Event::SearchCancel);
-    //                 }
-    //                 event::KeyCode::Left => {
-    //                     events.push(Event::NavigateLeft(1));
-    //                 }
-    //                 event::KeyCode::Right => {
-    //                     events.push(Event::NavigateRight(1));
-    //                 }
-    //                 event::KeyCode::Up => {
-    //                     events.push(Event::NavigateUp(1));
-    //                 }
-    //                 event::KeyCode::Down => {
-    //                     events.push(Event::NavigateDown(1));
-    //                 }
-    //                 event::KeyCode::Tab => {
-    //                     events.push(Event::NavigateDown(1));
-    //                 }
-    //                 event::KeyCode::BackTab => {
-    //                     events.push(Event::NavigateUp(1));
-    //                 }
-    //                 event::KeyCode::PageUp => {
-    //                     events.push(Event::NavigateUp(1));
-    //                 }
-    //                 event::KeyCode::PageDown => {
-    //                     events.push(Event::NavigateDown(1));
-    //                 }
-    //                 event::KeyCode::Home => {
-    //                     events.push(Event::NavigateHome);
-    //                 }
-    //                 event::KeyCode::End => {
-    //                     events.push(Event::NavigateEnd);
-    //                 }
-    //                 _ => {
-    //                     let key = match key_event.code {
-    //                         event::KeyCode::Char(c) => c,
-    //                         _ => '\0',
-    //                     };
-
-    //                     let modifiers = key_event.modifiers;
-    //                     if modifiers.contains(event::KeyModifiers::CONTROL)
-    //                         || matches!(key, '1'..='9')
-    //                     {
-    //                         println!("Executing application for key: {:?}", key_event);
-    //                         let idx = if matches!(key, '1'..='9') {
-    //                             (key as u8 - b'1') as usize
-    //                         } else {
-    //                             0
-    //                         };
-    //                         events.push(Event::ItemExecute(idx));
-    //                     } else {
-    //                         events.push(Event::SearchAdd(key));
-    //                         // if always search, execute the search event immediately
-    //                         if self.settings.search.always_search {
-    //                             events.push(Event::SearchExecute);
-    //                         }
-    //                     }
-    //                     // println!("Key Pressed: {:?}", key_event);
-    //                 }
-    //             }
-    //         }
-    //         _ => {}
-    //     }
-    //     events
-    // }
+fn update_search(
+    event: &Event,
+    module: &mut Box<dyn Module<State = ModuleState, Data = crate::model::module::Data>>,
+) {
+    let state: &mut ModuleState = module.get_state();
+    if let Event::Search(search_event) = event {
+        match search_event {
+            events::Search::Add(c) => {
+                let (pre_query, post_query) =
+                    state.search.split_at_caret(state.ui.get_caret_position());
+                state.search.query = format!("{}{}{}", pre_query, c, post_query);
+                state
+                    .ui
+                    .set_caret_position(state.ui.get_caret_position() + 1);
+                // app_state.search.query.push(c);
+            }
+            events::Search::Remove(x) => {
+                let (pre_query, post_query) =
+                    state.search.split_at_caret(state.ui.get_caret_position());
+                if x < &0 {
+                    // Remove behind cursor (backspace behavior)
+                    let chars_to_remove = x.unsigned_abs() as usize;
+                    if pre_query.len() >= chars_to_remove {
+                        let new_pre_len = pre_query.len() - chars_to_remove;
+                        state.search.query = format!("{}{}", &pre_query[..new_pre_len], post_query);
+                        state.ui.set_caret_position(
+                            state
+                                .ui
+                                .get_caret_position()
+                                .saturating_sub(chars_to_remove),
+                        );
+                    } else if !pre_query.is_empty() {
+                        state.search.query = post_query.to_string();
+                        state.ui.set_caret_position(0);
+                    }
+                } else if x > &0 {
+                    // Remove in front of cursor (delete behavior)
+                    let chars_to_remove = x.clone() as usize;
+                    if post_query.len() >= chars_to_remove {
+                        state.search.query =
+                            format!("{}{}", pre_query, &post_query[chars_to_remove..]);
+                    } else if !post_query.is_empty() {
+                        state.search.query = pre_query.to_string();
+                    }
+                }
+            }
+            events::Search::Execute => {
+                let query = module.get_state().search.query.trim().to_string();
+                module.on_search(&query);
+            }
+        }
+    }
 }

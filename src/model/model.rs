@@ -1,11 +1,9 @@
 use crate::model::input::{KeyboardState, MouseState};
 
-
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum RunState {
     #[default]
     Running,
-    Paused,
     Stopped,
 }
 
@@ -23,8 +21,5 @@ pub struct Model {
 impl Model {
     pub fn is_running(&self) -> bool {
         self.running_state == RunState::Running
-    }
-    pub fn is_paused(&self) -> bool {
-        self.running_state == RunState::Paused
     }
 }

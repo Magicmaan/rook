@@ -15,40 +15,25 @@ pub enum NavigateDirection {
 pub enum Search {
     Add(char),
     Remove(i8), // number of characters to remove
-    Clear,
     Execute,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Event {
-    Start,
-    Pause,
     Quit,
     //
     KeyPress(KeyEvent),
-    KeyUp(KeyEvent),
-    KeyDown(KeyEvent),
-    KeyHeld(KeyEvent, u16), // KeyEvent, duration in ms
     //
     Search(Search),
     ItemExecute, // execute selected item in results
     //
     Navigate(NavigateDirection, usize), // direction, number of lines
-    // NavigateDown(usize),                // number of lines
-    // NavigateUp(usize),                  // number of lines
-    // NavigateLeft(usize),                // number of lines
-    // NavigateRight(usize),               // number of lines
-    // NavigateHome,
-    // NavigateEnd,
-    Select,
-    Back,
-    MouseMove(u16, u16),        // x, y
-    MousePress(u16, u16),       // x, y
-    MouseDoubleClick(u16, u16), // x, y
-    MouseScrollUp(u16, u16),    // x, y
-    MouseScrollDown(u16, u16),  // x, y
-
-    Tick,
+                                        // NavigateDown(usize),                // number of lines
+                                        // NavigateUp(usize),                  // number of lines
+                                        // NavigateLeft(usize),                // number of lines
+                                        // NavigateRight(usize),               // number of lines
+                                        // NavigateHome,
+                                        // NavigateEnd,
 }
 
 pub fn process_events(app_events: &Vec<event::Event>, settings: &Settings) -> Vec<Event> {
@@ -134,7 +119,7 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
                     if modifiers.contains(event::KeyModifiers::CONTROL) || matches!(key, '1'..='9')
                     {
                         println!("Executing application for key: {:?}", key_event);
-                        let idx = if matches!(key, '1'..='9') {
+                        let _idx = if matches!(key, '1'..='9') {
                             (key as u8 - b'1') as usize
                         } else {
                             0
@@ -153,4 +138,58 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
         _ => {}
     }
     events
+}
+
+pub fn update_navigation(
+    event: &Event,
+    state: &mut crate::model::module::ModuleState,
+    settings: &Settings,
+) {
+    if let Event::Navigate(direction, amount) = event {
+        match direction {
+            NavigateDirection::Left => {
+                if (state.ui.get_caret_position() - *amount + 1) > 0 {
+                    state
+                        .ui
+                        .set_caret_position(state.ui.get_caret_position() - *amount);
+                }
+            }
+            NavigateDirection::Right => {
+                if state.ui.get_caret_position() + *amount
+                    < state.ui.search_box_state.query.len() + 1
+                {
+                    state
+                        .ui
+                        .set_caret_position(state.ui.get_caret_position() + *amount);
+                }
+            }
+            NavigateDirection::Down => {
+                let current = state.ui.get_selected_result_index();
+                let max_index = state.search.results.len().saturating_sub(1);
+                let new_index = current.saturating_add(*amount as usize);
+
+                if settings.ui.results.loopback && new_index > max_index {
+                    state.ui.set_selected_result_index(0);
+                } else {
+                    state.ui.set_selected_result_index(new_index.min(max_index));
+                }
+            }
+            NavigateDirection::Up => {
+                let current = state.ui.get_selected_result_index();
+                let new_index = current.saturating_sub(*amount as usize);
+
+                if settings.ui.results.loopback && current < *amount as usize {
+                    state.ui.set_selected_result_index(0);
+                } else {
+                    state.ui.set_selected_result_index(new_index);
+                }
+            }
+            NavigateDirection::Home => {
+                state.ui.set_caret_position(0);
+            }
+            NavigateDirection::End => {
+                state.ui.set_caret_position(state.search.query.len());
+            }
+        }
+    }
 }

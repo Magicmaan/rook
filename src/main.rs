@@ -1,7 +1,6 @@
 mod app;
-mod applications;
+
 mod events;
-mod logger;
 mod model;
 mod modules;
 mod settings;
