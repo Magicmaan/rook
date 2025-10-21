@@ -1,3 +1,4 @@
+use maths_rs::vec;
 use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
@@ -14,7 +15,8 @@ pub struct App {
     model: model::Model,
     settings: crate::settings::settings::Settings,
     terminal: DefaultTerminal,
-    modules: Box<dyn Module<State = ModuleState, Data = crate::model::module::Data>>,
+    active_module_idx: usize,
+    modules_vec: Vec<Box<dyn Module>>,
 }
 
 impl App {
@@ -23,13 +25,24 @@ impl App {
 
         let model = model::Model::default();
         let settings = crate::settings::settings::Settings::new();
-        let modules = crate::modules::applications::applications::ApplicationModule::new(&settings);
+
+        let modules: Vec<Box<dyn Module>> = vec![
+            Box::new(
+                crate::modules::applications::desktop_files_module::DesktopFilesModule::new(
+                    &settings,
+                ),
+            ),
+            Box::new(crate::modules::maths::maths_module::MathsModule::new(
+                &settings,
+            )),
+        ];
 
         Self {
             model,
             settings,
             terminal,
-            modules: Box::new(modules),
+            active_module_idx: 0,
+            modules_vec: modules,
         }
     }
 
@@ -57,10 +70,11 @@ impl App {
 
     // render the UI
     pub fn render(&mut self) {
+        let ui_settings = &self.settings.ui;
+        let gap = self.settings.ui.layout.gap;
+        let module = self.modules_vec[self.active_module_idx].as_mut();
         self.terminal
             .draw(|frame| {
-                let ui_settings = &self.settings.ui;
-                let gap = self.settings.ui.layout.gap;
                 let padding = self.settings.ui.layout.padding;
                 let root = Block::new()
                     .style(ui_settings.theme.get_default_style(None))
@@ -95,7 +109,7 @@ impl App {
                 // then allowing conditional modules
                 //i.e. if "zen" then render applications results,
                 //i.e. if "1 + 2" then render calculator results, etc.
-                let state = self.modules.render();
+                let state = module.render();
 
                 frame.render_stateful_widget(
                     SearchBox::new(&self.settings),
@@ -112,6 +126,12 @@ impl App {
     }
 
     fn update(&mut self) {
+        let modules = &mut self.modules_vec;
+
+        // idx, candidacy
+        let mut candidates: Vec<(usize, bool)> = vec![];
+        // let module = &mut modules[self.active_module_idx];
+
         let mut events: Vec<event::Event> = Vec::new();
         if event::poll(std::time::Duration::from_millis(16)).unwrap() {
             events.push(event::read().unwrap());
@@ -123,29 +143,52 @@ impl App {
                 Event::Quit => {
                     self.model.running_state = model::RunState::Stopped;
                 }
-                Event::Search(_) => {
-                    update_search(&e, &mut self.modules);
+                Event::Search(search_event) => {
+                    // let query = module.get_state().search.query.trim().to_string();
+                    // for m in modules.iter_mut() {
+                    //     let candidacy = update_search(&e, &mut **m);
+                    // }
+                    match search_event {
+                        events::Search::Execute => {
+                            for (i, m) in modules.iter_mut().enumerate() {
+                                let query = m.get_state().search.query.trim().to_string();
+                                let candidacy = m.on_search(&query);
+                                candidates.push((i, candidacy));
+                            }
+                        }
+                        _ => {
+                            for m in modules.iter_mut() {
+                                update_search(&e, &mut **m);
+                            }
+                        }
+                    }
                 }
+
                 Event::Navigate(_, _) => {
-                    update_navigation(&e, &mut self.modules.as_mut().get_state(), &self.settings);
+                    for m in modules.iter_mut() {
+                        update_navigation(&e, &mut m.get_state(), &self.settings);
+                    }
                 } // _ => {
                 //     self.modules.update(&events, &mut self.model);
                 // }
                 Event::ItemExecute => {
-                    self.modules.on_execute();
+                    modules[self.active_module_idx].on_execute();
                 }
                 _ => {}
             }
         }
 
+        let mut new_active_module_idx = candidates
+            .iter()
+            .find(|(_, is_candidate)| *is_candidate)
+            .map(|(idx, _)| *idx)
+            .unwrap_or(self.active_module_idx);
+        self.active_module_idx = new_active_module_idx;
         // self.modules.update(&events, &mut self.model);
     }
 }
 
-fn update_search(
-    event: &Event,
-    module: &mut Box<dyn Module<State = ModuleState, Data = crate::model::module::Data>>,
-) {
+fn update_search(event: &Event, module: &mut dyn Module) {
     let state: &mut ModuleState = module.get_state();
     if let Event::Search(search_event) = event {
         match search_event {
@@ -188,10 +231,7 @@ fn update_search(
                     }
                 }
             }
-            events::Search::Execute => {
-                let query = module.get_state().search.query.trim().to_string();
-                module.on_search(&query);
-            }
+            _ => {}
         }
     }
 }

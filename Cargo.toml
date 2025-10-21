@@ -21,5 +21,6 @@ rust-analyzer = "0.0.1"
 rust_search = "2.1.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
+shunting = "0.1.2"
 toml = "0.9.8"
 xdg = "3.0.0"

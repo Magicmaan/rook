@@ -28,15 +28,10 @@ impl SearchState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-pub struct Data {
-    pub applications: Vec<Application>,
-}
-
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ModuleState {
     // data
-    pub data: Data,
+    // pub data: Data,
 
     // search stuff
     pub search: SearchState,
@@ -46,6 +41,7 @@ pub struct ModuleState {
 
     // UI related state can go here
     pub ui: UIState,
+    pub is_candidate: bool,
 }
 
 impl ModuleState {}

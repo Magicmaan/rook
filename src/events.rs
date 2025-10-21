@@ -116,7 +116,7 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
                     };
 
                     let modifiers = key_event.modifiers;
-                    if modifiers.contains(event::KeyModifiers::CONTROL) || matches!(key, '1'..='9')
+                    if modifiers.contains(event::KeyModifiers::CONTROL) && matches!(key, '0'..='9')
                     {
                         println!("Executing application for key: {:?}", key_event);
                         let _idx = if matches!(key, '1'..='9') {
