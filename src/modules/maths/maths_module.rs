@@ -46,8 +46,8 @@ impl MathsModule {
 
     pub fn test_duplicates(&mut self, equation: &Equation) {
         let mut matcher = Matcher::new(Config::DEFAULT);
-        if self.data.equations.len() > 0 {
-            let result_full = format!("{}", equation.expression);
+        if !self.data.equations.is_empty() {
+            let result_full = equation.expression.to_string();
             for i in 0..(2.min(self.data.equations.len())) {
                 let default = Equation {
                     expression: "".to_string(),
@@ -55,7 +55,7 @@ impl MathsModule {
                     valid: false,
                 };
                 let eq = self.data.equations.get(i).unwrap_or(&default);
-                let previous_full = format!("{}", eq.expression);
+                let previous_full = eq.expression.to_string();
 
                 if result_full == previous_full {
                     self.data.equations.remove(i);
@@ -116,11 +116,7 @@ impl Module for MathsModule {
 
                 Err(_) => {
                     log::info!("Invalid expression: {}", query);
-                    if equation.expression.contains(['+', '-', '*', '/']) {
-                        candidacy = true;
-                    } else {
-                        candidacy = false;
-                    }
+                    candidacy = equation.expression.contains(['+', '-', '*', '/']);
                     equation
                 }
             }
@@ -194,8 +190,7 @@ impl Module for MathsModule {
 
         self.state.ui.set_search_post_fix(
             self.data
-                .equations
-                .get(0)
+                .equations.front()
                 .map(|eq| format!("= {}", eq.result.clone()))
                 .unwrap_or_default(),
         );

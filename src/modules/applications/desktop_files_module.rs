@@ -19,14 +19,14 @@ pub struct DesktopFilesModule {
 
 impl DesktopFilesModule {
     pub fn new(settings: &crate::settings::settings::Settings) -> Self {
-        let mut state = ModuleState::default();
+        let state = ModuleState::default();
         let applications = crate::modules::applications::desktop::find_desktop_files();
         // state.data.applications = applications;
         Self {
             settings: settings.clone(),
             state,
             data: Data {
-                applications: applications,
+                applications,
             },
         }
     }

@@ -144,7 +144,7 @@ impl StatefulWidget for ResultsBox {
 
         let available_height = inner_area.height as usize;
 
-        let results: &Vec<(Result)> = &state.results;
+        let results: &Vec<Result> = &state.results;
 
         let mut i = 1;
         let items = results
@@ -157,7 +157,7 @@ impl StatefulWidget for ResultsBox {
                 // space out sections to fit the width
                 // let app = &state.data.applications[*idx];
 
-                let score_text = format!("{}", score);
+                let score_text = score.to_string();
 
                 // get number icon
                 // mode configurable in settings
@@ -171,7 +171,7 @@ impl StatefulWidget for ResultsBox {
                 // pad score to end i.e. "App Name       123"
                 let line_width = inner_area.width as usize;
                 let mut name_width = line_width.saturating_sub(score_text.len() - 1);
-                if prepend_icon.trim().len() == 0 {
+                if prepend_icon.trim().is_empty() {
                     name_width = name_width.saturating_sub(4); // extra space if no icon
                 } else {
                     name_width = name_width.saturating_sub(prepend_icon.len() + 1); // +1 for space

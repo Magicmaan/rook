@@ -89,11 +89,10 @@ impl StatefulWidget for SearchBox {
             .expect("Time went backwards");
 
         // let mut caret_query = before_caret.to_string();
-        if search_settings.caret_visible {
-            if (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate) % 2 == 0 {
+        if search_settings.caret_visible
+            && (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate).is_multiple_of(2) {
                 flash_caret = true;
             }
-        }
 
         // construct line with styled spans
         // i.e. >> hello world▋

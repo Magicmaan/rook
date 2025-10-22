@@ -377,11 +377,11 @@ impl ThemeSettings {
 
     pub fn get_search_colors(&self) -> SearchThemeSettings {
         SearchThemeSettings {
-            background: Some(self.search.background.unwrap_or(self.background.clone())),
-            highlight: Some(self.search.highlight.unwrap_or(self.highlight.clone())),
-            muted: Some(self.search.muted.unwrap_or(self.muted.clone())),
-            muted_dark: Some(self.search.muted_dark.unwrap_or(self.muted_dark.clone())),
-            accent: Some(self.search.accent.unwrap_or(self.accent.clone())),
+            background: Some(self.search.background.unwrap_or(self.background)),
+            highlight: Some(self.search.highlight.unwrap_or(self.highlight)),
+            muted: Some(self.search.muted.unwrap_or(self.muted)),
+            muted_dark: Some(self.search.muted_dark.unwrap_or(self.muted_dark)),
+            accent: Some(self.search.accent.unwrap_or(self.accent)),
             caret: Some(self.search.caret.unwrap_or(Color::Yellow)),
             border: Some(self.search.border.unwrap_or(Color::Blue)),
             pre_query_text: Some(
@@ -397,11 +397,11 @@ impl ThemeSettings {
     }
     pub fn get_results_colors(&self) -> ResultsThemeSettings {
         ResultsThemeSettings {
-            background: Some(self.results.background.unwrap_or(self.background.clone())),
-            highlight: Some(self.results.highlight.unwrap_or(self.highlight.clone())),
-            muted: Some(self.results.muted.unwrap_or(self.muted.clone())),
-            muted_dark: Some(self.results.muted_dark.unwrap_or(self.muted_dark.clone())),
-            accent: Some(self.results.accent.unwrap_or(self.accent.clone())),
+            background: Some(self.results.background.unwrap_or(self.background)),
+            highlight: Some(self.results.highlight.unwrap_or(self.highlight)),
+            muted: Some(self.results.muted.unwrap_or(self.muted)),
+            muted_dark: Some(self.results.muted_dark.unwrap_or(self.muted_dark)),
+            accent: Some(self.results.accent.unwrap_or(self.accent)),
             border: Some(self.results.border.unwrap_or(Color::Blue)),
             text: Some(self.results.text.unwrap_or(Color::Rgb(200, 200, 200))),
             text_muted: Some(self.results.text_muted.unwrap_or(Color::Rgb(150, 150, 150))),
@@ -413,30 +413,30 @@ impl ThemeSettings {
     pub fn get_default_style(&self, section: Option<UISection>) -> Style {
         match section {
             Some(UISection::Search) => Style::default()
-                .bg(self.search.background.unwrap_or(self.background.clone()))
-                .fg(self.search.text.unwrap_or(self.text.clone())),
+                .bg(self.search.background.unwrap_or(self.background))
+                .fg(self.search.text.unwrap_or(self.text)),
 
             Some(UISection::Results) => Style::default()
-                .bg(self.results.background.unwrap_or(self.background.clone()))
-                .fg(self.results.text.unwrap_or(self.text.clone())),
+                .bg(self.results.background.unwrap_or(self.background))
+                .fg(self.results.text.unwrap_or(self.text)),
 
             _ => Style::default()
-                .bg(self.background.clone())
-                .fg(self.text.clone()),
+                .bg(self.background)
+                .fg(self.text),
         }
     }
 
     pub fn get_default_border_style(&self, section: Option<UISection>) -> Style {
         match section {
             Some(UISection::Search) => {
-                Style::default().fg(self.search.border.unwrap_or(self.border.clone()))
+                Style::default().fg(self.search.border.unwrap_or(self.border))
             }
 
             Some(UISection::Results) => {
-                Style::default().fg(self.results.border.unwrap_or(self.border.clone()))
+                Style::default().fg(self.results.border.unwrap_or(self.border))
             }
 
-            _ => Style::default().fg(self.border.clone()),
+            _ => Style::default().fg(self.border),
         }
     }
 }

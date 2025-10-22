@@ -1,4 +1,3 @@
-use maths_rs::vec;
 use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
@@ -9,8 +8,6 @@ use crate::model::module::ModuleState;
 use crate::modules::module::Module;
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
-use signal_hook::consts::signal::*;
-use signal_hook::iterator::Signals;
 use std::rc::Rc;
 pub struct App {
     model: model::Model,
@@ -157,7 +154,7 @@ impl App {
                         }
                         _ => {
                             for m in modules.iter_mut() {
-                                update_search(&e, &mut **m);
+                                update_search(e, &mut **m);
                             }
                         }
                     }
@@ -165,7 +162,7 @@ impl App {
 
                 Event::Navigate(_, _) => {
                     for m in modules.iter_mut() {
-                        update_navigation(&e, m.get_state(), &self.settings);
+                        update_navigation(e, m.get_state(), &self.settings);
                     }
                 } // _ => {
 

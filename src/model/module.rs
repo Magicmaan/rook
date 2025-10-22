@@ -1,10 +1,7 @@
 use ratatui::layout::Rect;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    modules::applications::desktop::Application,
-    ui::{results_box::ResultBoxState, search_box::SearchBoxState},
-};
+use crate::ui::{results_box::ResultBoxState, search_box::SearchBoxState};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UISection {

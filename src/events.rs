@@ -129,7 +129,7 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
                 };
 
                 let modifiers = key_event.modifiers;
-                if modifiers.contains(event::KeyModifiers::CONTROL) && matches!(key, '0'..='9') {
+                if modifiers.contains(event::KeyModifiers::CONTROL) && key.is_ascii_digit() {
                     println!("Executing application for key: {:?}", key_event);
                     let _idx = if matches!(key, '1'..='9') {
                         (key as u8 - b'1') as usize
@@ -186,9 +186,9 @@ pub fn update_navigation(
             }
             NavigateDirection::Up => {
                 let current = state.ui.get_selected_result_index();
-                let new_index = current.saturating_sub(*amount as usize);
+                let new_index = current.saturating_sub(*amount);
 
-                if settings.ui.results.loopback && current < *amount as usize {
+                if settings.ui.results.loopback && current < *amount {
                     state.ui.set_selected_result_index(0);
                 } else {
                     state.ui.set_selected_result_index(new_index);

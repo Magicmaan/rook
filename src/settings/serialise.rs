@@ -95,12 +95,12 @@ where
                     let r = parts[0].parse().map_err(serde::de::Error::custom)?;
                     let g = parts[1].parse().map_err(serde::de::Error::custom)?;
                     let b = parts[2].parse().map_err(serde::de::Error::custom)?;
-                    return Ok(Color::Rgb(r, g, b));
+                    Ok(Color::Rgb(r, g, b))
                 } else {
-                    return Err(serde::de::Error::custom("Invalid RGB format"));
+                    Err(serde::de::Error::custom("Invalid RGB format"))
                 }
             } else {
-                return Ok(Color::Red); // fallback for single number
+                Ok(Color::Red)// fallback for single number
             }
             // Ok(Color::Indexed(index))
         }

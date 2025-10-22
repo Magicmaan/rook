@@ -58,13 +58,12 @@ impl Application {
                 Ok(())
             }
             Err(e) => {
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::Other,
+                Err(std::io::Error::other(
                     format!(
                         "Failed to launch application: {} \nExecutable Path: {}",
                         e, self.exec
                     ),
-                ));
+                ))
             }
         }
     }
@@ -82,8 +81,8 @@ pub fn find_desktop_files() -> Vec<Application> {
     // .chain(std::iter::once(&PathBuf::from("/usr/share/")))
     {
         let apps_dir = dir.join("applications");
-        if apps_dir.is_dir() {
-            if let Ok(entries) = fs::read_dir(apps_dir) {
+        if apps_dir.is_dir()
+            && let Ok(entries) = fs::read_dir(apps_dir) {
                 for e in entries.flatten() {
                     // for each file in the directory
                     // i.e. /usr/share/applications/example.desktop
@@ -94,7 +93,6 @@ pub fn find_desktop_files() -> Vec<Application> {
                     }
                 }
             }
-        }
     }
     apps
 }
@@ -230,7 +228,10 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<(u16, 
             nucleo::Utf32Str::new(&app.name.to_lowercase(), &mut Vec::new()),
             nucleo::Utf32Str::new(query, &mut Vec::new()),
         ) {
-            if results.contains_key(&score) {
+            if let std::collections::hash_map::Entry::Vacant(e) = results.entry(score) {
+                // no collision, insert normally
+                e.insert(vec![index]);
+            } else {
                 // Compare current app against existing entries in this score bucket.
                 // If current clearly beats any existing entry, promote current to score+1.
                 // If an existing clearly beats current, promote that existing to score+1.
@@ -282,9 +283,6 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<(u16, 
                     // all ties -> keep both at same score
                     results.get_mut(&score).unwrap().push(index);
                 }
-            } else {
-                // no collision, insert normally
-                results.insert(score, vec![index]);
             }
         }
     }
