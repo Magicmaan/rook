@@ -1,5 +1,8 @@
 use crate::{
-    model::module::{ModuleState, Result, UIState},
+    model::{
+        model::Model,
+        module::{ModuleState, Result, UIState},
+    },
     modules::{applications::desktop::Application, module::Module},
 };
 
@@ -34,7 +37,7 @@ impl Module for DesktopFilesModule {
         &mut self.state
     }
 
-    fn on_search(&mut self, query: &str) -> bool {
+    fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
         // let query = self.state.search.query.trim();
         // ignore empty queries
         if query.is_empty() {
@@ -65,7 +68,7 @@ impl Module for DesktopFilesModule {
         log::info!("N of results: {}", self.state.search.results.len());
         true
     }
-    fn on_execute(&mut self) {
+    fn on_execute(&mut self, app_state: &Model) {
         let index = self.state.ui.get_selected_result_index();
         if let Some((_, app_index)) = self.state.search.results.get(index) {
             if let Some(app) = self.data.applications.get(*app_index) {

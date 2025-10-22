@@ -1,3 +1,4 @@
+use mouse_position::mouse_position::Mouse;
 use ratatui::crossterm::event::{self, KeyEvent};
 
 use crate::settings::settings::Settings;
@@ -39,10 +40,27 @@ pub enum Event {
 pub fn process_events(app_events: &Vec<event::Event>, settings: &Settings) -> Vec<Event> {
     let mut events = Vec::new();
 
+    // log::info!("Mouse event: {:?}", _mouse_event);
+    let screen_pos = match mouse_position::mouse_position::Mouse::get_mouse_position() {
+        Mouse::Position { x, y } => (x, y),
+        Mouse::Error => (0, 0),
+    };
+    log::info!("Mouse position: x={}, y={}", screen_pos.0, screen_pos.1);
+
     for event in app_events {
         match event {
             event::Event::Key(key) => events.extend(process_key_events(settings, *key)),
-            _ => {}
+            event::Event::Mouse(_mouse_event) => {
+                match _mouse_event.kind {
+                    event::MouseEventKind::Down(_button) => {}
+                    _ => {
+                        // log::info!("Mouse event: {:?}", _mouse_event);
+                    }
+                }
+            }
+            _ => {
+                log::info!("Unhandled event: {:?}", event);
+            }
         }
     }
     events
@@ -61,6 +79,9 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
                     } else {
                         events.push(Event::Search(Search::Add('q')));
                     }
+                }
+                event::KeyCode::Esc => {
+                    events.push(Event::Quit);
                 }
                 event::KeyCode::Backspace => {
                     events.push(Event::Search(Search::Remove(-1)));

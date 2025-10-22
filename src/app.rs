@@ -152,7 +152,7 @@ impl App {
                         events::Search::Execute => {
                             for (i, m) in modules.iter_mut().enumerate() {
                                 let query = m.get_state().search.query.trim().to_string();
-                                let candidacy = m.on_search(&query);
+                                let candidacy = m.on_search(&query, &self.model);
                                 candidates.push((i, candidacy));
                             }
                         }
@@ -172,7 +172,7 @@ impl App {
                 //     self.modules.update(&events, &mut self.model);
                 // }
                 Event::ItemExecute => {
-                    modules[self.active_module_idx].on_execute();
+                    modules[self.active_module_idx].on_execute(&self.model);
                 }
                 _ => {}
             }

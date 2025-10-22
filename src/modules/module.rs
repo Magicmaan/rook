@@ -1,4 +1,7 @@
-use crate::model::module::{ModuleState, UIState};
+use crate::model::{
+    model::Model,
+    module::{ModuleState, UIState},
+};
 
 /// A trait that defines the core functionality for application modules.
 ///
@@ -45,9 +48,9 @@ pub trait Module {
     ///   - `Execute` - Execute the search with the current query
     ///   - `Clear` - Clear the current search query
 
-    fn on_search(&mut self, query: &str) -> bool;
+    fn on_search(&mut self, query: &str, app_state: &Model) -> bool;
 
-    fn on_execute(&mut self);
+    fn on_execute(&mut self, app_state: &Model);
     /// Renders the module's UI elements to the terminal frame.
     ///
     /// This method is responsible for drawing the module's interface within
