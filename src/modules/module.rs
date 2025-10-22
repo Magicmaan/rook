@@ -50,7 +50,7 @@ pub trait Module {
 
     fn on_search(&mut self, query: &str, app_state: &Model) -> bool;
 
-    fn on_execute(&mut self, app_state: &Model);
+    fn on_execute(&mut self, app_state: &Model) -> bool;
     /// Renders the module's UI elements to the terminal frame.
     ///
     /// This method is responsible for drawing the module's interface within

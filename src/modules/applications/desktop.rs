@@ -1,6 +1,7 @@
-use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
+use std::thread::sleep;
+use std::{collections::HashMap, os::unix::process::CommandExt};
 use xdg::BaseDirectories;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -14,6 +15,7 @@ pub struct Application {
     pub categories: Vec<String>,
     pub terminal: bool,
     pub mime_types: Vec<String>,
+    pub desktop_file_path: Option<PathBuf>,
 }
 impl Application {
     pub fn launch(&self) -> Result<(), std::io::Error> {
@@ -25,46 +27,44 @@ impl Application {
                 "Invalid exec command",
             ));
         }
-        let command = exec_parts[0];
-        let args = &exec_parts[1..];
+        let command = "gtk-launch";
+        let executable = self
+            .desktop_file_path
+            .as_ref()
+            .unwrap()
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap();
+        let args: &[&str; 1] = &[executable];
 
         let mut cmd = std::process::Command::new(command);
         cmd.args(args);
-        // prevent the child process from printing to stdout
-        cmd.stdout(std::process::Stdio::null());
-        cmd.stderr(std::process::Stdio::null());
 
-        if self.terminal {
-            // if terminal is true, run in a terminal emulator
-            // use x-terminal-emulator if available, otherwise fallback to xterm
-            let terminal_emulator =
-                std::env::var("TERMINAL").unwrap_or_else(|_| "x-terminal-emulator".into());
-            let mut terminal_cmd = std::process::Command::new(terminal_emulator);
-            terminal_cmd.arg("-e").arg(command);
-            for arg in args {
-                terminal_cmd.arg(arg);
-            }
-            match terminal_cmd.spawn() {
-                Ok(_) => Ok(()),
-                Err(e) => {
-                    return Err(std::io::Error::new(
-                        std::io::ErrorKind::Other,
-                        format!("Failed to launch terminal: {}", e),
-                    ));
+        match cmd.spawn() {
+            Ok(mut child) => {
+                let res = child.try_wait();
+                if let Ok(Some(status)) = res {
+                    log::info!(
+                        "Launched application '{}' with exit code: {}",
+                        self.name,
+                        status.code().unwrap_or_default()
+                    );
+                } else {
+                    log::info!("Launched application '{}'", self.name);
                 }
+                log::info!("Launched application command: {}", args.join(" "));
+                sleep(std::time::Duration::from_millis(500)); // give some time for the process to start
+                Ok(())
             }
-        } else {
-            match cmd.spawn() {
-                Ok(_) => Ok(()),
-                Err(e) => {
-                    return Err(std::io::Error::new(
-                        std::io::ErrorKind::Other,
-                        format!(
-                            "Failed to launch application: {} \nExecutable Path: {}",
-                            e, self.exec
-                        ),
-                    ));
-                }
+            Err(e) => {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::Other,
+                    format!(
+                        "Failed to launch application: {} \nExecutable Path: {}",
+                        e, self.exec
+                    ),
+                ));
             }
         }
     }
@@ -170,6 +170,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
             .get("MimeType")
             .map(|s| s.split(';').map(|s| s.trim().into()).collect())
             .unwrap_or_default(),
+        desktop_file_path: Some(path.clone()),
     }
 }
 

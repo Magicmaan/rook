@@ -68,16 +68,35 @@ impl Module for DesktopFilesModule {
         log::info!("N of results: {}", self.state.search.results.len());
         true
     }
-    fn on_execute(&mut self, app_state: &Model) {
+    fn on_execute(&mut self, app_state: &Model) -> bool {
         let index = self.state.ui.get_selected_result_index();
-        if let Some((_, app_index)) = self.state.search.results.get(index) {
-            if let Some(app) = self.data.applications.get(*app_index) {
-                log::info!("Executing application: {}", app.name);
-                if let Err(e) = app.launch() {
-                    log::error!("Failed to launch application {}: {}", app.name, e);
-                }
+        let app_index = match self.state.search.results.get(index).map(|(_, idx)| *idx) {
+            Some(i) => i,
+            None => {
+                log::warn!("No application selected to execute.");
+                return false;
+            }
+        };
+
+        let app = match self.data.applications.get(app_index) {
+            Some(app) => app,
+            None => {
+                log::warn!("Application index out of bounds: {}", app_index);
+                return false;
+            }
+        };
+
+        match app.launch() {
+            Ok(_) => {
+                log::info!("Launched application: {}", app.name);
+            }
+            Err(e) => {
+                log::error!("Failed to launch application: {}: {}", app.name, e);
+                return false;
             }
         }
+
+        true
     }
 
     fn render(&mut self) -> &mut UIState {

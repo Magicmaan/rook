@@ -32,7 +32,7 @@ pub struct MathsModule {
 
 impl MathsModule {
     pub fn new(settings: &crate::settings::settings::Settings) -> Self {
-        let mut state = ModuleState::default();
+        let state = ModuleState::default();
         Self {
             settings: settings.clone(),
             state,
@@ -87,10 +87,10 @@ impl Module for MathsModule {
         &mut self.state
     }
 
-    fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
+    fn on_search(&mut self, query: &str, _: &Model) -> bool {
         let mut candidacy = false;
         let formatted_query = query.trim().replace(" ", "");
-        let mut equation = Equation {
+        let equation = Equation {
             expression: formatted_query.clone(),
             result: "✕".to_string(),
             valid: false,
@@ -129,7 +129,6 @@ impl Module for MathsModule {
             candidacy = false;
             equation
         };
-        let mut matcher = Matcher::new(Config::DEFAULT);
         self.test_duplicates(&result.clone());
         if candidacy {
             self.data.equations.push_front(result);
@@ -157,7 +156,9 @@ impl Module for MathsModule {
         self.time_since_last_eval = std::time::Instant::now();
         candidacy
     }
-    fn on_execute(&mut self, app_state: &Model) {}
+    fn on_execute(&mut self, _: &Model) -> bool {
+        true
+    }
 
     fn render(&mut self) -> &mut UIState {
         let results_formatted = self

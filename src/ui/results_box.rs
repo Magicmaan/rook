@@ -61,7 +61,7 @@ impl ResultsBox {
                     - maths_rs::lerp(
                         base_brightness,
                         0.25,
-                        (diff as f32 / height as f32).min(0.1).max(1.0),
+                        (diff as f32 / height as f32).clamp(0.1, 1.0),
                     );
                 self.multiply_color(start_color, brightness as f64)
             } else {

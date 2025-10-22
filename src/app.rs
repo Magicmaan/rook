@@ -9,8 +9,9 @@ use crate::model::module::ModuleState;
 use crate::modules::module::Module;
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
+use signal_hook::consts::signal::*;
+use signal_hook::iterator::Signals;
 use std::rc::Rc;
-
 pub struct App {
     model: model::Model,
     settings: crate::settings::settings::Settings,
@@ -144,12 +145,10 @@ impl App {
                     self.model.running_state = model::RunState::Stopped;
                 }
                 Event::Search(search_event) => {
-                    // let query = module.get_state().search.query.trim().to_string();
-                    // for m in modules.iter_mut() {
-                    //     let candidacy = update_search(&e, &mut **m);
-                    // }
                     match search_event {
                         events::Search::Execute => {
+                            // pass execute function to all modules to determine candidacy
+                            // candidacy is simply "what module should handle and display results for this query"
                             for (i, m) in modules.iter_mut().enumerate() {
                                 let query = m.get_state().search.query.trim().to_string();
                                 let candidacy = m.on_search(&query, &self.model);
@@ -166,25 +165,32 @@ impl App {
 
                 Event::Navigate(_, _) => {
                     for m in modules.iter_mut() {
-                        update_navigation(&e, &mut m.get_state(), &self.settings);
+                        update_navigation(&e, m.get_state(), &self.settings);
                     }
                 } // _ => {
-                //     self.modules.update(&events, &mut self.model);
-                // }
+
                 Event::ItemExecute => {
-                    modules[self.active_module_idx].on_execute(&self.model);
+                    let result = modules[self.active_module_idx]
+                        .on_execute(&self.model)
+                        .then(|| {
+                            // on successful execution, exit application
+                            log::info!(
+                                "Module {} executed item successfully.",
+                                self.active_module_idx
+                            );
+                            self.model.running_state = model::RunState::Stopped;
+                        });
                 }
                 _ => {}
             }
         }
 
-        let mut new_active_module_idx = candidates
+        let new_active_module_idx = candidates
             .iter()
             .find(|(_, is_candidate)| *is_candidate)
             .map(|(idx, _)| *idx)
             .unwrap_or(self.active_module_idx);
         self.active_module_idx = new_active_module_idx;
-        // self.modules.update(&events, &mut self.model);
     }
 }
 
@@ -222,7 +228,7 @@ fn update_search(event: &Event, module: &mut dyn Module) {
                     }
                 } else if x > &0 {
                     // Remove in front of cursor (delete behavior)
-                    let chars_to_remove = x.clone() as usize;
+                    let chars_to_remove = *x as usize;
                     if post_query.len() >= chars_to_remove {
                         state.search.query =
                             format!("{}{}", pre_query, &post_query[chars_to_remove..]);
