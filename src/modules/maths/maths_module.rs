@@ -44,7 +44,7 @@ impl MathsModule {
         }
     }
 
-    pub fn test_duplicates(&mut self, equation: &Equation) {
+    pub fn test_duplicates(&mut self, equation: &mut Equation) {
         let mut matcher = Matcher::new(Config::DEFAULT);
         if !self.data.equations.is_empty() {
             let result_full = equation.expression.to_string();
@@ -58,7 +58,8 @@ impl MathsModule {
                 let previous_full = eq.expression.to_string();
 
                 if result_full == previous_full {
-                    self.data.equations.remove(i);
+                    equation.valid = false;
+                    continue;
                 }
                 let substring_match_1 = matcher
                     .substring_match(
@@ -67,9 +68,14 @@ impl MathsModule {
                     )
                     .unwrap_or_default();
 
-                let substring_match = substring_match_1;
+                let substring_match = matcher
+                    .substring_match(
+                        nucleo::Utf32Str::new(&result_full, &mut vec![]),
+                        nucleo::Utf32Str::new(&previous_full, &mut vec![]),
+                    )
+                    .unwrap_or_else(|| substring_match_1);
                 if substring_match > 0 {
-                    self.data.equations.remove(i);
+                    equation.valid = false;
                 }
                 log::info!(
                     "Substring match score between '{}' and '{}' is {}",
@@ -88,15 +94,15 @@ impl Module for MathsModule {
     }
 
     fn on_search(&mut self, query: &str, _: &Model) -> bool {
-        let mut candidacy = false;
+        self.state.is_candidate = true;
         let formatted_query = query.trim().replace(" ", "");
-        let equation = Equation {
+        let equation = &mut Equation {
             expression: formatted_query.clone(),
             result: "✕".to_string(),
             valid: false,
         };
         if query.is_empty() {
-            self.state.search.results.clear();
+            return false;
         }
 
         let expr = ShuntingParser::parse_str(formatted_query.as_str());
@@ -104,30 +110,46 @@ impl Module for MathsModule {
         let result = if expr.is_ok() {
             match self.context.eval(&expr.unwrap()) {
                 Ok(value) => {
-                    self.state.is_candidate = true;
                     log::info!("Evaluated expression: {} = {}", query, value);
-                    candidacy = true;
-                    Equation {
-                        expression: formatted_query,
-                        result: value.to_string(),
-                        valid: true,
+                    if query.parse::<f64>().is_ok() {
+                        self.state.is_candidate = false;
+                        &mut Equation {
+                            expression: formatted_query,
+                            result: value.to_string(),
+                            valid: false,
+                        }
+                    } else {
+                        self.state.is_candidate = true;
+                        &mut Equation {
+                            expression: formatted_query,
+                            result: value.to_string(),
+                            valid: true,
+                        }
                     }
                 }
 
                 Err(_) => {
+                    if formatted_query.contains(['+', '-', '*', '/']) {
+                        // log::info!("MathsModule is candidate for query {}", query);
+                        self.state.is_candidate = true;
+                    } else {
+                        self.state.is_candidate = false;
+                    }
+                    // self.state.is_candidate = false;
                     log::info!("Invalid expression: {}", query);
-                    candidacy = equation.expression.contains(['+', '-', '*', '/']);
                     equation
                 }
             }
         } else {
+            self.state.is_candidate = false;
             log::info!("Failed to parse expression: {}", query);
-            candidacy = false;
             equation
         };
-        self.test_duplicates(&result.clone());
-        if candidacy {
-            self.data.equations.push_front(result);
+        // self.test_duplicates(result);
+
+        if result.valid {
+            self.data.equations.push_front(result.clone());
+            self.state.is_candidate = true;
         }
 
         if self.data.equations.len() > 100 {
@@ -150,13 +172,17 @@ impl Module for MathsModule {
         log::info!("MathsModule is candidate for query {}", query);
 
         self.time_since_last_eval = std::time::Instant::now();
-        candidacy
+
+        self.state.is_candidate
     }
     fn on_execute(&mut self, _: &Model) -> bool {
         true
     }
 
     fn render(&mut self) -> &mut UIState {
+        let mut results_formatted: Vec<Option<Result>> = Vec::new();
+        for e in self.data.equations.iter_mut() {}
+
         let results_formatted = self
             .state
             .search
@@ -166,17 +192,22 @@ impl Module for MathsModule {
                 let s = score.0;
                 let idx = score.1;
 
-                let equation = self.data.equations.get(idx).unwrap();
+                let equation = self.data.equations.get_mut(idx).unwrap();
 
-                Result {
-                    result: format!(
-                        "{} = {}",
-                        equation.expression.clone(),
-                        equation.result.clone()
-                    ),
-                    score: s.to_string(),
+                if equation.valid {
+                    Some(Result {
+                        result: format!(
+                            "{} = {}",
+                            equation.expression.clone(),
+                            equation.result.clone()
+                        ),
+                        score: s.to_string(),
+                    })
+                } else {
+                    None
                 }
             })
+            .filter_map(|x| x)
             .collect();
 
         self.state.ui.result_box_state.previous_results = self.state.ui.get_results().clone();
@@ -190,7 +221,8 @@ impl Module for MathsModule {
 
         self.state.ui.set_search_post_fix(
             self.data
-                .equations.front()
+                .equations
+                .front()
                 .map(|eq| format!("= {}", eq.result.clone()))
                 .unwrap_or_default(),
         );
