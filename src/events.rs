@@ -152,7 +152,7 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
 
 pub fn update_navigation(
     event: &Event,
-    state: &mut crate::model::module::ModuleState,
+    state: &mut crate::model::module_state::ModuleState,
     settings: &Settings,
 ) {
     if let Event::Navigate(direction, amount) = event {

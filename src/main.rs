@@ -1,5 +1,6 @@
 mod app;
 
+mod effects;
 mod events;
 mod model;
 mod modules;

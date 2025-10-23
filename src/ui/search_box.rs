@@ -1,5 +1,6 @@
 use crate::{
-    model::module::UISection,
+    effects::{self, rainbow},
+    model::module_state::UISection,
     settings::settings::{Settings, UISearchSettings},
 };
 use ratatui::widgets::Borders;
@@ -11,12 +12,16 @@ use ratatui::{
     widgets::{Block, Padding, Paragraph, StatefulWidget, Widget},
 };
 use std::time::SystemTime;
+use tachyonfx::{Duration, EffectManager, fx, pattern::SweepPattern};
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct SearchBoxState {
     pub post_fix: String,
     pub query: String,
     pub caret_position: usize,
+    pub last_search_tick: u64,
+    pub tick: u64,
+    pub delta_time: i32,
 }
 
 #[derive(Clone)]
@@ -33,9 +38,9 @@ impl SearchBox {
 }
 
 impl StatefulWidget for SearchBox {
-    type State = SearchBoxState;
+    type State<'b> = SearchBoxState;
 
-    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {
         let theme = self.settings.ui.theme.clone();
         let search_theme = theme.get_search_colors();
         let gap = self.settings.ui.layout.gap;
@@ -71,6 +76,9 @@ impl StatefulWidget for SearchBox {
         // render container
         block.render(area, buf);
 
+        if self.settings.ui.search.rainbow_border {
+            effects::rainbow(area, buf, state.tick as u32);
+        }
         //
         // Search Box text rendering
         //
@@ -90,9 +98,10 @@ impl StatefulWidget for SearchBox {
 
         // let mut caret_query = before_caret.to_string();
         if search_settings.caret_visible
-            && (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate).is_multiple_of(2) {
-                flash_caret = true;
-            }
+            && (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate).is_multiple_of(2)
+        {
+            flash_caret = true;
+        }
 
         // construct line with styled spans
         // i.e. >> hello world▋

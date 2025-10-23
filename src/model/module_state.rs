@@ -52,6 +52,7 @@ pub struct Result {
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct UIState {
     pub result_box_state: ResultBoxState,
+    
     pub search_box_state: SearchBoxState,
     pub sections: Vec<(UISection, Rect)>,
 }

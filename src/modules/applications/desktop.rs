@@ -1,13 +1,14 @@
 use std::fs;
+
+use color_eyre::Result;
+use color_eyre::eyre::eyre;
 use std::path::PathBuf;
 use std::thread::sleep;
 use std::{collections::HashMap, os::unix::process::CommandExt};
 use xdg::BaseDirectories;
-
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Application {
     pub name: String,
-    pub application_name: Option<String>,
     pub exec: String,
     pub icon: Option<String>,
     // pub icon_ascii: Option<String>,
@@ -18,54 +19,83 @@ pub struct Application {
     pub desktop_file_path: Option<PathBuf>,
 }
 impl Application {
-    pub fn launch(&self) -> Result<(), std::io::Error> {
+    pub fn launch(&self) -> Result<()> {
         // run the application using std::process::Command
         let exec_parts: Vec<&str> = self.exec.split_whitespace().collect();
         if exec_parts.is_empty() {
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::InvalidInput,
-                "Invalid exec command",
-            ));
+            return Err(eyre!("No executable found for application: {}", self.name));
         }
-        let command = "gtk-launch";
-        let executable = self
-            .desktop_file_path
-            .as_ref()
-            .unwrap()
-            .file_name()
-            .unwrap()
-            .to_str()
-            .unwrap();
-        let args: &[&str; 1] = &[executable];
+        let exec_str = self.exec.clone();
+        let binding = PathBuf::from(&exec_str);
+        let executable = binding.file_name().unwrap();
 
-        let mut cmd = std::process::Command::new(command);
-        cmd.args(args);
+        let mut cmd: Vec<&str> = vec!["gtk-launch"];
+        cmd.push(executable.to_str().unwrap());
 
-        match cmd.spawn() {
-            Ok(mut child) => {
-                let res = child.try_wait();
-                if let Ok(Some(status)) = res {
-                    log::info!(
-                        "Launched application '{}' with exit code: {}",
-                        self.name,
-                        status.code().unwrap_or_default()
-                    );
-                } else {
-                    log::info!("Launched application '{}'", self.name);
+        let mut exec = std::process::Command::new(&cmd[0]);
+        log::info!(
+            "Launching application: {} with command: {:?}",
+            self.name,
+            cmd
+        );
+        if cmd.len() > 1 {
+            exec.args(&cmd[1..]);
+        }
+
+        unsafe {
+            exec.pre_exec(|| {
+                // Become independent of the parent process
+                if libc::setsid() < 0 {
+                    return Err(std::io::Error::last_os_error());
                 }
-                log::info!("Launched application command: {}", args.join(" "));
-                sleep(std::time::Duration::from_millis(500)); // give some time for the process to start
                 Ok(())
-            }
-            Err(e) => {
-                Err(std::io::Error::other(
-                    format!(
-                        "Failed to launch application: {} \nExecutable Path: {}",
-                        e, self.exec
-                    ),
-                ))
-            }
+            });
         }
+
+        exec.spawn().is_err().then(|| {
+            Some(Err::<(), color_eyre::Report>(eyre!(
+                "Failed to launch application: {} \nExecutable Path: {}",
+                self.name,
+                self.exec
+            )))
+        });
+        // sleep(std::time::Duration::from_millis(2000)); // give some time for the process to start
+        Ok(())
+        // let command = "gtk-launch";
+        // let executable = self
+        //     .desktop_file_path
+        //     .as_ref()
+        //     .unwrap()
+        //     .file_name()
+        //     .unwrap()
+        //     .to_str()
+        //     .unwrap();
+        // let args: &[&str; 1] = &[executable];
+
+        // let mut cmd = std::process::Command::new(command);
+        // cmd.args(args);
+
+        // match cmd.spawn() {
+        //     Ok(mut child) => {
+        //         let res = child.try_wait();
+        //         if let Ok(Some(status)) = res {
+        //             log::info!(
+        //                 "Launched application '{}' with exit code: {}",
+        //                 self.name,
+        //                 status.code().unwrap_or_default()
+        //             );
+        //         } else {
+        //             log::info!("Launched application '{}'", self.name);
+        //         }
+        //         log::info!("Launched application command: {}", args.join(" "));
+        //         sleep(std::time::Duration::from_millis(500)); // give some time for the process to start
+        //         Ok(())
+        //     }
+        //     Err(e) => Err(std::io::Error::other(format!(
+        //         "Failed to launch application: {} \nExecutable Path: {}",
+        //         e, self.exec
+        //     ))),
+        // }
     }
 }
 
@@ -82,17 +112,18 @@ pub fn find_desktop_files() -> Vec<Application> {
     {
         let apps_dir = dir.join("applications");
         if apps_dir.is_dir()
-            && let Ok(entries) = fs::read_dir(apps_dir) {
-                for e in entries.flatten() {
-                    // for each file in the directory
-                    // i.e. /usr/share/applications/example.desktop
-                    let p = e.path();
-                    if p.extension().and_then(|s| s.to_str()) == Some("desktop") {
-                        let app = parse_desktop_file(&p);
-                        apps.push(app);
-                    }
+            && let Ok(entries) = fs::read_dir(apps_dir)
+        {
+            for e in entries.flatten() {
+                // for each file in the directory
+                // i.e. /usr/share/applications/example.desktop
+                let p = e.path();
+                if p.extension().and_then(|s| s.to_str()) == Some("desktop") {
+                    let app = parse_desktop_file(&p);
+                    apps.push(app);
                 }
             }
+        }
     }
     apps
 }
@@ -133,26 +164,13 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
         }
     }
 
-    let application_name: String = parse_executable_name(
-        options
-            .get("Exec")
-            .cloned()
-            .unwrap_or_else(|| "example-command".into())
-            .as_str(),
-    );
-    let executable = parse_executable_args(
-        options
-            .get("Exec")
-            .cloned()
-            .unwrap_or_else(|| "example-command".into())
-            .as_str(),
-    );
+    let executable = path.to_str().unwrap_or("").to_string();
     Application {
         name: options
             .get("Name")
             .cloned()
             .unwrap_or_else(|| "Unknown".into()),
-        application_name: application_name.into(),
+
         exec: executable,
         icon: options.get("Icon").cloned(),
         comment: options.get("Comment").cloned(),

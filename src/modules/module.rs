@@ -1,6 +1,6 @@
 use crate::model::{
-    model::Model,
-    module::{ModuleState, UIState},
+    app_state::Model,
+    module_state::{ModuleState, UIState},
 };
 
 /// A trait that defines the core functionality for application modules.

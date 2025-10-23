@@ -1,16 +1,18 @@
 use ratatui::layout::{Constraint, Layout, Rect};
+use ratatui::style::Color;
 use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
+use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::events::{self, Event, process_events, update_navigation};
-use crate::model::model;
-use crate::model::module::ModuleState;
+use crate::model::app_state;
+use crate::model::module_state::ModuleState;
 use crate::modules::module::Module;
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
 use std::rc::Rc;
 pub struct App {
-    model: model::Model,
+    model: app_state::Model,
     settings: crate::settings::settings::Settings,
     terminal: DefaultTerminal,
     active_module_idx: usize,
@@ -21,7 +23,7 @@ impl App {
     pub fn new(terminal: DefaultTerminal) -> Self {
         log::info!("Initializing application...");
 
-        let model = model::Model::default();
+        let model = app_state::Model::default();
         let settings = crate::settings::settings::Settings::new();
 
         let modules: Vec<Box<dyn Module>> = vec![
@@ -47,7 +49,7 @@ impl App {
     // main application loop
     pub fn run(&mut self) {
         // Main application loop
-        self.model.running_state = model::RunState::Running;
+        self.model.running_state = app_state::RunState::Running;
 
         while self.model.is_running() {
             let pre_time = std::time::Instant::now();
@@ -63,6 +65,13 @@ impl App {
             self.model.delta_time = frame_duration.as_millis() as i32;
             self.model.time += frame_duration.as_secs() as i32;
             self.model.tick += 1;
+            for m in self.modules_vec.iter_mut() {
+                let state = m.get_state();
+                state.ui.result_box_state.tick = self.model.tick;
+                state.ui.result_box_state.delta_time = self.model.delta_time;
+                state.ui.search_box_state.tick = self.model.tick;
+                state.ui.search_box_state.delta_time = self.model.delta_time;
+            }
         }
     }
 
@@ -139,7 +148,7 @@ impl App {
         for e in events.iter() {
             match e {
                 Event::Quit => {
-                    self.model.running_state = model::RunState::Stopped;
+                    self.model.running_state = app_state::RunState::Stopped;
                 }
                 Event::Search(search_event) => {
                     match search_event {
@@ -175,7 +184,7 @@ impl App {
                                 "Module {} executed item successfully.",
                                 self.active_module_idx
                             );
-                            self.model.running_state = model::RunState::Stopped;
+                            self.model.running_state = app_state::RunState::Stopped;
                         });
                 }
                 _ => {}

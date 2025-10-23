@@ -1,7 +1,7 @@
 use crate::{
     model::{
-        model::Model,
-        module::{ModuleState, Result, UIState},
+        app_state::Model,
+        module_state::{ModuleState, Result, UIState},
     },
     modules::{applications::desktop::Application, module::Module},
 };
@@ -25,9 +25,7 @@ impl DesktopFilesModule {
         Self {
             settings: settings.clone(),
             state,
-            data: Data {
-                applications,
-            },
+            data: Data { applications },
         }
     }
 }
@@ -59,6 +57,8 @@ impl Module for DesktopFilesModule {
         self.state.search.previous_results = self.state.search.results.clone();
         self.state.search.results = result;
         self.state.ui.set_selected_result_index(0);
+        self.state.ui.result_box_state.last_search_tick = app_state.tick;
+        self.state.search.last_search_tick = app_state.tick;
 
         log::info!(
             "Found {} applications matching the query: {}",

@@ -5,8 +5,8 @@ use shunting::ShuntingParser;
 
 use crate::{
     model::{
-        model::Model,
-        module::{ModuleState, Result, UIState},
+        app_state::Model,
+        module_state::{ModuleState, Result, UIState},
     },
     modules::module::Module,
 };

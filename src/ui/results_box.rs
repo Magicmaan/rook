@@ -1,7 +1,9 @@
-use crate::model::module::{Result, UISection};
+use crate::effects;
+use crate::model::module_state::{Result, UISection};
 
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::number_to_icon;
+use ratatui::layout::Margin;
 use ratatui::symbols;
 use ratatui::widgets::{Borders, ListState};
 use ratatui::{
@@ -11,6 +13,7 @@ use ratatui::{
     text::{Line, Span},
     widgets::{Block, List, ListItem, Padding, StatefulWidget, Widget},
 };
+use tachyonfx::{Duration, EffectManager, EffectTimer, Interpolation, fx, pattern};
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ResultBoxState {
@@ -21,6 +24,7 @@ pub struct ResultBoxState {
     pub list_state: ListState,
     pub last_search_tick: u64,
     pub tick: u64,
+    pub delta_time: i32,
 }
 
 #[derive(Clone)]
@@ -93,9 +97,8 @@ impl ResultsBox {
 }
 
 impl StatefulWidget for ResultsBox {
-    type State = ResultBoxState;
-
-    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+    type State<'b> = ResultBoxState;
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {
         let results_settings: UIResultsSettings = self.settings.ui.results.clone();
         let theme = self.settings.ui.theme.clone();
         let results_theme = theme.get_results_colors();
@@ -226,7 +229,34 @@ impl StatefulWidget for ResultsBox {
             .highlight_style(Style::default().bg(results_theme.highlight.unwrap()));
 
         block.render(area, buf);
+
+        if self.settings.ui.results.rainbow_border {
+            effects::rainbow(area, buf, state.tick as u32);
+        }
+
         // list.render(inner_area, buf);
         StatefulWidget::render(list, inner_area, buf, &mut state.list_state);
+
+        if self.settings.ui.results.fade_in {
+            let mut effects: EffectManager<()> = EffectManager::default();
+            let mut fx = fx::fade_from_fg(
+                results_theme.background.unwrap(),
+                self.settings.ui.results.fade_in_duration,
+            );
+
+            if self.settings.ui.results.fade_top_to_bottom {
+                fx = fx.with_pattern(pattern::SweepPattern::down_to_up(area.height as u16 * 2));
+            }
+            fx = fx::remap_alpha(0.25, 1.0, fx);
+            effects.add_effect(fx);
+            effects.process_effects(
+                Duration::from_millis(
+                    state.tick.saturating_sub(state.last_search_tick) as u32
+                        * state.delta_time as u32,
+                ),
+                buf,
+                inner_area,
+            );
+        }
     }
 }

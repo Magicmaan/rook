@@ -6,7 +6,7 @@ use ratatui::{style::Color, widgets::BorderType};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use crate::model::module::UISection;
+use crate::model::module_state::UISection;
 use crate::settings::serialise::{
     deserialize_alignment, deserialize_border_type, deserialize_color,
     deserialize_optional_border_type, deserialize_optional_color, serialize_alignment,
@@ -50,6 +50,7 @@ pub struct UISearchSettings {
     )]
     pub text_alignment: Alignment, // alignment of the text: left, center, right
     pub padding: u16,        // padding inside the search box
+    pub rainbow_border: bool,
 }
 impl Default for UISearchSettings {
     fn default() -> Self {
@@ -60,6 +61,7 @@ impl Default for UISearchSettings {
             caret_visible: true,
             text_alignment: Alignment::Left,
             padding: 0,
+            rainbow_border: false,
         }
     }
 }
@@ -73,6 +75,10 @@ pub struct UIResultsSettings {
     pub loopback: bool,            // whether to loop back when navigating results
     pub fade_color: bool,          // whether to fade text color towards the bottom
     pub padding: u16,              // padding inside the results box
+    pub fade_in: bool,             // whether to fade in results on search
+    pub fade_in_duration: u32,     // duration of fade in effect in ms
+    pub fade_top_to_bottom: bool,  // pattern used for fade in effect
+    pub rainbow_border: bool,
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
@@ -85,6 +91,10 @@ impl Default for UIResultsSettings {
             loopback: true,               // loop back when navigating results
             fade_color: true,             // fade text color towards the bottom. REQUIRES RGB COLORS
             padding: 1,
+            fade_in: true,          // fade in results on search
+            fade_in_duration: 1000, // duration of fade in effect in ms
+            fade_top_to_bottom: true,
+            rainbow_border: false,
         }
     }
 }
@@ -420,9 +430,7 @@ impl ThemeSettings {
                 .bg(self.results.background.unwrap_or(self.background))
                 .fg(self.results.text.unwrap_or(self.text)),
 
-            _ => Style::default()
-                .bg(self.background)
-                .fg(self.text),
+            _ => Style::default().bg(self.background).fg(self.text),
         }
     }
 
