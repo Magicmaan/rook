@@ -5,7 +5,7 @@ use ratatui::{DefaultTerminal, crossterm::event};
 use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::events::{self, Event, process_events, update_navigation};
-use crate::model::app_state;
+use crate::model::app_state::{self, Model};
 use crate::model::module_state::ModuleState;
 use crate::modules::module::Module;
 use crate::ui::results_box::ResultsBox;
@@ -65,13 +65,10 @@ impl App {
             self.model.delta_time = frame_duration.as_millis() as i32;
             self.model.time += frame_duration.as_secs() as i32;
             self.model.tick += 1;
-            for m in self.modules_vec.iter_mut() {
-                let state = m.get_state();
-                state.ui.result_box_state.tick = self.model.tick;
-                state.ui.result_box_state.delta_time = self.model.delta_time;
-                state.ui.search_box_state.tick = self.model.tick;
-                state.ui.search_box_state.delta_time = self.model.delta_time;
-            }
+            self.model.ui.search_box_state.tick = self.model.tick;
+            self.model.ui.search_box_state.delta_time = self.model.delta_time;
+            self.model.ui.result_box_state.tick = self.model.tick;
+            self.model.ui.result_box_state.delta_time = self.model.delta_time;
         }
     }
 
@@ -116,17 +113,30 @@ impl App {
                 // then allowing conditional modules
                 //i.e. if "zen" then render applications results,
                 //i.e. if "1 + 2" then render calculator results, etc.
-                let state = module.render();
+                let ui_update = module.render();
+
+                self.model
+                    .ui
+                    .set_search_query(self.model.search.query.clone());
+
+                // update search box and results box states
+                self.model
+                    .ui
+                    .set_search_post_fix(ui_update.post_fix.clone());
+
+                self.model.ui.result_box_state.previous_results =
+                    self.model.ui.get_results().clone();
+                self.model.ui.set_results(ui_update.results.clone());
 
                 frame.render_stateful_widget(
                     SearchBox::new(&self.settings),
                     chunks[0],
-                    &mut state.search_box_state,
+                    &mut self.model.ui.search_box_state,
                 );
                 frame.render_stateful_widget(
                     ResultsBox::new(&self.settings),
                     chunks[2],
-                    &mut state.result_box_state,
+                    &mut self.model.ui.result_box_state,
                 );
             })
             .unwrap();
@@ -156,28 +166,34 @@ impl App {
                             // pass execute function to all modules to determine candidacy
                             // candidacy is simply "what module should handle and display results for this query"
                             for (i, m) in modules.iter_mut().enumerate() {
-                                let query = m.get_state().search.query.trim().to_string();
+                                let query = self.model.search.query.as_str();
                                 let candidacy = m.on_search(&query, &self.model);
+                                if candidacy {
+                                    self.model.ui.search_box_state.last_search_tick =
+                                        self.model.tick;
+                                    self.model.ui.result_box_state.last_search_tick =
+                                        self.model.tick;
+                                }
                                 candidates.push((i, candidacy));
                             }
                         }
                         _ => {
-                            for m in modules.iter_mut() {
-                                update_search(e, &mut **m);
-                            }
+                            // for m in modules.iter_mut() {
+                            update_search(e, &mut self.model);
+                            // }
                         }
                     }
                 }
 
                 Event::Navigate(_, _) => {
                     for m in modules.iter_mut() {
-                        update_navigation(e, m.get_state(), &self.settings);
+                        update_navigation(e, &mut self.model, &self.settings);
                     }
                 } // _ => {
 
                 Event::ItemExecute => {
                     let result = modules[self.active_module_idx]
-                        .on_execute(&self.model)
+                        .on_execute(&mut self.model)
                         .then(|| {
                             // on successful execution, exit application
                             log::info!(
@@ -200,8 +216,8 @@ impl App {
     }
 }
 
-fn update_search(event: &Event, module: &mut dyn Module) {
-    let state: &mut ModuleState = module.get_state();
+fn update_search(event: &Event, state: &mut Model) {
+    // let state = self.model;
     if let Event::Search(search_event) = event {
         match search_event {
             events::Search::Add(c) => {

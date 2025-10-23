@@ -1,4 +1,7 @@
-use crate::model::input::{KeyboardState, MouseState};
+use crate::model::{
+    input::{KeyboardState, MouseState},
+    module_state::{SearchState, UIState},
+};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum RunState {
@@ -16,6 +19,8 @@ pub struct Model {
 
     pub mouse: MouseState,
     pub keyboard: KeyboardState,
+    pub ui: UIState,
+    pub search: SearchState,
 }
 
 impl Model {

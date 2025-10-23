@@ -194,7 +194,7 @@ impl StatefulWidget for ResultsBox {
                 let mut muted_color = results_theme.text_muted.unwrap();
 
                 // calculate list color fade
-                if results_settings.fade_color && available_height >= 10 {
+                if results_settings.fade_color_at_bottom && available_height >= 10 {
                     log::trace!(
                         "Applying color fade for item {} at position {} of {}",
                         result,

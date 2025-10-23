@@ -69,17 +69,17 @@ impl Default for UISearchSettings {
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct UIResultsSettings {
-    pub max_results: usize,        // maximum number of results to display
-    pub show_scores: bool,         // whether to show scores next to results
-    pub open_through_number: bool, // whether to open results through number keybinds
-    pub numbered: bool,            // whether to show numbers next to results
-    pub number_mode: IconMode,     // icon mode for numbers
-    pub loopback: bool,            // whether to loop back when navigating results
-    pub fade_color: bool,          // whether to fade text color towards the bottom
-    pub padding: u16,              // padding inside the results box
-    pub fade_in: bool,             // whether to fade in results on search
-    pub fade_in_duration: u32,     // duration of fade in effect in ms
-    pub fade_top_to_bottom: bool,  // pattern used for fade in effect
+    pub max_results: usize,         // maximum number of results to display
+    pub show_scores: bool,          // whether to show scores next to results
+    pub open_through_number: bool,  // whether to open results through number keybinds
+    pub numbered: bool,             // whether to show numbers next to results
+    pub number_mode: IconMode,      // icon mode for numbers
+    pub loopback: bool,             // whether to loop back when navigating results
+    pub fade_color_at_bottom: bool, // whether to fade text color towards the bottom
+    pub padding: u16,               // padding inside the results box
+    pub fade_in: bool,              // whether to fade in results on search
+    pub fade_in_duration: u32,      // duration of fade in effect in ms
+    pub fade_top_to_bottom: bool,   // pattern used for fade in effect
     pub rainbow_border: bool,
     pub rainbow_border_speed: f32, // speed of the rainbow border effect in scalar multiples 1.0, 1.5, 2.0 etc
 }
@@ -92,7 +92,7 @@ impl Default for UIResultsSettings {
             open_through_number: true,    // CTRL + number to open
             number_mode: IconMode::Small, // icon mode for numbers
             loopback: true,               // loop back when navigating results
-            fade_color: true,             // fade text color towards the bottom. REQUIRES RGB COLORS
+            fade_color_at_bottom: true,   // fade text color towards the bottom. REQUIRES RGB COLORS
             padding: 1,
             fade_in: true,          // fade in results on search
             fade_in_duration: 1000, // duration of fade in effect in ms

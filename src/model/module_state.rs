@@ -10,7 +10,7 @@ pub enum UISection {
     Tooltip,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SearchState {
     pub searching: bool,
     pub query: String,
@@ -19,6 +19,19 @@ pub struct SearchState {
     pub previous_query: String,
     pub previous_results: Vec<(u16, usize)>,
 }
+impl Default for SearchState {
+    fn default() -> Self {
+        Self {
+            searching: false,
+            query: String::new(),
+            results: Vec::new(),
+            last_search_tick: 0,
+            previous_query: String::new(),
+            previous_results: Vec::new(),
+        }
+    }
+}
+
 impl SearchState {
     pub fn split_at_caret(&self, caret_position: usize) -> (&str, &str) {
         self.query.split_at(caret_position.min(self.query.len()))
@@ -31,13 +44,12 @@ pub struct ModuleState {
     // pub data: Data,
 
     // search stuff
-    pub search: SearchState,
+    // pub search: SearchState,
     // pub results: Vec<Result>,
     // pub previous_results: Vec<Result>,
     // pub caret_position: usize,
+    pub results: Vec<(u16, usize)>,
 
-    // UI related state can go here
-    pub ui: UIState,
     pub is_candidate: bool,
 }
 
@@ -52,7 +64,7 @@ pub struct Result {
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct UIState {
     pub result_box_state: ResultBoxState,
-    
+
     pub search_box_state: SearchBoxState,
     pub sections: Vec<(UISection, Rect)>,
 }
@@ -85,4 +97,9 @@ impl UIState {
     pub fn set_caret_position(&mut self, position: usize) {
         self.search_box_state.caret_position = position;
     }
+}
+
+pub struct UIStateUpdate {
+    pub post_fix: String,
+    pub results: Vec<Result>,
 }

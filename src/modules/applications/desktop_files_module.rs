@@ -1,7 +1,7 @@
 use crate::{
     model::{
         app_state::Model,
-        module_state::{ModuleState, Result, UIState},
+        module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
     modules::{applications::desktop::Application, module::Module},
 };
@@ -36,13 +36,10 @@ impl Module for DesktopFilesModule {
     }
 
     fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
-        // let query = self.state.search.query.trim();
         // ignore empty queries
         if query.is_empty() {
-            self.state.search.results.clear();
             return false;
         }
-
         let result = crate::modules::applications::desktop::sort_applications(
             &mut self.data.applications,
             query,
@@ -53,25 +50,19 @@ impl Module for DesktopFilesModule {
             return false;
         }
 
-        self.state.search.previous_query = query.to_string();
-        self.state.search.previous_results = self.state.search.results.clone();
-        self.state.search.results = result;
-        self.state.ui.set_selected_result_index(0);
-        self.state.ui.result_box_state.last_search_tick = app_state.tick;
-        self.state.ui.search_box_state.last_search_tick = app_state.tick;
-        self.state.search.last_search_tick = app_state.tick;
+        self.state.results = result;
 
         log::info!(
             "Found {} applications matching the query: {}",
-            self.state.search.results.len(),
+            app_state.search.results.len(),
             query
         );
-        log::info!("N of results: {}", self.state.search.results.len());
+        log::info!("N of results: {}", app_state.search.results.len());
         true
     }
-    fn on_execute(&mut self, app_state: &Model) -> bool {
-        let index = self.state.ui.get_selected_result_index();
-        let app_index = match self.state.search.results.get(index).map(|(_, idx)| *idx) {
+    fn on_execute(&mut self, app_state: &mut Model) -> bool {
+        let index = app_state.ui.get_selected_result_index();
+        let app_index = match app_state.search.results.get(index).map(|(_, idx)| *idx) {
             Some(i) => i,
             None => {
                 log::warn!("No application selected to execute.");
@@ -100,10 +91,9 @@ impl Module for DesktopFilesModule {
         true
     }
 
-    fn render(&mut self) -> &mut UIState {
+    fn render(&mut self) -> UIStateUpdate {
         let results_formatted = self
             .state
-            .search
             .results
             .iter()
             .map(|score| {
@@ -119,14 +109,9 @@ impl Module for DesktopFilesModule {
             })
             .collect();
 
-        self.state.ui.result_box_state.previous_results = self.state.ui.get_results().clone();
-        self.state.ui.set_results(results_formatted);
-
-        self.state
-            .ui
-            .set_search_query(self.state.search.query.clone());
-
-        // self.state.ui.set_search_post_fix("boom".to_string());
-        &mut self.state.ui
+        UIStateUpdate {
+            post_fix: "".to_string(),
+            results: results_formatted,
+        }
     }
 }

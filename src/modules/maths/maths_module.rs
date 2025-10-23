@@ -6,7 +6,7 @@ use shunting::ShuntingParser;
 use crate::{
     model::{
         app_state::Model,
-        module_state::{ModuleState, Result, UIState},
+        module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
     modules::module::Module,
 };
@@ -93,7 +93,7 @@ impl Module for MathsModule {
         &mut self.state
     }
 
-    fn on_search(&mut self, query: &str, _: &Model) -> bool {
+    fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
         self.state.is_candidate = true;
         let formatted_query = query.trim().replace(" ", "");
         let equation = &mut Equation {
@@ -164,10 +164,11 @@ impl Module for MathsModule {
             .map(|(idx, _)| (1, idx))
             .collect::<Vec<(u16, usize)>>();
 
-        self.state.search.previous_query = query.to_string();
-        self.state.search.previous_results = self.state.search.results.clone();
-        self.state.search.results = results_pointers;
-        self.state.ui.set_selected_result_index(0);
+        self.state.results = results_pointers.clone();
+
+        // self.state.search.previous_query = query.to_string();
+        // self.state.search.previous_results = self.state.search.results.clone();
+        // self.state.search.results = results_pointers;
 
         log::info!("MathsModule is candidate for query {}", query);
 
@@ -175,17 +176,13 @@ impl Module for MathsModule {
 
         self.state.is_candidate
     }
-    fn on_execute(&mut self, _: &Model) -> bool {
+    fn on_execute(&mut self, _: &mut Model) -> bool {
         true
     }
 
-    fn render(&mut self) -> &mut UIState {
-        let mut results_formatted: Vec<Option<Result>> = Vec::new();
-        for e in self.data.equations.iter_mut() {}
-
+    fn render(&mut self) -> UIStateUpdate {
         let results_formatted = self
             .state
-            .search
             .results
             .iter()
             .map(|score| {
@@ -210,22 +207,15 @@ impl Module for MathsModule {
             .filter_map(|x| x)
             .collect();
 
-        self.state.ui.result_box_state.previous_results = self.state.ui.get_results().clone();
-        self.state.ui.set_results(results_formatted);
-
-        // self.state.ui.set_results(results_formatted);
-
-        self.state
-            .ui
-            .set_search_query(self.state.search.query.clone());
-
-        self.state.ui.set_search_post_fix(
-            self.data
-                .equations
-                .front()
-                .map(|eq| format!("= {}", eq.result.clone()))
-                .unwrap_or_default(),
-        );
-        &mut self.state.ui
+        UIStateUpdate {
+            post_fix: self.data.equations.front().map_or("".to_string(), |e| {
+                if e.valid {
+                    format!("= {}", e.result)
+                } else {
+                    "".to_string()
+                }
+            }),
+            results: results_formatted,
+        }
     }
 }

@@ -1,13 +1,12 @@
 use crate::model::{
     app_state::Model,
-    module_state::{ModuleState, UIState},
+    module_state::{ModuleState, UIState, UIStateUpdate},
 };
 
 /// A trait that defines the core functionality for application modules.
 ///
-/// Modules are components that can handle events, maintain state, and render UI elements.
-/// Each module can respond to navigation and search events, and is responsible for
-/// rendering itself within the provided layout chunks.
+/// Modules are components that can take in a query, process it based on the modules own state,
+/// and output a UI State with results / other information to be displayed in the terminal UI.
 ///
 /// # Type Parameters
 ///
@@ -50,7 +49,7 @@ pub trait Module {
 
     fn on_search(&mut self, query: &str, app_state: &Model) -> bool;
 
-    fn on_execute(&mut self, app_state: &Model) -> bool;
+    fn on_execute(&mut self, app_state: &mut Model) -> bool;
     /// Renders the module's UI elements to the terminal frame.
     ///
     /// This method is responsible for drawing the module's interface within
@@ -68,7 +67,7 @@ pub trait Module {
     ///   - `chunks[3]` - gap between results and bottom (if any) (don't render anything here)
     ///   - `chunks[4]` - Bottom area for status bars or additional info
     ///
-    fn render(&mut self) -> &mut UIState;
+    fn render(&mut self) -> UIStateUpdate;
 
     fn get_state(&mut self) -> &mut ModuleState;
 }
