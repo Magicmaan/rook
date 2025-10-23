@@ -14,7 +14,6 @@ pub enum UISection {
 pub struct SearchState {
     pub searching: bool,
     pub query: String,
-    pub results: Vec<(u16, usize)>, // (score, index in applications)
     pub last_search_tick: u64,
     pub previous_query: String,
     pub previous_results: Vec<(u16, usize)>,
@@ -24,7 +23,6 @@ impl Default for SearchState {
         Self {
             searching: false,
             query: String::new(),
-            results: Vec::new(),
             last_search_tick: 0,
             previous_query: String::new(),
             previous_results: Vec::new(),

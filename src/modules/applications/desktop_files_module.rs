@@ -66,7 +66,7 @@ impl Module for DesktopFilesModule {
     }
     fn on_execute(&mut self, app_state: &mut AppState) -> bool {
         let index = app_state.ui.get_selected_result_index();
-        let app_index = match app_state.search.results.get(index).map(|(_, idx)| *idx) {
+        let app_index = match self.state.results.get(index).map(|(_, idx)| *idx) {
             Some(i) => i,
             None => {
                 log::warn!("No application selected to execute.");

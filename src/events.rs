@@ -170,9 +170,13 @@ pub fn update_navigation(event: &Event, state: &mut AppState, settings: &Setting
                 }
             }
             NavigateDirection::Down => {
+                log::info!("Navigating down by {}", amount);
                 let current = state.ui.get_selected_result_index();
-                let max_index = state.search.results.len().saturating_sub(1);
+                log::info!("Current selected index: {}", current);
+                let max_index = state.ui.result_box_state.results.len().saturating_sub(1);
+                log::info!("Max index: {}", max_index);
                 let new_index = current.saturating_add(*amount);
+                log::info!("New index: {}", new_index);
 
                 if settings.ui.results.loopback && new_index > max_index {
                     state.ui.set_selected_result_index(0);

@@ -1,3 +1,4 @@
+use color_eyre::Section;
 use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::style::Color;
 use ratatui::widgets::{Block, Padding};
@@ -6,7 +7,7 @@ use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::events::{self, Event, process_events, update_navigation};
 use crate::model::app_state::{self, AppState};
-use crate::model::module_state::ModuleState;
+use crate::model::module_state::{ModuleState, UISection};
 use crate::modules::module::{Module, ModuleData};
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
@@ -101,11 +102,28 @@ impl App {
                     // when their is a gap, extra height must be given for centering
                     search_bar_height += 1;
                 }
-                let layout = Layout::vertical([
-                    Constraint::Length(search_bar_height),
-                    Constraint::Length(gap.saturating_sub(1)),
-                    Constraint::Fill(1),
-                ]);
+                let mut constraints: Vec<Constraint> = vec![];
+                self.settings
+                    .ui
+                    .layout
+                    .sections
+                    .iter()
+                    .for_each(|section| match section {
+                        UISection::Search => {
+                            constraints.push(Constraint::Length(search_bar_height))
+                        }
+                        UISection::Results => constraints.push(Constraint::Min(1)),
+                        UISection::Tooltip => constraints.push(Constraint::Length(1)),
+                    });
+                let mut spaced_constraints: Vec<Constraint> = Vec::new();
+                for (i, constraint) in constraints.into_iter().enumerate() {
+                    spaced_constraints.push(constraint);
+                    if i < self.settings.ui.layout.sections.len() - 1 {
+                        spaced_constraints.push(Constraint::Length(gap.saturating_sub(1)));
+                    }
+                }
+                constraints = spaced_constraints;
+                let layout = Layout::vertical(constraints);
                 let chunks: Rc<[Rect]> = layout.split(area);
 
                 // pass chunks to modules
@@ -130,12 +148,28 @@ impl App {
 
                 frame.render_stateful_widget(
                     SearchBox::new(&self.settings),
-                    chunks[0],
+                    chunks[self
+                        .settings
+                        .ui
+                        .layout
+                        .sections
+                        .iter()
+                        .position(|s| *s == UISection::Search)
+                        .map(|i| i * 2)
+                        .unwrap_or(0)],
                     &mut self.model.ui.search_box_state,
                 );
                 frame.render_stateful_widget(
                     ResultsBox::new(&self.settings),
-                    chunks[2],
+                    chunks[self
+                        .settings
+                        .ui
+                        .layout
+                        .sections
+                        .iter()
+                        .position(|s| *s == UISection::Results)
+                        .map(|i| i * 2)
+                        .unwrap_or(0)],
                     &mut self.model.ui.result_box_state,
                 );
             })
@@ -173,6 +207,7 @@ impl App {
                                         self.model.tick;
                                     self.model.ui.result_box_state.last_search_tick =
                                         self.model.tick;
+                                    self.model.ui.set_selected_result_index(0);
                                 }
                                 candidates.push((i, candidacy));
                             }
@@ -186,9 +221,9 @@ impl App {
                 }
 
                 Event::Navigate(_, _) => {
-                    for m in modules.iter_mut() {
-                        update_navigation(e, &mut self.model, &self.settings);
-                    }
+                    // for m in modules.iter_mut() {
+                    update_navigation(e, &mut self.model, &self.settings);
+                    // }
                 } // _ => {
 
                 Event::ItemExecute => {
