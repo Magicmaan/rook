@@ -11,7 +11,7 @@ pub enum RunState {
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-pub struct Model {
+pub struct AppState {
     pub running_state: RunState,
     pub tick: u64,
     pub delta_time: i32, // in ms
@@ -23,7 +23,7 @@ pub struct Model {
     pub search: SearchState,
 }
 
-impl Model {
+impl AppState {
     pub fn is_running(&self) -> bool {
         self.running_state == RunState::Running
     }

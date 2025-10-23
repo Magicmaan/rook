@@ -5,7 +5,7 @@ use shunting::ShuntingParser;
 
 use crate::{
     model::{
-        app_state::Model,
+        app_state::AppState,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
     modules::module::{Module, ModuleData},
@@ -94,7 +94,7 @@ impl Module for MathsModule {
         &mut self.state
     }
 
-    fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
+    fn on_search(&mut self, query: &str, app_state: &AppState) -> bool {
         let mut candidacy = false;
         if query.is_empty() {
             return false;
@@ -174,7 +174,7 @@ impl Module for MathsModule {
 
         candidacy
     }
-    fn on_execute(&mut self, _: &mut Model) -> bool {
+    fn on_execute(&mut self, _: &mut AppState) -> bool {
         true
     }
 

@@ -1,6 +1,6 @@
 use ratatui::crossterm::event::{self, KeyEvent};
 
-use crate::{model::app_state::Model, settings::settings::Settings};
+use crate::{model::app_state::AppState, settings::settings::Settings};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum NavigateDirection {
@@ -150,7 +150,7 @@ fn process_key_events(settings: &Settings, key_event: event::KeyEvent) -> Vec<Ev
     events
 }
 
-pub fn update_navigation(event: &Event, state: &mut Model, settings: &Settings) {
+pub fn update_navigation(event: &Event, state: &mut AppState, settings: &Settings) {
     if let Event::Navigate(direction, amount) = event {
         match direction {
             NavigateDirection::Left => {

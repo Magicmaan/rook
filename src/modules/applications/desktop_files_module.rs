@@ -1,6 +1,6 @@
 use crate::{
     model::{
-        app_state::Model,
+        app_state::AppState,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
     modules::{
@@ -40,7 +40,7 @@ impl Module for DesktopFilesModule {
         &mut self.state
     }
 
-    fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
+    fn on_search(&mut self, query: &str, app_state: &AppState) -> bool {
         // ignore empty queries
         if query.is_empty() {
             return false;
@@ -64,7 +64,7 @@ impl Module for DesktopFilesModule {
         );
         true
     }
-    fn on_execute(&mut self, app_state: &mut Model) -> bool {
+    fn on_execute(&mut self, app_state: &mut AppState) -> bool {
         let index = app_state.ui.get_selected_result_index();
         let app_index = match app_state.search.results.get(index).map(|(_, idx)| *idx) {
             Some(i) => i,

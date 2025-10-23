@@ -5,14 +5,14 @@ use ratatui::{DefaultTerminal, crossterm::event};
 use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::events::{self, Event, process_events, update_navigation};
-use crate::model::app_state::{self, Model};
+use crate::model::app_state::{self, AppState};
 use crate::model::module_state::ModuleState;
 use crate::modules::module::{Module, ModuleData};
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
 use std::rc::Rc;
 pub struct App {
-    model: app_state::Model,
+    model: app_state::AppState,
     settings: crate::settings::settings::Settings,
     terminal: DefaultTerminal,
     active_module_idx: usize,
@@ -23,7 +23,7 @@ impl App {
     pub fn new(terminal: DefaultTerminal) -> Self {
         log::info!("Initializing application...");
 
-        let model = app_state::Model::default();
+        let model = app_state::AppState::default();
         let settings = crate::settings::settings::Settings::new();
 
         let modules: Vec<Box<dyn Module<State = ModuleState>>> = vec![
@@ -216,7 +216,7 @@ impl App {
     }
 }
 
-fn update_search(event: &Event, state: &mut Model) {
+fn update_search(event: &Event, state: &mut AppState) {
     // let state = self.model;
     if let Event::Search(search_event) = event {
         match search_event {

@@ -1,5 +1,5 @@
 use crate::model::{
-    app_state::Model,
+    app_state::AppState,
     module_state::{ModuleState, UIState, UIStateUpdate},
 };
 
@@ -33,7 +33,7 @@ pub trait Module {
     /// # Returns
     ///
     /// * `bool` - True if this module is a candidate for handling the query, false otherwise
-    fn on_search(&mut self, query: &str, app_state: &Model) -> bool;
+    fn on_search(&mut self, query: &str, app_state: &AppState) -> bool;
 
     /// Executes the module's primary action.
     ///
@@ -47,7 +47,7 @@ pub trait Module {
     /// # Returns
     ///
     /// * `bool` - True if the execution was successful, false otherwise
-    fn on_execute(&mut self, app_state: &mut Model) -> bool;
+    fn on_execute(&mut self, app_state: &mut AppState) -> bool;
 
     /// Renders the module's UI by processing its internal data into display elements.
     ///

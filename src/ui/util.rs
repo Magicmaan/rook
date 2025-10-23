@@ -1,4 +1,10 @@
+use ratatui::{
+    symbols::{self, border},
+    widgets::Borders,
+};
 use serde::{Deserialize, Serialize};
+
+use crate::model::module_state::UISection;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum IconMode {
@@ -65,4 +71,16 @@ pub fn number_to_icon(number: usize, mode: IconMode) -> String {
         _ => " ", // fallback for numbers > 10
     }
     .to_string()
+}
+
+pub fn collapsed_border(section: UISection, default_border: border::Set) -> border::Set {
+    match section {
+        UISection::Search => symbols::border::Set { ..default_border },
+        UISection::Results => symbols::border::Set {
+            top_left: symbols::line::NORMAL.vertical_right,
+            top_right: symbols::line::NORMAL.vertical_left,
+            ..default_border
+        },
+        UISection::Tooltip => symbols::border::Set { ..default_border },
+    }
 }

@@ -381,10 +381,10 @@ impl Default for ThemeSettings {
 }
 
 impl ThemeSettings {
-    pub fn get_border_type(&self, section: &str) -> BorderType {
+    pub fn get_border_type(&self, section: UISection) -> BorderType {
         match section {
-            "search" => self.search.border_type.unwrap_or(self.border_type),
-            "results" => self.results.border_type.unwrap_or(self.border_type),
+            UISection::Search => self.search.border_type.unwrap_or(self.border_type),
+            UISection::Results => self.results.border_type.unwrap_or(self.border_type),
             _ => self.border_type,
         }
     }
