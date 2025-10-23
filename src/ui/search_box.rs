@@ -76,8 +76,11 @@ impl StatefulWidget for SearchBox {
         // render container
         block.render(area, buf);
 
+        // rainbow border effect
         if self.settings.ui.search.rainbow_border {
-            effects::rainbow(area, buf, state.tick as u32);
+            let t = state.tick as u32;
+            let speed: f32 = self.settings.ui.search.rainbow_border_speed;
+            effects::rainbow(search_theme.border.unwrap(), 2000, speed, area, buf, t);
         }
         //
         // Search Box text rendering
@@ -98,7 +101,7 @@ impl StatefulWidget for SearchBox {
 
         // let mut caret_query = before_caret.to_string();
         if search_settings.caret_visible
-            && (since_epoch.as_millis() as u64 / search_settings.caret_blink_rate).is_multiple_of(2)
+            && (since_epoch.as_millis() as u32 / search_settings.caret_blink_rate).is_multiple_of(2)
         {
             flash_caret = true;
         }

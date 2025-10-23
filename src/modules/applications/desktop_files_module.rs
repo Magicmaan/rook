@@ -58,6 +58,7 @@ impl Module for DesktopFilesModule {
         self.state.search.results = result;
         self.state.ui.set_selected_result_index(0);
         self.state.ui.result_box_state.last_search_tick = app_state.tick;
+        self.state.ui.search_box_state.last_search_tick = app_state.tick;
         self.state.search.last_search_tick = app_state.tick;
 
         log::info!(

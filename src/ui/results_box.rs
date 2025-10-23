@@ -230,8 +230,11 @@ impl StatefulWidget for ResultsBox {
 
         block.render(area, buf);
 
-        if self.settings.ui.results.rainbow_border {
-            effects::rainbow(area, buf, state.tick as u32);
+        // rainbow border effect
+        if self.settings.ui.search.rainbow_border {
+            let t = state.tick as u32;
+            let speed: f32 = self.settings.ui.results.rainbow_border_speed;
+            effects::rainbow(results_theme.border.unwrap(), 2000, speed, area, buf, t);
         }
 
         // list.render(inner_area, buf);

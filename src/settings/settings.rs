@@ -38,11 +38,11 @@ impl Default for KeybindSettings {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct UISearchSettings {
     pub pre_query: String,     // text before the query input
     pub caret_text: String,    // caret character
-    pub caret_blink_rate: u64, // in ms
+    pub caret_blink_rate: u32, // in ms
     pub caret_visible: bool, // if disabled, remove blinking, caret, and care movement    // if true, search as you type
     #[serde(
         deserialize_with = "deserialize_alignment",
@@ -51,6 +51,7 @@ pub struct UISearchSettings {
     pub text_alignment: Alignment, // alignment of the text: left, center, right
     pub padding: u16,        // padding inside the search box
     pub rainbow_border: bool,
+    pub rainbow_border_speed: f32, // speed of the rainbow border effect in scalar multiples 1.0, 1.5, 2.0 etc
 }
 impl Default for UISearchSettings {
     fn default() -> Self {
@@ -62,10 +63,11 @@ impl Default for UISearchSettings {
             text_alignment: Alignment::Left,
             padding: 0,
             rainbow_border: false,
+            rainbow_border_speed: 1.0,
         }
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct UIResultsSettings {
     pub max_results: usize,        // maximum number of results to display
     pub show_scores: bool,         // whether to show scores next to results
@@ -79,6 +81,7 @@ pub struct UIResultsSettings {
     pub fade_in_duration: u32,     // duration of fade in effect in ms
     pub fade_top_to_bottom: bool,  // pattern used for fade in effect
     pub rainbow_border: bool,
+    pub rainbow_border_speed: f32, // speed of the rainbow border effect in scalar multiples 1.0, 1.5, 2.0 etc
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
@@ -95,6 +98,7 @@ impl Default for UIResultsSettings {
             fade_in_duration: 1000, // duration of fade in effect in ms
             fade_top_to_bottom: true,
             rainbow_border: false,
+            rainbow_border_speed: 1.0,
         }
     }
 }
@@ -449,7 +453,7 @@ impl ThemeSettings {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, PartialEq, Deserialize, Serialize)]
 pub struct UISettings {
     pub layout: UILayoutSettings,
     pub search: UISearchSettings,
@@ -470,7 +474,7 @@ impl Default for SearchSettings {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, PartialEq, Deserialize, Serialize)]
 pub struct Settings {
     // Add your settings fields here
     pub search: SearchSettings,
