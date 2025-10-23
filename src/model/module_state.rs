@@ -40,17 +40,12 @@ impl SearchState {
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ModuleState {
-    // data
-    // pub data: Data,
-
     // search stuff
     // pub search: SearchState,
     // pub results: Vec<Result>,
     // pub previous_results: Vec<Result>,
     // pub caret_position: usize,
     pub results: Vec<(u16, usize)>,
-
-    pub is_candidate: bool,
 }
 
 impl ModuleState {}

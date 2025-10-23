@@ -8,7 +8,7 @@ use crate::{
         app_state::Model,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
-    modules::module::Module,
+    modules::module::{Module, ModuleData},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -17,15 +17,17 @@ pub struct Equation {
     pub result: String,
     pub valid: bool,
 }
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 
-pub struct Data {
+pub struct MathsData {
     pub equations: VecDeque<Equation>,
 }
+impl ModuleData for MathsData {}
 
 pub struct MathsModule {
     pub settings: crate::settings::settings::Settings,
     state: ModuleState,
-    data: Data,
+    data: Box<MathsData>,
     context: shunting::MathContext,
     time_since_last_eval: std::time::Instant,
 }
@@ -36,9 +38,7 @@ impl MathsModule {
         Self {
             settings: settings.clone(),
             state,
-            data: Data {
-                equations: VecDeque::new(),
-            },
+            data: Box::new(MathsData::default()),
             context: shunting::MathContext::new(),
             time_since_last_eval: std::time::Instant::now(),
         }
@@ -89,21 +89,23 @@ impl MathsModule {
 }
 
 impl Module for MathsModule {
+    type State = ModuleState;
     fn get_state(&mut self) -> &mut ModuleState {
         &mut self.state
     }
 
     fn on_search(&mut self, query: &str, app_state: &Model) -> bool {
-        self.state.is_candidate = true;
+        let mut candidacy = false;
+        if query.is_empty() {
+            return false;
+        }
+
         let formatted_query = query.trim().replace(" ", "");
         let equation = &mut Equation {
             expression: formatted_query.clone(),
             result: "✕".to_string(),
             valid: false,
         };
-        if query.is_empty() {
-            return false;
-        }
 
         let expr = ShuntingParser::parse_str(formatted_query.as_str());
 
@@ -112,14 +114,14 @@ impl Module for MathsModule {
                 Ok(value) => {
                     log::info!("Evaluated expression: {} = {}", query, value);
                     if query.parse::<f64>().is_ok() {
-                        self.state.is_candidate = false;
+                        candidacy = false;
                         &mut Equation {
                             expression: formatted_query,
                             result: value.to_string(),
                             valid: false,
                         }
                     } else {
-                        self.state.is_candidate = true;
+                        candidacy = true;
                         &mut Equation {
                             expression: formatted_query,
                             result: value.to_string(),
@@ -131,9 +133,9 @@ impl Module for MathsModule {
                 Err(_) => {
                     if formatted_query.contains(['+', '-', '*', '/']) {
                         // log::info!("MathsModule is candidate for query {}", query);
-                        self.state.is_candidate = true;
+                        candidacy = true;
                     } else {
-                        self.state.is_candidate = false;
+                        candidacy = false;
                     }
                     // self.state.is_candidate = false;
                     log::info!("Invalid expression: {}", query);
@@ -141,7 +143,7 @@ impl Module for MathsModule {
                 }
             }
         } else {
-            self.state.is_candidate = false;
+            candidacy = false;
             log::info!("Failed to parse expression: {}", query);
             equation
         };
@@ -149,7 +151,7 @@ impl Module for MathsModule {
 
         if result.valid {
             self.data.equations.push_front(result.clone());
-            self.state.is_candidate = true;
+            candidacy = true;
         }
 
         if self.data.equations.len() > 100 {
@@ -166,15 +168,11 @@ impl Module for MathsModule {
 
         self.state.results = results_pointers.clone();
 
-        // self.state.search.previous_query = query.to_string();
-        // self.state.search.previous_results = self.state.search.results.clone();
-        // self.state.search.results = results_pointers;
-
         log::info!("MathsModule is candidate for query {}", query);
 
         self.time_since_last_eval = std::time::Instant::now();
 
-        self.state.is_candidate
+        candidacy
     }
     fn on_execute(&mut self, _: &mut Model) -> bool {
         true

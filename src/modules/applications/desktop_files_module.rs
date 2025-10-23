@@ -3,18 +3,22 @@ use crate::{
         app_state::Model,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
-    modules::{applications::desktop::Application, module::Module},
+    modules::{
+        applications::desktop::Application,
+        module::{Module, ModuleData},
+    },
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
-pub struct Data {
+pub struct DesktopData {
     pub applications: Vec<Application>,
 }
+impl ModuleData for DesktopData {}
 
 pub struct DesktopFilesModule {
     pub settings: crate::settings::settings::Settings,
     state: ModuleState,
-    data: Data,
+    data: Box<DesktopData>,
 }
 
 impl DesktopFilesModule {
@@ -25,12 +29,13 @@ impl DesktopFilesModule {
         Self {
             settings: settings.clone(),
             state,
-            data: Data { applications },
+            data: Box::new(DesktopData { applications }),
         }
     }
 }
 
 impl Module for DesktopFilesModule {
+    type State = ModuleState;
     fn get_state(&mut self) -> &mut ModuleState {
         &mut self.state
     }
@@ -54,10 +59,9 @@ impl Module for DesktopFilesModule {
 
         log::info!(
             "Found {} applications matching the query: {}",
-            app_state.search.results.len(),
+            self.state.results.len(),
             query
         );
-        log::info!("N of results: {}", app_state.search.results.len());
         true
     }
     fn on_execute(&mut self, app_state: &mut Model) -> bool {

@@ -7,7 +7,7 @@ use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 use crate::events::{self, Event, process_events, update_navigation};
 use crate::model::app_state::{self, Model};
 use crate::model::module_state::ModuleState;
-use crate::modules::module::Module;
+use crate::modules::module::{Module, ModuleData};
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
 use std::rc::Rc;
@@ -16,7 +16,7 @@ pub struct App {
     settings: crate::settings::settings::Settings,
     terminal: DefaultTerminal,
     active_module_idx: usize,
-    modules_vec: Vec<Box<dyn Module>>,
+    modules_vec: Vec<Box<dyn Module<State = ModuleState>>>,
 }
 
 impl App {
@@ -26,7 +26,7 @@ impl App {
         let model = app_state::Model::default();
         let settings = crate::settings::settings::Settings::new();
 
-        let modules: Vec<Box<dyn Module>> = vec![
+        let modules: Vec<Box<dyn Module<State = ModuleState>>> = vec![
             Box::new(
                 crate::modules::applications::desktop_files_module::DesktopFilesModule::new(
                     &settings,

@@ -5,92 +5,67 @@ use crate::model::{
 
 /// A trait that defines the core functionality for application modules.
 ///
-/// Modules are components that can take in a query, process it based on the modules own state,
-/// and output a UI State with results / other information to be displayed in the terminal UI.
+/// A module is a small "machine" that operates on its own internal data to process
+/// queries and generate UI content. Each module maintains its own state and data,
+/// and can determine its relevance to search queries.
 ///
 /// # Type Parameters
 ///
-/// * `State` - The type representing the internal state of the module
+/// * `Data` - The type representing the module's internal data
+/// * `State` - The type representing the module's internal state
+
+pub trait ModuleData {}
+
 pub trait Module {
-    /// The type representing the internal state of this module
+    type State;
 
-    /// Updates the module based on incoming events and application state.
+    /// Processes a search query and determines module candidacy.
     ///
-    /// This method processes a vector of events, taken in from the apps update() loop,
-    /// handler methods based on the event type.
+    /// This method evaluates whether the module is relevant to the given search query.
+    /// For example, a math module would return true for queries like "1+1" or "calculate",
+    /// while a file search module might return true for filesystem-related queries.
     ///
     /// # Arguments
     ///
-    /// * `events` - A vector of events to process
-    /// * `app_state` - Mutable reference to the application's global state model
-
-    /// Handles navigation-related events for the module.
+    /// * `query` - The search query string to evaluate
+    /// * `app_state` - Reference to the application's global state
     ///
-    /// This method is called when a navigation event is received and should
-    /// update the module's internal state accordingly.
+    /// # Returns
     ///
-    /// # Arguments
-    ///
-    /// * `event` - The navigation event to process
-    // fn update_navigation(&mut self, event: &Event);
-
-    /// Handles search-related events for the module.
-    ///
-    /// This method is called when a search event is received and should
-    /// update the module's search functionality and internal state.
-    ///
-    /// # Arguments
-    ///
-    /// * `event` - The search event to process
-    ///   - `Add(char)` - Add a character to the search query
-    ///   - `Remove(isize)` - Remove characters from the search query
-    ///   - `Execute` - Execute the search with the current query
-    ///   - `Clear` - Clear the current search query
-
+    /// * `bool` - True if this module is a candidate for handling the query, false otherwise
     fn on_search(&mut self, query: &str, app_state: &Model) -> bool;
 
-    fn on_execute(&mut self, app_state: &mut Model) -> bool;
-    /// Renders the module's UI elements to the terminal frame.
+    /// Executes the module's primary action.
     ///
-    /// This method is responsible for drawing the module's interface within
-    /// the provided layout chunks using the ratatui framework.
-    ///
-    /// the UI should be drawn from structs own settings and state.
+    /// This method performs the module's main functionality, typically triggered
+    /// when the user confirms or executes a search/action.
     ///
     /// # Arguments
     ///
-    /// * `frame` - Mutable reference to the ratatui frame for rendering
-    /// * `chunks` - Reference-counted slice of layout rectangles defining the UI sections:
-    ///   - `chunks[0]` - Search box area for user input
-    ///   - `chunks[1]` - gap between search box and results (if any) (don't render anything here)
-    ///   - `chunks[2]` - Results area for displaying search results or content
-    ///   - `chunks[3]` - gap between results and bottom (if any) (don't render anything here)
-    ///   - `chunks[4]` - Bottom area for status bars or additional info
+    /// * `app_state` - Mutable reference to the application's global state
     ///
+    /// # Returns
+    ///
+    /// * `bool` - True if the execution was successful, false otherwise
+    fn on_execute(&mut self, app_state: &mut Model) -> bool;
+
+    /// Renders the module's UI by processing its internal data into display elements.
+    ///
+    /// This method acts upon the module's stored data to produce a UIStateUpdate
+    /// containing results, query information, and other display elements. The module
+    /// transforms its internal data state into UI components that can be displayed
+    /// in the terminal interface.
+    ///
+    /// # Returns
+    ///
+    /// * `UIStateUpdate` - Contains the rendered results, query display, and other
+    ///   UI elements derived from the module's current data state
     fn render(&mut self) -> UIStateUpdate;
 
+    /// Retrieves a mutable reference to the module's state.
+    ///
+    /// # Returns
+    ///
+    /// * `&mut ModuleState` - Mutable reference to the module's internal state
     fn get_state(&mut self) -> &mut ModuleState;
 }
-
-// pub trait Update {
-//     // update will handle events and update the modules state accordingly.
-//     // possibility to add custom state for each module in the future?
-//     // although I don't know how this would work yet.
-//     fn update(&mut self, events: &Vec<Event>);
-// }
-
-// // idea:
-// // A Module trait that defines update, render.
-// // their will be module state, and UI state.
-// // during update, module state is updated based on events. this could be stuff like search queries , raw data, objects etc.
-// // this will then update UIState, which is specifically for rendering.
-// // during render, the UIState is used to render the widgets.
-
-// pub trait UI {
-//     // UI state will hold data specifically meant to be rendered
-//     // i.e. results, list state, selected item etc.
-//     type UIState;
-
-//     fn search_box(&self) -> &dyn StatefulWidget<State = Self::UIState>;
-//     fn results_box(&self) -> &dyn StatefulWidget<State = Self::UIState>;
-// }
