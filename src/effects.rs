@@ -1,5 +1,8 @@
 use ratatui::{buffer::Buffer, layout::Rect, style::Color};
-use tachyonfx::{Duration, EffectManager, fx, pattern::SweepPattern};
+use tachyonfx::{
+    Duration, EffectManager, fx,
+    pattern::{self, SweepPattern},
+};
 
 pub fn rainbow(
     start_color: Color,
@@ -29,4 +32,22 @@ pub fn rainbow(
 
     effects.add_effect(fx);
     effects.process_effects(Duration::from_millis((t)), buf, area);
+}
+
+pub fn fade_in(
+    start_color: Color,
+    duration: u32,
+    fade_direction: Option<pattern::AnyPattern>,
+    area: Rect,
+    buf: &mut Buffer,
+    tick: u32,
+) {
+    let mut effects: EffectManager<()> = EffectManager::default();
+    let mut fx = fx::fade_from_fg(start_color, duration);
+    if let Some(fade_direction) = fade_direction {
+        fx = fx.with_pattern(fade_direction)
+    }
+    fx = fx::remap_alpha(0.1, 1.0, fx);
+    effects.add_effect(fx);
+    effects.process_effects(Duration::from_millis(tick), buf, area);
 }

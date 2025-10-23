@@ -145,6 +145,15 @@ impl StatefulWidget for ResultsBox {
         // block.render(area, buf);
         let inner_area = block.inner(area);
 
+        block.render(area, buf);
+
+        // rainbow border effect
+        if self.settings.ui.results.rainbow_border {
+            let t = state.tick as u32;
+            let speed: f32 = self.settings.ui.results.rainbow_border_speed;
+            effects::rainbow(results_theme.border.unwrap(), 2000, speed, area, buf, t);
+        }
+
         let available_height = inner_area.height as usize;
 
         let results: &Vec<Result> = &state.results;
@@ -228,37 +237,27 @@ impl StatefulWidget for ResultsBox {
             .highlight_symbol("")
             .highlight_style(Style::default().bg(results_theme.highlight.unwrap()));
 
-        block.render(area, buf);
-
-        // rainbow border effect
-        if self.settings.ui.search.rainbow_border {
-            let t = state.tick as u32;
-            let speed: f32 = self.settings.ui.results.rainbow_border_speed;
-            effects::rainbow(results_theme.border.unwrap(), 2000, speed, area, buf, t);
-        }
-
-        // list.render(inner_area, buf);
+        // render list with state
         StatefulWidget::render(list, inner_area, buf, &mut state.list_state);
 
+        // fade in effect
         if self.settings.ui.results.fade_in {
-            let mut effects: EffectManager<()> = EffectManager::default();
-            let mut fx = fx::fade_from_fg(
-                results_theme.background.unwrap(),
-                self.settings.ui.results.fade_in_duration,
-            );
-
-            if self.settings.ui.results.fade_top_to_bottom {
-                fx = fx.with_pattern(pattern::SweepPattern::down_to_up(area.height as u16 * 2));
+            let mut direction: Option<pattern::AnyPattern> = None;
+            if results_settings.fade_top_to_bottom {
+                direction = Some(pattern::AnyPattern::Sweep(
+                    pattern::SweepPattern::down_to_up(area.height as u16),
+                ));
             }
-            fx = fx::remap_alpha(0.25, 1.0, fx);
-            effects.add_effect(fx);
-            effects.process_effects(
-                Duration::from_millis(
-                    state.tick.saturating_sub(state.last_search_tick) as u32
-                        * state.delta_time as u32,
-                ),
-                buf,
+            let tick =
+                state.tick.saturating_sub(state.last_search_tick) as u32 * state.delta_time as u32;
+
+            effects::fade_in(
+                Color::Black,
+                self.settings.ui.results.fade_in_duration,
+                direction,
                 inner_area,
+                buf,
+                tick,
             );
         }
     }
