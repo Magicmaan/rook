@@ -224,8 +224,9 @@ pub struct ThemeSettings {
 
     results: ResultsThemeSettings,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[allow(unused)]
+#[serde(default)]
 pub struct SearchThemeSettings {
     #[serde(
         deserialize_with = "deserialize_optional_color",
@@ -290,8 +291,9 @@ pub struct SearchThemeSettings {
     pub border_type: Option<BorderType>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[allow(unused)]
+#[serde(default)]
 pub struct ResultsThemeSettings {
     #[serde(
         deserialize_with = "deserialize_optional_color",
@@ -365,34 +367,9 @@ impl Default for ThemeSettings {
             title: Color::White,
             border_type: BorderType::Rounded,
 
-            search: SearchThemeSettings {
-                background: None,
-                highlight: None,
-                muted: None,
-                muted_dark: None,
-                pre_query_text: None,
-                text: None,
-                text_muted: None,
-                text_accent: None,
-                accent: None,
-                caret: Some(Color::Yellow),
-                border: None,
-                border_type: None,
-            },
+            search: SearchThemeSettings::default(),
 
-            results: ResultsThemeSettings {
-                background: None,
-                highlight: None,
-                muted: None,
-                muted_dark: None,
-                text: None,
-                text_muted: None,
-                text_accent: None,
-                accent: None,
-
-                border: None,
-                border_type: None,
-            },
+            results: ResultsThemeSettings::default(),
         }
     }
 }
