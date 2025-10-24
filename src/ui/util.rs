@@ -73,14 +73,44 @@ pub fn number_to_icon(number: usize, mode: IconMode) -> String {
     .to_string()
 }
 
-pub fn collapsed_border(section: UISection, default_border: border::Set) -> border::Set {
-    match section {
-        UISection::Search => symbols::border::Set { ..default_border },
-        UISection::Results => symbols::border::Set {
-            top_left: symbols::line::NORMAL.vertical_right,
-            top_right: symbols::line::NORMAL.vertical_left,
-            ..default_border
-        },
-        UISection::Tooltip => symbols::border::Set { ..default_border },
+pub fn collapsed_border(
+    section: UISection,
+    layout: &Vec<UISection>,
+    default_border: border::Set,
+) -> (Borders, border::Set) {
+    let position = layout
+        .iter()
+        .position(|s| *s == section)
+        .expect("Section not found in layout");
+
+    let top_connected = symbols::border::Set {
+        top_left: symbols::line::NORMAL.vertical_right,
+        top_right: symbols::line::NORMAL.vertical_left,
+        ..default_border
+    };
+    let bottom_connected = symbols::border::Set {
+        bottom_left: symbols::line::NORMAL.vertical_right,
+        bottom_right: symbols::line::NORMAL.vertical_left,
+        ..default_border
+    };
+    let both_connected = symbols::border::Set {
+        top_left: symbols::line::NORMAL.vertical_right,
+        top_right: symbols::line::NORMAL.vertical_left,
+        bottom_left: symbols::line::NORMAL.vertical_right,
+        bottom_right: symbols::line::NORMAL.vertical_left,
+        ..default_border
+    };
+
+    let len = layout.len();
+
+    match position {
+        0 => (
+            Borders::LEFT | Borders::RIGHT | Borders::TOP,
+            bottom_connected,
+        ),
+        middle if middle > 0 && middle < len - 1 => {
+            (Borders::LEFT | Borders::RIGHT, both_connected)
+        }
+        _ => (Borders::ALL, top_connected),
     }
 }

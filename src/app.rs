@@ -97,7 +97,7 @@ impl App {
                 // takes in gap from settings, and adds extra space in between
                 // the connection of borders is handled in results_box and search_box
                 let mut search_bar_height = 2 + ui_settings.search.padding.saturating_mul(2);
-                if gap > 0 {
+                if gap > 0 || ui_settings.layout.sections.get(0) != Some(&UISection::Search) {
                     // borders take up extra space, when no gap, their is no bottom border on search box
                     // when their is a gap, extra height must be given for centering
                     search_bar_height += 1;
@@ -112,8 +112,8 @@ impl App {
                         UISection::Search => {
                             constraints.push(Constraint::Length(search_bar_height))
                         }
-                        UISection::Results => constraints.push(Constraint::Min(1)),
-                        UISection::Tooltip => constraints.push(Constraint::Length(1)),
+                        UISection::Results => constraints.push(Constraint::Fill(0)),
+                        // UISection::Tooltip => constraints.push(Constraint::Length(1)),
                     });
                 let mut spaced_constraints: Vec<Constraint> = Vec::new();
                 for (i, constraint) in constraints.into_iter().enumerate() {

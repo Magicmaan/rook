@@ -135,7 +135,7 @@ pub struct UILayoutSettings {
 impl Default for UILayoutSettings {
     fn default() -> Self {
         Self {
-            sections: vec![UISection::Search, UISection::Results, UISection::Tooltip],
+            sections: vec![UISection::Search, UISection::Results],
             gap: 1,
             padding: 1,
             title: "Rook".into(),

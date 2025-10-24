@@ -7,7 +7,6 @@ use crate::ui::{results_box::ResultBoxState, search_box::SearchBoxState};
 pub enum UISection {
     Search,
     Results,
-    Tooltip,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

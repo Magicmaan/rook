@@ -196,13 +196,11 @@ impl StatefulWidget for ResultsBox {
         let padding = results_settings.padding;
         let default_borders = theme.get_border_type(UISection::Results).to_border_set();
 
-        let collapsed_borders = collapsed_border(UISection::Results, default_borders);
-        // replace top left and top right with vertical connectors
-        let collapsed_borders = symbols::border::Set {
-            top_left: symbols::line::NORMAL.vertical_right,
-            top_right: symbols::line::NORMAL.vertical_left,
-            ..default_borders
-        };
+        let (visible_borders, collapsed_borders) = collapsed_border(
+            UISection::Results,
+            &self.settings.ui.layout.sections,
+            default_borders,
+        );
         let block = Block::bordered()
             .border_set(if gap > 0 {
                 default_borders
@@ -216,7 +214,11 @@ impl StatefulWidget for ResultsBox {
                     .get_default_border_style(Some(UISection::Results)),
             )
             // .border_type(theme.get_border_type("results"))
-            .borders(Borders::ALL)
+            .borders(if gap > 0 {
+                Borders::ALL
+            } else {
+                visible_borders
+            })
             // .title("Search")
             .padding(Padding::new(
                 padding.saturating_mul(2).max(1),
@@ -250,9 +252,13 @@ impl StatefulWidget for ResultsBox {
         );
 
         let list = List::new(items)
-            .style(Style::default().fg(Color::White))
+            .style(Style::default().fg(results_theme.text.unwrap()))
             .highlight_symbol("")
-            .highlight_style(Style::default().bg(results_theme.highlight.unwrap()));
+            .highlight_style(
+                Style::default()
+                    .bg(results_theme.highlight.unwrap())
+                    .fg(results_theme.text_accent.unwrap()),
+            );
 
         // render list with state
         StatefulWidget::render(list, inner_area, buf, &mut state.list_state);

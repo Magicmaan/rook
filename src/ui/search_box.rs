@@ -96,12 +96,11 @@ impl StatefulWidget for SearchBox {
         let search_settings: UISearchSettings = self.settings.ui.search.clone();
 
         let default_borders = theme.get_border_type(UISection::Search).to_border_set();
-        let collapsed_borders = collapsed_border(UISection::Search, default_borders);
-        let visible_borders = if gap > 0 {
-            Borders::ALL
-        } else {
-            Borders::LEFT | Borders::RIGHT | Borders::TOP
-        };
+        let (visible_borders, collapsed_borders) = collapsed_border(
+            UISection::Search,
+            &self.settings.ui.layout.sections,
+            default_borders,
+        );
 
         let padding = Padding::new(
             search_settings.padding.saturating_mul(2).max(2),
@@ -121,7 +120,11 @@ impl StatefulWidget for SearchBox {
             })
             .border_style(theme.get_default_border_style(Some(UISection::Search)))
             // .border_type(theme.get_border_type("results"))
-            .borders(visible_borders)
+            .borders(if gap > 0 {
+                Borders::ALL
+            } else {
+                visible_borders
+            })
             //
             .padding(padding)
             .style(theme.get_default_style(Some(UISection::Search)));
