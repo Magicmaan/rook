@@ -145,6 +145,8 @@ impl App {
                 self.model.ui.result_box_state.previous_results =
                     self.model.ui.get_results().clone();
                 self.model.ui.set_results(ui_update.results.clone());
+                self.model.ui.result_box_state.total_potential_results =
+                    ui_update.total_potential_results;
 
                 frame.render_stateful_widget(
                     SearchBox::new(&self.settings),
@@ -225,7 +227,6 @@ impl App {
                     update_navigation(e, &mut self.model, &self.settings);
                     // }
                 } // _ => {
-
                 Event::ItemExecute => {
                     let result = modules[self.active_module_idx]
                         .on_execute(&mut self.model)

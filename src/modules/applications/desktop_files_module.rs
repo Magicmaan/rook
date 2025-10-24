@@ -116,6 +116,7 @@ impl Module for DesktopFilesModule {
         UIStateUpdate {
             post_fix: "".to_string(),
             results: results_formatted,
+            total_potential_results: self.data.applications.len(),
         }
     }
 }

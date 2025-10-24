@@ -1,11 +1,14 @@
+use std::cmp::min;
+use std::result;
+
 use crate::effects;
 use crate::model::module_state::{Result, UISection};
 
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::{IconMode, collapsed_border, number_to_icon};
-use ratatui::layout::Margin;
+use ratatui::layout::{Constraint, Layout, Margin, Offset};
 use ratatui::symbols;
-use ratatui::widgets::{Borders, ListState};
+use ratatui::widgets::{Borders, ListState, Paragraph};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -26,6 +29,7 @@ pub struct ResultBoxState {
     pub last_search_tick: u64,
     pub tick: u64,
     pub delta_time: i32,
+    pub total_potential_results: usize, // not the number of results shown, but the total of potential i.e. 1500 applications, but only 10 relevant shown
 }
 
 #[derive(Clone)]
@@ -229,9 +233,41 @@ impl StatefulWidget for ResultsBox {
             .style(theme.get_default_style(Some(UISection::Results)));
 
         // block.render(area, buf);
-        let inner_area = block.inner(area);
-
+        let mut inner_area = block.inner(area);
         block.render(area, buf);
+
+        // show number of results
+        // positions it inside the padding area
+        if results_settings.show_number_of_results {
+            // if padding is zero, make space for number of results
+            if padding == 0 {
+                inner_area.height = inner_area.height.saturating_sub(1);
+            }
+            let mut chunk = inner_area.clone();
+
+            if results_settings.number_of_results_position
+                == crate::settings::settings::VerticalAlignment::Top
+            {
+                // need to adjust y position if no padding
+                if padding == 0 {
+                    inner_area.y += 1;
+                }
+                chunk.y = chunk.y.saturating_sub(padding.min(1));
+                chunk.height = 1;
+            } else {
+                chunk.y = chunk.y.saturating_add(chunk.height);
+                chunk.height = 1;
+            }
+
+            let num_results = Paragraph::new(format!(
+                "{} / {}",
+                state.results.len(),
+                state.total_potential_results
+            ))
+            .style(Style::default().fg(results_theme.text_muted.unwrap()))
+            .alignment(results_settings.number_of_results_alignment);
+            num_results.render(chunk, buf);
+        }
 
         // rainbow border effect
         if self.settings.ui.results.rainbow_border {
@@ -268,7 +304,9 @@ impl StatefulWidget for ResultsBox {
             let mut direction: Option<pattern::AnyPattern> = None;
             if results_settings.fade_top_to_bottom {
                 direction = Some(pattern::AnyPattern::Sweep(
-                    pattern::SweepPattern::down_to_up(area.height as u16),
+                    pattern::SweepPattern::down_to_up(
+                        min(area.height as usize, results.len()) as u16
+                    ),
                 ));
             }
             let tick =

@@ -94,4 +94,5 @@ impl UIState {
 pub struct UIStateUpdate {
     pub post_fix: String,
     pub results: Vec<Result>,
+    pub total_potential_results: usize,
 }

@@ -214,6 +214,7 @@ impl Module for MathsModule {
                 }
             }),
             results: results_formatted,
+            total_potential_results: self.data.equations.len(),
         }
     }
 }

@@ -16,6 +16,13 @@ use crate::settings::serialise::{
 use crate::ui::util::IconMode;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum VerticalAlignment {
+    Top,
+    Center,
+    Bottom,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 
 pub struct KeybindSettings {
     pub quit: String,
@@ -69,19 +76,26 @@ impl Default for UISearchSettings {
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct UIResultsSettings {
-    pub max_results: usize,         // maximum number of results to display
-    pub show_scores: bool,          // whether to show scores next to results
-    pub open_through_number: bool,  // whether to open results through number keybinds
-    pub numbered: bool,             // whether to show numbers next to results
-    pub number_mode: IconMode,      // icon mode for numbers
-    pub loopback: bool,             // whether to loop back when navigating results
-    pub fade_color_at_bottom: bool, // whether to fade text color towards the bottom
-    pub padding: u16,               // padding inside the results box
-    pub fade_in: bool,              // whether to fade in results on search
-    pub fade_in_duration: u32,      // duration of fade in effect in ms
-    pub fade_top_to_bottom: bool,   // pattern used for fade in effect
-    pub rainbow_border: bool,
+    pub max_results: usize,           // maximum number of results to display
+    pub show_scores: bool,            // whether to show scores next to results
+    pub open_through_number: bool,    // whether to open results through number keybinds
+    pub numbered: bool,               // whether to show numbers next to results
+    pub number_mode: IconMode,        // icon mode for numbers
+    pub loopback: bool,               // whether to loop back when navigating results
+    pub fade_color_at_bottom: bool,   // whether to fade text color towards the bottom
+    pub padding: u16,                 // padding inside the results box
+    pub fade_in: bool,                // whether to fade in results on search
+    pub fade_in_duration: u32,        // duration of fade in effect in ms
+    pub fade_top_to_bottom: bool,     // pattern used for fade in effect
+    pub rainbow_border: bool,         // whether to use rainbow border effect
     pub rainbow_border_speed: f32, // speed of the rainbow border effect in scalar multiples 1.0, 1.5, 2.0 etc
+    pub show_number_of_results: bool, // whether to show number of results at the top
+    pub number_of_results_position: VerticalAlignment, // position of number of results text
+    #[serde(
+        deserialize_with = "deserialize_alignment",
+        serialize_with = "serialize_alignment"
+    )]
+    pub number_of_results_alignment: Alignment, // alignment of number of results text
 }
 impl Default for UIResultsSettings {
     fn default() -> Self {
@@ -99,6 +113,9 @@ impl Default for UIResultsSettings {
             fade_top_to_bottom: true,
             rainbow_border: false,
             rainbow_border_speed: 1.0,
+            show_number_of_results: true,
+            number_of_results_position: VerticalAlignment::Bottom,
+            number_of_results_alignment: Alignment::Right,
         }
     }
 }
