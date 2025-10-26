@@ -1,5 +1,5 @@
 use crate::{
-    model::{
+    common::{
         app_state::AppState,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },
@@ -25,7 +25,7 @@ impl DesktopFilesModule {
     pub fn new(settings: &crate::settings::settings::Settings) -> Self {
         let state = ModuleState::default();
         let applications = crate::modules::applications::desktop::find_desktop_files();
-        // state.data.applications = applications;
+
         Self {
             settings: settings.clone(),
             state,

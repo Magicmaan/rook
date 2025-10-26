@@ -58,7 +58,6 @@ pub struct UIState {
     pub result_box_state: ResultBoxState,
 
     pub search_box_state: SearchBoxState,
-    pub sections: Vec<(UISection, Rect)>,
 }
 
 impl UIState {

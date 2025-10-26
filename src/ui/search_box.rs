@@ -1,6 +1,6 @@
 use crate::{
+    common::module_state::UISection,
     effects::{self, rainbow},
-    model::module_state::UISection,
     settings::settings::{Settings, UISearchSettings},
     ui::util::collapsed_border,
 };
@@ -27,15 +27,13 @@ pub struct SearchBoxState {
 }
 
 #[derive(Clone)]
-pub struct SearchBox {
-    settings: Settings,
+pub struct SearchBox<'a> {
+    settings: &'a Settings,
 }
 
-impl SearchBox {
-    pub fn new(settings: &Settings) -> Self {
-        Self {
-            settings: settings.clone(),
-        }
+impl<'a> SearchBox<'a> {
+    pub fn new(settings: &'a Settings) -> Self {
+        Self { settings }
     }
 
     fn construct_line(
@@ -86,7 +84,7 @@ impl SearchBox {
     }
 }
 
-impl StatefulWidget for SearchBox {
+impl StatefulWidget for SearchBox<'_> {
     type State<'b> = SearchBoxState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {

@@ -1,4 +1,4 @@
-use crate::model::{
+use crate::common::{
     app_state::AppState,
     module_state::{ModuleState, UIState, UIStateUpdate},
 };

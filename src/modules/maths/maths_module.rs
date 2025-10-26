@@ -4,7 +4,7 @@ use nucleo::{Config, Matcher};
 use shunting::ShuntingParser;
 
 use crate::{
-    model::{
+    common::{
         app_state::AppState,
         module_state::{ModuleState, Result, UIState, UIStateUpdate},
     },

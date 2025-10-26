@@ -1,8 +1,8 @@
 mod app;
 
+mod common;
 mod effects;
-mod events;
-mod model;
+mod event_handler;
 mod modules;
 mod settings;
 mod ui;

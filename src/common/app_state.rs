@@ -1,4 +1,4 @@
-use crate::model::{
+use crate::common::{
     input::{KeyboardState, MouseState},
     module_state::{SearchState, UIState},
 };

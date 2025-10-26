@@ -5,9 +5,10 @@ use ratatui::widgets::{Block, Padding};
 use ratatui::{DefaultTerminal, crossterm::event};
 use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
-use crate::events::{self, Event, process_events, update_navigation};
-use crate::model::app_state::{self, AppState};
-use crate::model::module_state::{ModuleState, UISection};
+use crate::common::app_state::{self, AppState};
+use crate::common::events::{self, Event};
+use crate::common::module_state::{ModuleState, UISection};
+// use crate::event_handler::{process_events, update_navigation};
 use crate::modules::module::{Module, ModuleData};
 use crate::ui::results_box::ResultsBox;
 use crate::ui::search_box::SearchBox;
@@ -15,6 +16,7 @@ use std::rc::Rc;
 pub struct App {
     model: app_state::AppState,
     settings: crate::settings::settings::Settings,
+    event_handler: crate::event_handler::EventHandler,
     terminal: DefaultTerminal,
     active_module_idx: usize,
     modules_vec: Vec<Box<dyn Module<State = ModuleState>>>,
@@ -38,9 +40,12 @@ impl App {
             )),
         ];
 
+        let event_handler = crate::event_handler::EventHandler::new(&settings);
+
         Self {
             model,
             settings,
+            event_handler,
             terminal,
             active_module_idx: 0,
             modules_vec: modules,
@@ -71,6 +76,59 @@ impl App {
             self.model.ui.result_box_state.tick = self.model.tick;
             self.model.ui.result_box_state.delta_time = self.model.delta_time;
         }
+    }
+
+    // handle events and update app state
+    fn update(&mut self) {
+        let modules = &mut self.modules_vec;
+
+        // idx, candidacy
+        let mut candidates: Vec<(usize, bool)> = vec![];
+        // let module = &mut modules[self.active_module_idx];
+
+        let mut events: Vec<event::Event> = Vec::new();
+        if event::poll(std::time::Duration::from_millis(16)).unwrap() {
+            events.push(event::read().unwrap());
+        }
+        // Update the app state
+        let events = self.event_handler.process_events(&events);
+        for e in events.iter() {
+            match e {
+                events::Event::Quit => {
+                    self.model.running_state = app_state::RunState::Stopped;
+                }
+                events::Event::Search(_) => {
+                    candidates = self
+                        .event_handler
+                        .handle_search(e, modules, &mut self.model);
+                }
+
+                Event::Navigate(_, _) => {
+                    self.event_handler
+                        .handle_navigation(e, &mut self.model, &self.settings);
+                }
+                Event::ItemExecute => {
+                    let result = modules[self.active_module_idx]
+                        .on_execute(&mut self.model)
+                        .then(|| {
+                            // on successful execution, exit application
+                            log::info!(
+                                "Module {} executed item successfully.",
+                                self.active_module_idx
+                            );
+                            self.model.running_state = app_state::RunState::Stopped;
+                        });
+                }
+                _ => {}
+            }
+        }
+
+        let new_active_module_idx = candidates
+            .iter()
+            .find(|(_, is_candidate)| *is_candidate)
+            .map(|(idx, _)| *idx)
+            .unwrap_or(self.active_module_idx);
+        self.active_module_idx = new_active_module_idx;
     }
 
     // render the UI
@@ -176,126 +234,5 @@ impl App {
                 );
             })
             .unwrap();
-    }
-
-    fn update(&mut self) {
-        let modules = &mut self.modules_vec;
-
-        // idx, candidacy
-        let mut candidates: Vec<(usize, bool)> = vec![];
-        // let module = &mut modules[self.active_module_idx];
-
-        let mut events: Vec<event::Event> = Vec::new();
-        if event::poll(std::time::Duration::from_millis(16)).unwrap() {
-            events.push(event::read().unwrap());
-        }
-        // Update the app state
-        let events = process_events(&events, &self.settings);
-        for e in events.iter() {
-            match e {
-                Event::Quit => {
-                    self.model.running_state = app_state::RunState::Stopped;
-                }
-                Event::Search(search_event) => {
-                    match search_event {
-                        events::Search::Execute => {
-                            // pass execute function to all modules to determine candidacy
-                            // candidacy is simply "what module should handle and display results for this query"
-                            for (i, m) in modules.iter_mut().enumerate() {
-                                let query = self.model.search.query.as_str();
-                                let candidacy = m.on_search(&query, &self.model);
-                                if candidacy {
-                                    self.model.ui.search_box_state.last_search_tick =
-                                        self.model.tick;
-                                    self.model.ui.result_box_state.last_search_tick =
-                                        self.model.tick;
-                                    self.model.ui.set_selected_result_index(0);
-                                }
-                                candidates.push((i, candidacy));
-                            }
-                        }
-                        _ => {
-                            // for m in modules.iter_mut() {
-                            update_search(e, &mut self.model);
-                            // }
-                        }
-                    }
-                }
-
-                Event::Navigate(_, _) => {
-                    // for m in modules.iter_mut() {
-                    update_navigation(e, &mut self.model, &self.settings);
-                    // }
-                } // _ => {
-                Event::ItemExecute => {
-                    let result = modules[self.active_module_idx]
-                        .on_execute(&mut self.model)
-                        .then(|| {
-                            // on successful execution, exit application
-                            log::info!(
-                                "Module {} executed item successfully.",
-                                self.active_module_idx
-                            );
-                            self.model.running_state = app_state::RunState::Stopped;
-                        });
-                }
-                _ => {}
-            }
-        }
-
-        let new_active_module_idx = candidates
-            .iter()
-            .find(|(_, is_candidate)| *is_candidate)
-            .map(|(idx, _)| *idx)
-            .unwrap_or(self.active_module_idx);
-        self.active_module_idx = new_active_module_idx;
-    }
-}
-
-fn update_search(event: &Event, state: &mut AppState) {
-    // let state = self.model;
-    if let Event::Search(search_event) = event {
-        match search_event {
-            events::Search::Add(c) => {
-                let (pre_query, post_query) =
-                    state.search.split_at_caret(state.ui.get_caret_position());
-                state.search.query = format!("{}{}{}", pre_query, c, post_query);
-                state
-                    .ui
-                    .set_caret_position(state.ui.get_caret_position() + 1);
-                // app_state.search.query.push(c);
-            }
-            events::Search::Remove(x) => {
-                let (pre_query, post_query) =
-                    state.search.split_at_caret(state.ui.get_caret_position());
-                if x < &0 {
-                    // Remove behind cursor (backspace behavior)
-                    let chars_to_remove = x.unsigned_abs() as usize;
-                    if pre_query.len() >= chars_to_remove {
-                        let new_pre_len = pre_query.len() - chars_to_remove;
-                        state.search.query = format!("{}{}", &pre_query[..new_pre_len], post_query);
-                        state.ui.set_caret_position(
-                            state
-                                .ui
-                                .get_caret_position()
-                                .saturating_sub(chars_to_remove),
-                        );
-                    } else if !pre_query.is_empty() {
-                        state.search.query = post_query.to_string();
-                        state.ui.set_caret_position(0);
-                    }
-                } else if x > &0 {
-                    // Remove in front of cursor (delete behavior)
-                    let chars_to_remove = *x as usize;
-                    if post_query.len() >= chars_to_remove {
-                        state.search.query =
-                            format!("{}{}", pre_query, &post_query[chars_to_remove..]);
-                    } else if !post_query.is_empty() {
-                        state.search.query = pre_query.to_string();
-                    }
-                }
-            }
-            _ => {}
-        }
     }
 }

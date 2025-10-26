@@ -1,4 +1,5 @@
 use std::fs;
+use std::time::Duration;
 
 use color_eyre::Result;
 use color_eyre::eyre::eyre;
@@ -16,7 +17,7 @@ pub struct Application {
     pub categories: Vec<String>,
     pub terminal: bool,
     pub mime_types: Vec<String>,
-    pub desktop_file_path: Option<PathBuf>,
+    pub desktop_file_path: PathBuf,
 }
 impl Application {
     pub fn launch(&self) -> Result<()> {
@@ -29,8 +30,25 @@ impl Application {
         let binding = PathBuf::from(&exec_str);
         let executable = binding.file_name().unwrap();
 
-        let mut cmd: Vec<&str> = vec!["gtk-launch"];
-        cmd.push(executable.to_str().unwrap());
+        let mut cmd: Vec<&str> = vec![];
+        if self.terminal {
+            // launch in terminal
+            // try to get preferred terminal from env
+            let terminal = "kitty"; // TODO: make configurable
+            cmd.push(&terminal);
+            cmd.push("-e");
+            cmd.push(self.exec.as_str());
+        } else {
+            // launch directly
+            cmd.push("gtk-launch"); // use gtk-launch to launch the application properly
+            cmd.push(
+                self.desktop_file_path
+                    .file_stem()
+                    .unwrap()
+                    .to_str()
+                    .unwrap(),
+            );
+        }
 
         let mut exec = std::process::Command::new(&cmd[0]);
         log::info!(
@@ -41,13 +59,16 @@ impl Application {
         if cmd.len() > 1 {
             exec.args(&cmd[1..]);
         }
-
+        exec.stderr(std::process::Stdio::null());
+        exec.stdout(std::process::Stdio::null());
+        exec.stdin(std::process::Stdio::null());
         unsafe {
             exec.pre_exec(|| {
                 // Become independent of the parent process
                 if libc::setsid() < 0 {
                     return Err(std::io::Error::last_os_error());
                 }
+
                 Ok(())
             });
         }
@@ -59,43 +80,9 @@ impl Application {
                 self.exec
             )))
         });
-        // sleep(std::time::Duration::from_millis(2000)); // give some time for the process to start
+        sleep(Duration::from_millis(100)); // give some time for the application to launch
+
         Ok(())
-        // let command = "gtk-launch";
-        // let executable = self
-        //     .desktop_file_path
-        //     .as_ref()
-        //     .unwrap()
-        //     .file_name()
-        //     .unwrap()
-        //     .to_str()
-        //     .unwrap();
-        // let args: &[&str; 1] = &[executable];
-
-        // let mut cmd = std::process::Command::new(command);
-        // cmd.args(args);
-
-        // match cmd.spawn() {
-        //     Ok(mut child) => {
-        //         let res = child.try_wait();
-        //         if let Ok(Some(status)) = res {
-        //             log::info!(
-        //                 "Launched application '{}' with exit code: {}",
-        //                 self.name,
-        //                 status.code().unwrap_or_default()
-        //             );
-        //         } else {
-        //             log::info!("Launched application '{}'", self.name);
-        //         }
-        //         log::info!("Launched application command: {}", args.join(" "));
-        //         sleep(std::time::Duration::from_millis(500)); // give some time for the process to start
-        //         Ok(())
-        //     }
-        //     Err(e) => Err(std::io::Error::other(format!(
-        //         "Failed to launch application: {} \nExecutable Path: {}",
-        //         e, self.exec
-        //     ))),
-        // }
     }
 }
 
@@ -125,6 +112,18 @@ pub fn find_desktop_files() -> Vec<Application> {
             }
         }
     }
+
+    // for file in PathBuf::from("/usr/share/applications")
+    //     .read_dir()
+    //     .unwrap()
+    //     .flatten()
+    // {
+    //     let path = file.path();
+    //     if path.extension().and_then(|s| s.to_str()) == Some("desktop") {
+    //         let app = parse_desktop_file(&path);
+    //         apps.push(app);
+    //     }
+    // }
     apps
 }
 
@@ -164,14 +163,15 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
         }
     }
 
-    let executable = path.to_str().unwrap_or("").to_string();
+    let exec = options.get("Exec").cloned().unwrap_or_else(|| "".into());
+    let path = path.to_str().unwrap_or("").to_string();
     Application {
         name: options
             .get("Name")
             .cloned()
             .unwrap_or_else(|| "Unknown".into()),
 
-        exec: executable,
+        exec: exec,
         icon: options.get("Icon").cloned(),
         comment: options.get("Comment").cloned(),
         categories: options
@@ -186,7 +186,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
             .get("MimeType")
             .map(|s| s.split(';').map(|s| s.trim().into()).collect())
             .unwrap_or_default(),
-        desktop_file_path: Some(path.clone()),
+        desktop_file_path: PathBuf::from(path).into(),
     }
 }
 

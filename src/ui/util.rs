@@ -4,7 +4,7 @@ use ratatui::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::model::module_state::UISection;
+use crate::common::module_state::UISection;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum IconMode {

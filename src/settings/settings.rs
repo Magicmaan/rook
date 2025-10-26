@@ -6,7 +6,7 @@ use ratatui::{style::Color, widgets::BorderType};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use crate::model::module_state::UISection;
+use crate::common::module_state::UISection;
 use crate::settings::serialise::{
     deserialize_alignment, deserialize_border_type, deserialize_color,
     deserialize_optional_border_type, deserialize_optional_color, serialize_alignment,
@@ -354,7 +354,7 @@ impl Default for ThemeSettings {
     fn default() -> Self {
         Self {
             background: Color::Reset,
-            highlight: Color::Yellow,
+            highlight: Color::Blue,
             muted: Color::DarkGray,
             muted_dark: Color::Black,
             accent: Color::Cyan,
@@ -540,9 +540,6 @@ impl Settings {
         // create default settings string from serializing self
         let string = toml::to_string_pretty(self).expect("Could not serialize default settings");
         std::fs::write(&config_file, string).expect("Could not write default settings to file");
-
-        // std::fs::copy(&default_settings_path, &config_file)
-        //     .expect("Could not copy default settings");
     }
 }
 

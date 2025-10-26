@@ -1,8 +1,8 @@
 use std::cmp::min;
 use std::result;
 
+use crate::common::module_state::{Result, UISection};
 use crate::effects;
-use crate::model::module_state::{Result, UISection};
 
 use crate::settings::settings::{Settings, UIResultsSettings};
 use crate::ui::util::{IconMode, collapsed_border, number_to_icon};
@@ -33,15 +33,13 @@ pub struct ResultBoxState {
 }
 
 #[derive(Clone)]
-pub struct ResultsBox {
-    settings: Settings,
+pub struct ResultsBox<'a> {
+    settings: &'a Settings,
 }
 
-impl ResultsBox {
-    pub fn new(settings: &Settings) -> Self {
-        Self {
-            settings: settings.clone(),
-        }
+impl<'a> ResultsBox<'a> {
+    pub fn new(settings: &'a Settings) -> Self {
+        Self { settings }
     }
 
     fn multiply_color(&self, color: Color, mult: f64) -> Color {
@@ -183,7 +181,7 @@ impl ResultsBox {
     }
 }
 
-impl StatefulWidget for ResultsBox {
+impl StatefulWidget for ResultsBox<'_> {
     type State<'b> = ResultBoxState;
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {
         let results_settings: UIResultsSettings = self.settings.ui.results.clone();
