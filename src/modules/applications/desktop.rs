@@ -204,6 +204,8 @@ fn parse_executable_args(exec: &str) -> String {
 
 use nucleo::{Config, Matcher};
 
+use crate::common::module_state::ScoredResult;
+
 pub fn resolve_same_score(app_1: &Application, app_2: &Application, query: &str) -> i32 {
     let app_1_name = app_1.name.to_lowercase();
     let app_2_name = app_2.name.to_lowercase();
@@ -231,7 +233,7 @@ pub fn resolve_same_score(app_1: &Application, app_2: &Application, query: &str)
     }
 }
 
-pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<(u16, usize)> {
+pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<ScoredResult> {
     // TODO: improve sorting algorithm
     // TODO: fuzzy search the application type, and mime types too
     //
@@ -306,14 +308,14 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<(u16, 
     }
 
     // flatten into Vec<(score, index)>
-    let mut output: Vec<(u16, usize)> = Vec::new();
+    let mut output: Vec<ScoredResult> = Vec::new();
     for (score, idxs) in results {
         for idx in idxs {
-            output.push((score, idx));
+            output.push(ScoredResult { index: idx, score });
         }
     }
 
-    output.sort_by(|a, b| b.0.cmp(&a.0));
+    output.sort_by(|a, b| b.score.cmp(&a.score));
 
     output
 }
@@ -344,8 +346,11 @@ mod tests {
         println!("Sorted {} applications in {:?}", apps.len(), now.elapsed());
 
         let mut i = 1;
-        for (score, idx) in sorted {
-            println!("Score: {}, App: {:?}", score, apps[idx].name);
+        for scored_result in sorted {
+            println!(
+                "Score: {}, App: {:?}",
+                scored_result.score, apps[scored_result.index].name
+            );
             if i >= 10 {
                 break;
             }

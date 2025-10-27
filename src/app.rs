@@ -7,7 +7,7 @@ use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::common::app_state::{self, AppState};
 use crate::common::events::{self, Event};
-use crate::common::module_state::{ModuleState, UISection};
+use crate::common::module_state::{ModuleState, UISection, UIStateUpdate};
 // use crate::event_handler::{process_events, update_navigation};
 use crate::modules::module::{Module, ModuleData};
 use crate::ui::results_box::ResultsBox;
@@ -18,7 +18,7 @@ pub struct App {
     settings: crate::settings::settings::Settings,
     event_handler: crate::event_handler::EventHandler,
     terminal: DefaultTerminal,
-    active_module_idx: usize,
+    active_modules_idx: Vec<usize>,
     modules_vec: Vec<Box<dyn Module<State = ModuleState>>>,
 }
 
@@ -38,6 +38,7 @@ impl App {
             Box::new(crate::modules::maths::maths_module::MathsModule::new(
                 &settings,
             )),
+            Box::new(crate::modules::programs::programs_module::ProgramsModule::new(&settings)),
         ];
 
         let event_handler = crate::event_handler::EventHandler::new(&settings);
@@ -47,7 +48,7 @@ impl App {
             settings,
             event_handler,
             terminal,
-            active_module_idx: 0,
+            active_modules_idx: vec![0],
             modules_vec: modules,
         }
     }
@@ -108,34 +109,74 @@ impl App {
                         .handle_navigation(e, &mut self.model, &self.settings);
                 }
                 Event::ItemExecute => {
-                    let result = modules[self.active_module_idx]
-                        .on_execute(&mut self.model)
-                        .then(|| {
-                            // on successful execution, exit application
-                            log::info!(
-                                "Module {} executed item successfully.",
-                                self.active_module_idx
-                            );
-                            self.model.running_state = app_state::RunState::Stopped;
-                        });
+                    let idx = self.model.ui.get_selected_result_index();
+                    if let Some(result) = self.model.ui.get_results().get(idx) {
+                        (result.launch)();
+                    }
                 }
                 _ => {}
             }
         }
 
-        let new_active_module_idx = candidates
+        // Find all candidate module indices
+        let candidate_indices: Vec<usize> = candidates
             .iter()
-            .find(|(_, is_candidate)| *is_candidate)
-            .map(|(idx, _)| *idx)
-            .unwrap_or(self.active_module_idx);
-        self.active_module_idx = new_active_module_idx;
+            .filter_map(|(idx, is_candidate)| if *is_candidate { Some(*idx) } else { None })
+            .collect();
+
+        if candidate_indices.is_empty() {
+            // If no candidates, keep the current active modules
+            log::info!("No candidate modules found, keeping current active modules.");
+            return;
+        }
+
+        self.active_modules_idx = candidate_indices;
+
+        // Optionally, you can store or use candidate_indices elsewhere if needed
+        // self.candidate_module_indices = candidate_indices;
     }
 
     // render the UI
     pub fn render(&mut self) {
         let ui_settings = &self.settings.ui;
         let gap = self.settings.ui.layout.gap;
-        let module = self.modules_vec[self.active_module_idx].as_mut();
+
+        let mut ui_update = UIStateUpdate {
+            post_fix: "".to_string(),
+            results: vec![],
+            total_potential_results: 0,
+        };
+
+        let mut results_all = vec![];
+        let mut total_results = 0;
+        for idx in self.active_modules_idx.iter() {
+            let module = self.modules_vec[*idx].as_mut();
+            let module_results = module.get_results();
+
+            // total_results += module_results.len();
+            results_all.extend_from_slice(module_results.as_slice());
+        }
+        results_all.sort_by(|a, b| b.score.cmp(&a.score));
+
+        ui_update.results = results_all;
+        ui_update.total_potential_results = total_results;
+
+        self.model
+            .ui
+            .set_search_query(self.model.search.query.clone());
+
+        // update search box and results box states
+        self.model
+            .ui
+            .set_search_post_fix(ui_update.post_fix.clone());
+
+        // if ui_update.results.is_empty() {
+        //     return;
+        // }
+        // self.model.ui.result_box_state.previous_results = self.model.ui.get_results().clone();
+        self.model.ui.set_results(ui_update.results.clone());
+        // self.model.ui.result_box_state.total_potential_results = ui_update.total_potential_results;
+
         self.terminal
             .draw(|frame| {
                 let padding = self.settings.ui.layout.padding;
@@ -183,28 +224,6 @@ impl App {
                 constraints = spaced_constraints;
                 let layout = Layout::vertical(constraints);
                 let chunks: Rc<[Rect]> = layout.split(area);
-
-                // pass chunks to modules
-                // in future, modules will return some sort of "has results" boolean,
-                // then allowing conditional modules
-                //i.e. if "zen" then render applications results,
-                //i.e. if "1 + 2" then render calculator results, etc.
-                let ui_update = module.render();
-
-                self.model
-                    .ui
-                    .set_search_query(self.model.search.query.clone());
-
-                // update search box and results box states
-                self.model
-                    .ui
-                    .set_search_post_fix(ui_update.post_fix.clone());
-
-                self.model.ui.result_box_state.previous_results =
-                    self.model.ui.get_results().clone();
-                self.model.ui.set_results(ui_update.results.clone());
-                self.model.ui.result_box_state.total_potential_results =
-                    ui_update.total_potential_results;
 
                 frame.render_stateful_widget(
                     SearchBox::new(&self.settings),

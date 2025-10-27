@@ -1,7 +1,7 @@
 use std::cmp::min;
 use std::result;
 
-use crate::common::module_state::{Result, UISection};
+use crate::common::module_state::{UIResult, UISection};
 use crate::effects;
 
 use crate::settings::settings::{Settings, UIResultsSettings};
@@ -19,10 +19,10 @@ use ratatui::{
 use serde_json::Number;
 use tachyonfx::{Duration, EffectManager, EffectTimer, Interpolation, fx, pattern};
 
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone)]
 pub struct ResultBoxState {
-    pub results: Vec<Result>,
-    pub previous_results: Vec<Result>,
+    pub results: Vec<UIResult>,
+    pub previous_results: Vec<UIResult>,
 
     pub executing_item: Option<usize>,
     pub list_state: ListState,
@@ -100,7 +100,7 @@ impl<'a> ResultsBox<'a> {
 
     pub fn construct_list(
         &self,
-        results: &Vec<Result>,
+        results: &Vec<UIResult>,
         number_mode: IconMode,
         executing_item: Option<usize>,
         state: &ResultBoxState,
@@ -274,7 +274,7 @@ impl StatefulWidget for ResultsBox<'_> {
             effects::rainbow(results_theme.border.unwrap(), 2000, speed, area, buf, t);
         }
 
-        let results: &Vec<Result> = &state.results;
+        let results: &Vec<UIResult> = &state.results;
 
         let items = self.construct_list(
             results,

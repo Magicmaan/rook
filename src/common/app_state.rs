@@ -10,7 +10,7 @@ pub enum RunState {
     Stopped,
 }
 
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub struct AppState {
     pub running_state: RunState,
     pub tick: u64,

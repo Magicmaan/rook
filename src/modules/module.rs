@@ -1,6 +1,6 @@
 use crate::common::{
     app_state::AppState,
-    module_state::{ModuleState, UIState, UIStateUpdate},
+    module_state::{ModuleState, UIResult, UIState, UIStateUpdate},
 };
 
 /// A trait that defines the core functionality for application modules.
@@ -47,7 +47,6 @@ pub trait Module {
     /// # Returns
     ///
     /// * `bool` - True if the execution was successful, false otherwise
-    fn on_execute(&mut self, app_state: &mut AppState) -> bool;
 
     /// Renders the module's UI by processing its internal data into display elements.
     ///
@@ -60,7 +59,7 @@ pub trait Module {
     ///
     /// * `UIStateUpdate` - Contains the rendered results, query display, and other
     ///   UI elements derived from the module's current data state
-    fn render(&mut self) -> UIStateUpdate;
+    fn get_results(&mut self) -> Vec<UIResult>;
 
     /// Retrieves a mutable reference to the module's state.
     ///

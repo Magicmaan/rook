@@ -33,6 +33,19 @@ impl Drop for TerminalGuard {
     }
 }
 fn main() {
+    std::panic::set_hook(Box::new(|panic_info| {
+        eprintln!("PANIC: {}", panic_info);
+        if let Some(location) = panic_info.location() {
+            eprintln!(
+                "at {}:{}:{}",
+                location.file(),
+                location.line(),
+                location.column()
+            );
+        }
+        std::process::exit(1);
+    }));
+
     Ftail::new()
         .daily_file(
             &PathBuf::from("/home/theo/Documents/github/rust-tui/logs"),

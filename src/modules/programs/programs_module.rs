@@ -12,31 +12,33 @@ use crate::{
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
-pub struct DesktopData {
+pub struct ProgramData {
     pub applications: Vec<Application>,
 }
-impl ModuleData for DesktopData {}
+impl ModuleData for ProgramData {}
 
-pub struct DesktopFilesModule {
+pub struct ProgramsModule {
     pub settings: crate::settings::settings::Settings,
     state: ModuleState,
-    data: Box<DesktopData>,
+    data: Box<ProgramData>,
 }
 
-impl DesktopFilesModule {
+impl ProgramsModule {
     pub fn new(settings: &crate::settings::settings::Settings) -> Self {
         let state = ModuleState::default();
-        let applications = crate::modules::applications::desktop::find_desktop_files();
+        let programs = crate::modules::programs::programs::find_programs();
 
         Self {
             settings: settings.clone(),
             state,
-            data: Box::new(DesktopData { applications }),
+            data: Box::new(ProgramData {
+                applications: programs,
+            }),
         }
     }
 }
 
-impl Module for DesktopFilesModule {
+impl Module for ProgramsModule {
     type State = ModuleState;
     fn get_state(&mut self) -> &mut ModuleState {
         &mut self.state
@@ -69,35 +71,30 @@ impl Module for DesktopFilesModule {
 
     fn get_results(&mut self) -> Vec<UIResult> {
         if self.state.results.is_empty() {
-            return vec![];
+            return Vec::new();
         }
-
-        let results_formatted = self
-            .state
+        self.state
             .results
             .iter()
             .map(|score| {
                 let s = score.score;
                 let idx = score.index;
 
-                let app = self.data.applications.get(idx).unwrap();
+                let app = self.data.applications.get(idx).unwrap().clone();
 
-                let app_clone = app.clone();
                 UIResult {
                     result: app.name.clone(),
                     score: s.to_string(),
-                    launch: Rc::new(move || match app_clone.launch() {
+                    launch: Rc::new(move || match app.launch() {
                         Ok(_) => {
-                            log::info!("Launched application: {}", app_clone.name);
+                            log::info!("Launched application: {}", app.name);
                         }
                         Err(e) => {
-                            log::error!("Failed to launch application: {}: {}", app_clone.name, e);
+                            log::error!("Failed to launch application: {}: {}", app.name, e);
                         }
                     }),
                 }
             })
-            .collect();
-
-        results_formatted
+            .collect()
     }
 }

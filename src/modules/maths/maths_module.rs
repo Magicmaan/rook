@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, rc::Rc, vec};
 
 use nucleo::{Config, Matcher};
 use shunting::ShuntingParser;
@@ -6,7 +6,7 @@ use shunting::ShuntingParser;
 use crate::{
     common::{
         app_state::AppState,
-        module_state::{ModuleState, Result, UIState, UIStateUpdate},
+        module_state::{ModuleState, ScoredResult, UIResult, UIState, UIStateUpdate},
     },
     modules::module::{Module, ModuleData},
 };
@@ -16,6 +16,12 @@ pub struct Equation {
     pub expression: String,
     pub result: String,
     pub valid: bool,
+}
+impl Equation {
+    pub fn launch(&self) {
+        log::info!("Launching equation result: {}", self.result);
+        // no launch action for equations
+    }
 }
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 
@@ -163,8 +169,11 @@ impl Module for MathsModule {
             .equations
             .iter()
             .enumerate()
-            .map(|(idx, _)| (1, idx))
-            .collect::<Vec<(u16, usize)>>();
+            .map(|(idx, _)| ScoredResult {
+                index: idx,
+                score: idx as u16,
+            })
+            .collect::<Vec<ScoredResult>>();
 
         self.state.results = results_pointers.clone();
 
@@ -174,29 +183,34 @@ impl Module for MathsModule {
 
         candidacy
     }
-    fn on_execute(&mut self, _: &mut AppState) -> bool {
-        true
-    }
 
-    fn render(&mut self) -> UIStateUpdate {
+    fn get_results(&mut self) -> Vec<UIResult> {
+        if self.state.results.is_empty() {
+            return vec![];
+        }
+
         let results_formatted = self
             .state
             .results
             .iter()
             .map(|score| {
-                let s = score.0;
-                let idx = score.1;
+                let s = score.score;
+                let idx = score.index;
 
                 let equation = self.data.equations.get_mut(idx).unwrap();
 
                 if equation.valid {
-                    Some(Result {
+                    let equation_clone = equation.clone();
+                    Some(UIResult {
                         result: format!(
                             "{} = {}",
                             equation.expression.clone(),
                             equation.result.clone()
                         ),
                         score: s.to_string(),
+                        launch: Rc::new(move || {
+                            equation_clone.launch();
+                        }),
                     })
                 } else {
                     None
@@ -205,16 +219,6 @@ impl Module for MathsModule {
             .filter_map(|x| x)
             .collect();
 
-        UIStateUpdate {
-            post_fix: self.data.equations.front().map_or("".to_string(), |e| {
-                if e.valid {
-                    format!("= {}", e.result)
-                } else {
-                    "".to_string()
-                }
-            }),
-            results: results_formatted,
-            total_potential_results: self.data.equations.len(),
-        }
+        results_formatted
     }
 }
