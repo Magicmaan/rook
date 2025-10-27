@@ -16,18 +16,18 @@ pub struct DesktopData {
 impl ModuleData for DesktopData {}
 
 pub struct DesktopFilesModule {
-    pub settings: crate::settings::settings::Settings,
+    pub settings: Rc<crate::settings::settings::Settings>,
     state: ModuleState,
     data: Box<DesktopData>,
 }
 
 impl DesktopFilesModule {
-    pub fn new(settings: &crate::settings::settings::Settings) -> Self {
+    pub fn new(settings: Rc<crate::settings::settings::Settings>) -> Self {
         let state = ModuleState::default();
         let applications = crate::modules::applications::desktop::find_desktop_files();
 
         Self {
-            settings: settings.clone(),
+            settings: settings,
             state,
             data: Box::new(DesktopData { applications }),
         }

@@ -31,7 +31,7 @@ pub struct MathsData {
 impl ModuleData for MathsData {}
 
 pub struct MathsModule {
-    pub settings: crate::settings::settings::Settings,
+    settings: Rc<crate::settings::settings::Settings>,
     state: ModuleState,
     data: Box<MathsData>,
     context: shunting::MathContext,
@@ -39,10 +39,10 @@ pub struct MathsModule {
 }
 
 impl MathsModule {
-    pub fn new(settings: &crate::settings::settings::Settings) -> Self {
+    pub fn new(settings: Rc<crate::settings::settings::Settings>) -> Self {
         let state = ModuleState::default();
         Self {
-            settings: settings.clone(),
+            settings: settings,
             state,
             data: Box::new(MathsData::default()),
             context: shunting::MathContext::new(),

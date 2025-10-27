@@ -16,7 +16,7 @@ use crate::ui::search_box::SearchBox;
 use std::rc::Rc;
 pub struct App {
     model: app_state::AppState,
-    settings: crate::settings::settings::Settings,
+    settings: Rc<crate::settings::settings::Settings>,
     event_handler: crate::event_handler::EventHandler,
     terminal: DefaultTerminal,
     active_modules_idx: Vec<usize>,
@@ -28,21 +28,23 @@ impl App {
         log::info!("Initializing application...");
 
         let model = app_state::AppState::default();
-        let settings = crate::settings::settings::Settings::new();
+        let settings = Rc::new(crate::settings::settings::Settings::new());
 
         let modules: Vec<Box<dyn Module<State = ModuleState>>> = vec![
             Box::new(
                 crate::modules::applications::desktop_files_module::DesktopFilesModule::new(
-                    &settings,
+                    settings.clone(),
                 ),
             ),
             Box::new(crate::modules::maths::maths_module::MathsModule::new(
-                &settings,
+                settings.clone(),
             )),
-            Box::new(crate::modules::programs::programs_module::ProgramsModule::new(&settings)),
+            Box::new(
+                crate::modules::programs::programs_module::ProgramsModule::new(settings.clone()),
+            ),
         ];
 
-        let event_handler = crate::event_handler::EventHandler::new(&settings);
+        let event_handler = crate::event_handler::EventHandler::new(settings.clone());
 
         Self {
             model,

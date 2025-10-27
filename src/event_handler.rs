@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use ratatui::crossterm::event::{self, KeyEvent};
 
 use crate::{
@@ -12,14 +14,12 @@ use crate::{
 
 #[derive(Debug, Clone)]
 pub struct EventHandler {
-    settings: Settings,
+    settings: Rc<Settings>,
 }
 
 impl EventHandler {
-    pub fn new(settings: &Settings) -> Self {
-        Self {
-            settings: settings.clone(),
-        }
+    pub fn new(settings: Rc<crate::settings::settings::Settings>) -> Self {
+        Self { settings }
     }
 
     // process the ratatui events into application events
