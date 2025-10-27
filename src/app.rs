@@ -1,4 +1,5 @@
 use color_eyre::Section;
+use ratatui::CompletedFrame;
 use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::style::Color;
 use ratatui::widgets::{Block, Padding};
@@ -151,15 +152,15 @@ impl App {
         let mut total_results = 0;
         for idx in self.active_modules_idx.iter() {
             let module = self.modules_vec[*idx].as_mut();
-            let module_results = module.get_results();
+            let mut module_results = module.get_results();
 
-            // total_results += module_results.len();
-            results_all.extend_from_slice(module_results.as_slice());
+            results_all.append(module_results.as_mut());
+            drop(module_results);
         }
-        results_all.sort_by(|a, b| b.score.cmp(&a.score));
+        results_all.sort_by(|a, b| u16::from(b.score).cmp(&u16::from(a.score)));
 
-        ui_update.results = results_all;
-        ui_update.total_potential_results = total_results;
+        // ui_update.results = results_all;
+        // ui_update.total_potential_results = total_results;
 
         self.model
             .ui
@@ -174,84 +175,102 @@ impl App {
         //     return;
         // }
         // self.model.ui.result_box_state.previous_results = self.model.ui.get_results().clone();
-        self.model.ui.set_results(ui_update.results.clone());
+        self.model.ui.set_results(results_all);
         // self.model.ui.result_box_state.total_potential_results = ui_update.total_potential_results;
 
         self.terminal
             .draw(|frame| {
-                let padding = self.settings.ui.layout.padding;
-                let root = Block::new()
-                    .style(ui_settings.theme.get_default_style(None))
-                    .padding(Padding::new(
-                        padding.saturating_mul(2),
-                        padding.saturating_mul(2),
-                        padding,
-                        padding,
-                    ));
+                {
+                    let padding = self.settings.ui.layout.padding;
+                    let root = Block::new()
+                        .style(ui_settings.theme.get_default_style(None))
+                        .padding(Padding::new(
+                            padding.saturating_mul(2),
+                            padding.saturating_mul(2),
+                            padding,
+                            padding,
+                        ));
 
-                let area = root.inner(frame.area());
-                frame.render_widget(root, frame.area());
+                    let area = root.inner(frame.area());
+                    frame.render_widget(root, frame.area());
 
-                // create layout with search box, and result
-                // takes in gap from settings, and adds extra space in between
-                // the connection of borders is handled in results_box and search_box
-                let mut search_bar_height = 2 + ui_settings.search.padding.saturating_mul(2);
-                if gap > 0 || ui_settings.layout.sections.get(0) != Some(&UISection::Search) {
-                    // borders take up extra space, when no gap, their is no bottom border on search box
-                    // when their is a gap, extra height must be given for centering
-                    search_bar_height += 1;
-                }
-                let mut constraints: Vec<Constraint> = vec![];
-                self.settings
-                    .ui
-                    .layout
-                    .sections
-                    .iter()
-                    .for_each(|section| match section {
-                        UISection::Search => {
-                            constraints.push(Constraint::Length(search_bar_height))
-                        }
-                        UISection::Results => constraints.push(Constraint::Fill(0)),
-                        // UISection::Tooltip => constraints.push(Constraint::Length(1)),
-                    });
-                let mut spaced_constraints: Vec<Constraint> = Vec::new();
-                for (i, constraint) in constraints.into_iter().enumerate() {
-                    spaced_constraints.push(constraint);
-                    if i < self.settings.ui.layout.sections.len() - 1 {
-                        spaced_constraints.push(Constraint::Length(gap.saturating_sub(1)));
+                    // app will panic if  attempts to render in area smaller than minimum size
+                    // asks me how i know
+                    let smallest_size = crate::ui::util::calculate_minimum_size(&self.settings);
+                    if frame.area().height < smallest_size.height
+                        || frame.area().width < smallest_size.width
+                    {
+                        frame.render_widget(
+                            Block::new()
+                                .title("Window too small")
+                                .borders(ratatui::widgets::Borders::ALL)
+                                .style(ui_settings.theme.get_default_style(None)),
+                            area,
+                        );
+                        return;
                     }
-                }
-                constraints = spaced_constraints;
-                let layout = Layout::vertical(constraints);
-                let chunks: Rc<[Rect]> = layout.split(area);
 
-                frame.render_stateful_widget(
-                    SearchBox::new(&self.settings),
-                    chunks[self
-                        .settings
+                    // create layout with search box, and result
+                    // takes in gap from settings, and adds extra space in between
+                    // the connection of borders is handled in results_box and search_box
+                    let mut search_bar_height = 2 + ui_settings.search.padding.saturating_mul(2);
+                    if gap > 0 || ui_settings.layout.sections.get(0) != Some(&UISection::Search) {
+                        // borders take up extra space, when no gap, their is no bottom border on search box
+                        // when their is a gap, extra height must be given for centering
+                        search_bar_height += 1;
+                    }
+                    let mut constraints: Vec<Constraint> = vec![];
+                    self.settings
                         .ui
                         .layout
                         .sections
                         .iter()
-                        .position(|s| *s == UISection::Search)
-                        .map(|i| i * 2)
-                        .unwrap_or(0)],
-                    &mut self.model.ui.search_box_state,
-                );
-                frame.render_stateful_widget(
-                    ResultsBox::new(&self.settings),
-                    chunks[self
-                        .settings
-                        .ui
-                        .layout
-                        .sections
-                        .iter()
-                        .position(|s| *s == UISection::Results)
-                        .map(|i| i * 2)
-                        .unwrap_or(0)],
-                    &mut self.model.ui.result_box_state,
-                );
+                        .for_each(|section| match section {
+                            UISection::Search => {
+                                constraints.push(Constraint::Length(search_bar_height))
+                            }
+                            UISection::Results => constraints.push(Constraint::Fill(0)),
+                            // UISection::Tooltip => constraints.push(Constraint::Length(1)),
+                        });
+                    let mut spaced_constraints: Vec<Constraint> = Vec::new();
+                    for (i, constraint) in constraints.into_iter().enumerate() {
+                        spaced_constraints.push(constraint);
+                        if i < self.settings.ui.layout.sections.len() - 1 {
+                            spaced_constraints.push(Constraint::Length(gap.saturating_sub(1)));
+                        }
+                    }
+                    constraints = spaced_constraints;
+                    let layout = Layout::vertical(constraints);
+                    let chunks: Rc<[Rect]> = layout.split(area);
+
+                    frame.render_stateful_widget(
+                        SearchBox::new(&self.settings),
+                        chunks[self
+                            .settings
+                            .ui
+                            .layout
+                            .sections
+                            .iter()
+                            .position(|s| *s == UISection::Search)
+                            .map(|i| i * 2)
+                            .unwrap_or(0)],
+                        &mut self.model.ui.search_box_state,
+                    );
+                    frame.render_stateful_widget(
+                        ResultsBox::new(&self.settings),
+                        chunks[self
+                            .settings
+                            .ui
+                            .layout
+                            .sections
+                            .iter()
+                            .position(|s| *s == UISection::Results)
+                            .map(|i| i * 2)
+                            .unwrap_or(0)],
+                        &mut self.model.ui.result_box_state,
+                    );
+                }
             })
-            .unwrap();
+            .expect("Failed to draw frame");
     }
 }

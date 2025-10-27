@@ -3,12 +3,10 @@ use std::rc::Rc;
 use crate::{
     common::{
         app_state::AppState,
+        application::Application,
         module_state::{ModuleState, UIResult, UIState, UIStateUpdate},
     },
-    modules::{
-        applications::desktop::Application,
-        module::{Module, ModuleData},
-    },
+    modules::module::{Module, ModuleData},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -67,36 +65,41 @@ impl Module for DesktopFilesModule {
         true
     }
 
-    fn get_results(&mut self) -> Vec<UIResult> {
+    fn get_results(&mut self) -> Box<Vec<UIResult>> {
         if self.state.results.is_empty() {
-            return vec![];
+            return Box::new(vec![]);
         }
 
-        let results_formatted = self
-            .state
-            .results
-            .iter()
-            .map(|score| {
-                let s = score.score;
-                let idx = score.index;
+        let results_formatted = Box::new(
+            self.state
+                .results
+                .iter()
+                .map(|score| {
+                    let s = score.score;
+                    let idx = score.index;
 
-                let app = self.data.applications.get(idx).unwrap();
+                    let app = self.data.applications.get(idx).unwrap();
 
-                let app_clone = app.clone();
-                UIResult {
-                    result: app.name.clone(),
-                    score: s.to_string(),
-                    launch: Rc::new(move || match app_clone.launch() {
-                        Ok(_) => {
-                            log::info!("Launched application: {}", app_clone.name);
-                        }
-                        Err(e) => {
-                            log::error!("Failed to launch application: {}: {}", app_clone.name, e);
-                        }
-                    }),
-                }
-            })
-            .collect();
+                    let app_clone = app.clone();
+                    UIResult {
+                        result: app.name.clone(),
+                        score: s,
+                        launch: Rc::new(move || match app_clone.launch() {
+                            Ok(_) => {
+                                log::info!("Launched application: {}", app_clone.name);
+                            }
+                            Err(e) => {
+                                log::error!(
+                                    "Failed to launch application: {}: {}",
+                                    app_clone.name,
+                                    e
+                                );
+                            }
+                        }),
+                    }
+                })
+                .collect(),
+        );
 
         results_formatted
     }

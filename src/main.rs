@@ -32,6 +32,14 @@ impl Drop for TerminalGuard {
         let _ = disable_raw_mode();
     }
 }
+
+use std::{
+    io::{self},
+    panic::{set_hook, take_hook},
+    thread::sleep,
+    time::Duration,
+};
+
 fn main() {
     std::panic::set_hook(Box::new(|panic_info| {
         eprintln!("PANIC: {}", panic_info);
@@ -40,7 +48,7 @@ fn main() {
                 "at {}:{}:{}",
                 location.file(),
                 location.line(),
-                location.column()
+                location.column(),
             );
         }
         std::process::exit(1);

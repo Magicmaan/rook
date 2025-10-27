@@ -53,7 +53,7 @@ pub fn find_programs() -> Vec<Application> {
                         .replace("-", "")
                         .replace("_", "");
 
-                    if truncated_name_1 == truncated_name_2 {
+                    if truncated_name_1.contains(&truncated_name_2) {
                         found = true;
                     }
                 }
@@ -68,9 +68,9 @@ pub fn find_programs() -> Vec<Application> {
 
 use nucleo::{Config, Matcher};
 
+use crate::common::application::Application;
 use crate::common::module_state::ScoredResult;
-use crate::modules::applications::desktop::{Application, find_desktop_files};
-
+use crate::modules::applications::desktop::find_desktop_files;
 #[cfg(test)]
 mod tests {
 

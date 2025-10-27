@@ -59,7 +59,7 @@ pub trait Module {
     ///
     /// * `UIStateUpdate` - Contains the rendered results, query display, and other
     ///   UI elements derived from the module's current data state
-    fn get_results(&mut self) -> Vec<UIResult>;
+    fn get_results(&mut self) -> Box<Vec<UIResult>>;
 
     /// Retrieves a mutable reference to the module's state.
     ///

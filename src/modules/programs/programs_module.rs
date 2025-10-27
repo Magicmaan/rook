@@ -1,14 +1,12 @@
 use std::rc::Rc;
 
+use crate::common::application::Application;
 use crate::{
     common::{
         app_state::AppState,
         module_state::{ModuleState, UIResult, UIState, UIStateUpdate},
     },
-    modules::{
-        applications::desktop::Application,
-        module::{Module, ModuleData},
-    },
+    modules::module::{Module, ModuleData},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -69,32 +67,34 @@ impl Module for ProgramsModule {
         true
     }
 
-    fn get_results(&mut self) -> Vec<UIResult> {
+    fn get_results(&mut self) -> Box<Vec<UIResult>> {
         if self.state.results.is_empty() {
-            return Vec::new();
+            return Box::new(Vec::new());
         }
-        self.state
-            .results
-            .iter()
-            .map(|score| {
-                let s = score.score;
-                let idx = score.index;
+        Box::new(
+            self.state
+                .results
+                .iter()
+                .map(|score| {
+                    let s = score.score;
+                    let idx = score.index;
 
-                let app = self.data.applications.get(idx).unwrap().clone();
+                    let app = self.data.applications.get(idx).unwrap().clone();
 
-                UIResult {
-                    result: app.name.clone(),
-                    score: s.to_string(),
-                    launch: Rc::new(move || match app.launch() {
-                        Ok(_) => {
-                            log::info!("Launched application: {}", app.name);
-                        }
-                        Err(e) => {
-                            log::error!("Failed to launch application: {}: {}", app.name, e);
-                        }
-                    }),
-                }
-            })
-            .collect()
+                    UIResult {
+                        result: app.name.clone(),
+                        score: s,
+                        launch: Rc::new(move || match app.launch() {
+                            Ok(_) => {
+                                log::info!("Launched application: {}", app.name);
+                            }
+                            Err(e) => {
+                                log::error!("Failed to launch application: {}: {}", app.name, e);
+                            }
+                        }),
+                    }
+                })
+                .collect(),
+        )
     }
 }

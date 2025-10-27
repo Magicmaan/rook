@@ -184,41 +184,40 @@ impl Module for MathsModule {
         candidacy
     }
 
-    fn get_results(&mut self) -> Vec<UIResult> {
+    fn get_results(&mut self) -> Box<Vec<UIResult>> {
         if self.state.results.is_empty() {
-            return vec![];
+            return Box::new(vec![]);
         }
 
-        let results_formatted = self
-            .state
-            .results
-            .iter()
-            .map(|score| {
-                let s = score.score;
-                let idx = score.index;
+        Box::new(
+            self.state
+                .results
+                .iter()
+                .map(|score| {
+                    let s = score.score;
+                    let idx = score.index;
 
-                let equation = self.data.equations.get_mut(idx).unwrap();
+                    let equation = self.data.equations.get_mut(idx).unwrap();
 
-                if equation.valid {
-                    let equation_clone = equation.clone();
-                    Some(UIResult {
-                        result: format!(
-                            "{} = {}",
-                            equation.expression.clone(),
-                            equation.result.clone()
-                        ),
-                        score: s.to_string(),
-                        launch: Rc::new(move || {
-                            equation_clone.launch();
-                        }),
-                    })
-                } else {
-                    None
-                }
-            })
-            .filter_map(|x| x)
-            .collect();
-
-        results_formatted
+                    if equation.valid {
+                        let equation_clone = equation.clone();
+                        Some(UIResult {
+                            result: format!(
+                                "{} = {}",
+                                equation.expression.clone(),
+                                equation.result.clone()
+                            ),
+                            score: s,
+                            launch: Rc::new(move || {
+                                equation_clone.launch();
+                            }),
+                        })
+                    } else {
+                        None
+                    }
+                })
+                .filter_map(|x| x)
+                .collect(),
+        )
     }
 }

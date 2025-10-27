@@ -1,10 +1,11 @@
 use ratatui::{
+    layout::Rect,
     symbols::{self, border},
     widgets::Borders,
 };
 use serde::{Deserialize, Serialize};
 
-use crate::common::module_state::UISection;
+use crate::{common::module_state::UISection, settings::settings::Settings};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum IconMode {
@@ -113,4 +114,22 @@ pub fn collapsed_border(
         }
         _ => (Borders::ALL, top_connected),
     }
+}
+
+pub fn calculate_minimum_size(settings: &Settings) -> Rect {
+    let mut min_width = 20;
+    let mut min_height = 5;
+
+    min_height += ((settings.ui.layout.gap.saturating_sub(1)) * 2) + 1;
+    min_height += (settings.ui.layout.padding * 2) + 1;
+
+    min_height += settings.ui.results.padding.saturating_sub(1) * 2;
+    min_height += settings.ui.search.padding * 2;
+
+    min_width += settings.ui.layout.padding * 2;
+    min_width += settings.ui.search.padding * 2;
+    min_width += settings.ui.results.padding.saturating_sub(1) * 2;
+    // hardcoded minimum size for now
+    // later can be calculated based on font size and ui settings
+    Rect::new(0, 0, min_width, min_height)
 }
