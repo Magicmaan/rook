@@ -114,7 +114,10 @@ impl App {
                 Event::ItemExecute => {
                     let idx = self.model.ui.get_selected_result_index();
                     if let Some(result) = self.model.ui.get_results().get(idx) {
-                        (result.launch)();
+                        let res = (result.launch)();
+                        if res {
+                            self.model.running_state = app_state::RunState::Stopped;
+                        }
                     }
                 }
                 _ => {}

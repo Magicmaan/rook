@@ -182,8 +182,8 @@ impl<'a> ResultsBox<'a> {
 }
 
 impl StatefulWidget for ResultsBox<'_> {
-    type State<'b> = ResultBoxState;
-    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {
+    type State = ResultBoxState;
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let results_settings: UIResultsSettings = self.settings.ui.results.clone();
         let theme = self.settings.ui.theme.clone();
         let results_theme = theme.get_results_colors();

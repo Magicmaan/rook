@@ -17,11 +17,12 @@ pub struct Application {
     pub desktop_file_path: PathBuf,
 }
 impl Application {
-    pub fn launch(&self) -> Result<()> {
+    pub fn launch(&self) -> bool {
         // run the application using std::process::Command
         let exec_parts: Vec<&str> = self.exec.split_whitespace().collect();
         if exec_parts.is_empty() {
-            return Err(eyre!("No executable found for application: {}", self.name));
+            log::error!("No executable found for application: {}", self.name);
+            return false;
         }
         let exec_str = self.exec.clone();
         let binding = PathBuf::from(&exec_str);
@@ -71,14 +72,10 @@ impl Application {
         }
 
         exec.spawn().is_err().then(|| {
-            Some(Err::<(), color_eyre::Report>(eyre!(
-                "Failed to launch application: {} \nExecutable Path: {}",
-                self.name,
-                self.exec
-            )))
+            return false;
         });
         sleep(Duration::from_millis(100)); // give some time for the application to launch
 
-        Ok(())
+        true
     }
 }

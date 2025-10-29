@@ -18,9 +18,10 @@ pub struct Equation {
     pub valid: bool,
 }
 impl Equation {
-    pub fn launch(&self) {
+    pub fn launch(&self) -> bool {
         log::info!("Launching equation result: {}", self.result);
         // no launch action for equations
+        true
     }
 }
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
@@ -208,9 +209,7 @@ impl Module for MathsModule {
                                 equation.result.clone()
                             ),
                             score: s,
-                            launch: Rc::new(move || {
-                                equation_clone.launch();
-                            }),
+                            launch: Rc::new(move || equation_clone.launch()),
                         })
                     } else {
                         None

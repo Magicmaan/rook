@@ -84,14 +84,7 @@ impl Module for ProgramsModule {
                     UIResult {
                         result: app.name.clone(),
                         score: s,
-                        launch: Rc::new(move || match app.launch() {
-                            Ok(_) => {
-                                log::info!("Launched application: {}", app.name);
-                            }
-                            Err(e) => {
-                                log::error!("Failed to launch application: {}: {}", app.name, e);
-                            }
-                        }),
+                        launch: Rc::new(move || app.launch()),
                     }
                 })
                 .collect(),

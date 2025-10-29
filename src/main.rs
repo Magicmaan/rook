@@ -1,6 +1,7 @@
 mod app;
 
 mod common;
+mod db;
 mod effects;
 mod event_handler;
 mod modules;
@@ -56,7 +57,7 @@ fn main() {
 
     Ftail::new()
         .daily_file(
-            &PathBuf::from("/home/theo/Documents/github/rust-tui/logs"),
+            &PathBuf::from("/home/theo/Documents/github/rook/logs"),
             log::LevelFilter::Info,
         )
         .init()

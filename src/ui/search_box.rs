@@ -85,9 +85,9 @@ impl<'a> SearchBox<'a> {
 }
 
 impl StatefulWidget for SearchBox<'_> {
-    type State<'b> = SearchBoxState;
+    type State = SearchBoxState;
 
-    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State<'_>) {
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let theme = self.settings.ui.theme.clone();
         let search_theme = theme.get_search_colors();
         let gap = self.settings.ui.layout.gap;

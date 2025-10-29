@@ -61,14 +61,14 @@ fn clone_box<F: Fn() + Send + Sync + 'static>(f: F) -> Box<dyn Fn() + Send + Syn
 pub struct UIResult {
     pub result: String,
     pub score: u16,
-    pub launch: Rc<dyn Fn() + Send + Sync>,
+    pub launch: Rc<dyn Fn() -> bool + Send + Sync>,
 }
 impl Default for UIResult {
     fn default() -> Self {
         Self {
             result: String::new(),
             score: 0,
-            launch: Rc::new(|| {}),
+            launch: Rc::new(|| false),
         }
     }
 }

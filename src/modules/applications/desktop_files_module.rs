@@ -84,18 +84,7 @@ impl Module for DesktopFilesModule {
                     UIResult {
                         result: app.name.clone(),
                         score: s,
-                        launch: Rc::new(move || match app_clone.launch() {
-                            Ok(_) => {
-                                log::info!("Launched application: {}", app_clone.name);
-                            }
-                            Err(e) => {
-                                log::error!(
-                                    "Failed to launch application: {}: {}",
-                                    app_clone.name,
-                                    e
-                                );
-                            }
-                        }),
+                        launch: Rc::new(move || app_clone.launch()),
                     }
                 })
                 .collect(),
