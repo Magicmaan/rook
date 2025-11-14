@@ -8,13 +8,12 @@ use std::time::Duration;
 pub struct Application {
     pub name: String,
     pub exec: String,
-    pub icon: Option<String>,
     // pub icon_ascii: Option<String>,
     pub comment: Option<String>,
     pub categories: Vec<String>,
     pub terminal: bool,
     pub mime_types: Vec<String>,
-    pub desktop_file_path: PathBuf,
+    pub file_path: PathBuf,
 }
 impl Application {
     pub fn launch(&self) -> bool {
@@ -39,13 +38,7 @@ impl Application {
         } else {
             // launch directly
             cmd.push("gtk-launch"); // use gtk-launch to launch the application properly
-            cmd.push(
-                self.desktop_file_path
-                    .file_stem()
-                    .unwrap()
-                    .to_str()
-                    .unwrap(),
-            );
+            cmd.push(self.file_path.file_stem().unwrap().to_str().unwrap());
         }
 
         let mut exec = std::process::Command::new(&cmd[0]);

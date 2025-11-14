@@ -7,7 +7,7 @@ use ratatui::{DefaultTerminal, crossterm::event};
 use tachyonfx::{Duration, EffectRenderer, EffectTimer, fx};
 
 use crate::common::app_state::{self, AppState};
-use crate::common::events::{self, Event};
+use crate::common::events::{self, Action};
 use crate::common::module_state::{ModuleState, UISection, UIStateUpdate};
 // use crate::event_handler::{process_events, update_navigation};
 use crate::modules::module::{Module, ModuleData};
@@ -26,6 +26,9 @@ pub struct App {
 impl App {
     pub fn new(terminal: DefaultTerminal) -> Self {
         log::info!("Initializing application...");
+
+        let connection = crate::db::open_connection();
+        crate::db::create_db(connection);
 
         let model = app_state::AppState::default();
         let settings = Rc::new(crate::settings::settings::Settings::new());
@@ -98,20 +101,20 @@ impl App {
         let events = self.event_handler.process_events(&events);
         for e in events.iter() {
             match e {
-                events::Event::Quit => {
+                events::Action::Quit => {
                     self.model.running_state = app_state::RunState::Stopped;
                 }
-                events::Event::Search(_) => {
+                events::Action::Search(_) => {
                     candidates = self
                         .event_handler
                         .handle_search(e, modules, &mut self.model);
                 }
 
-                Event::Navigate(_, _) => {
+                Action::Navigate(_, _) => {
                     self.event_handler
                         .handle_navigation(e, &mut self.model, &self.settings);
                 }
-                Event::ItemExecute => {
+                Action::ItemExecute => {
                     let idx = self.model.ui.get_selected_result_index();
                     if let Some(result) = self.model.ui.get_results().get(idx) {
                         let res = (result.launch)();

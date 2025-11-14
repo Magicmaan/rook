@@ -5,7 +5,7 @@ use ratatui::crossterm::event::{self, KeyEvent};
 use crate::{
     common::{
         app_state::AppState,
-        events::{Event, NavigateDirection, Search},
+        events::{Action, NavigateDirection, Search},
         module_state::ModuleState,
     },
     modules::module::Module,
@@ -23,7 +23,7 @@ impl EventHandler {
     }
 
     // process the ratatui events into application events
-    pub fn process_events(&self, app_events: &Vec<event::Event>) -> Vec<Event> {
+    pub fn process_events(&self, app_events: &Vec<event::Event>) -> Vec<Action> {
         let mut events = Vec::new();
         for event in app_events {
             match event {
@@ -44,69 +44,69 @@ impl EventHandler {
         events
     }
 
-    fn process_key_events(&self, key_event: event::KeyEvent) -> Vec<Event> {
+    fn process_key_events(&self, key_event: event::KeyEvent) -> Vec<Action> {
         let mut events = Vec::new();
 
         if key_event.kind == event::KeyEventKind::Press {
-            events.push(Event::KeyPress(key_event));
+            events.push(Action::KeyPress(key_event));
             // println!("Key Pressed: {:?}", key_event);
             match key_event.code {
                 event::KeyCode::Char('q') => {
                     if key_event.modifiers.contains(event::KeyModifiers::CONTROL) {
-                        events.push(Event::Quit);
+                        events.push(Action::Quit);
                     } else {
-                        events.push(Event::Search(Search::Add('q')));
+                        events.push(Action::Search(Search::Add('q')));
                     }
                 }
                 event::KeyCode::Esc => {
-                    events.push(Event::Quit);
+                    events.push(Action::Quit);
                 }
                 event::KeyCode::Backspace => {
-                    events.push(Event::Search(Search::Remove(-1)));
+                    events.push(Action::Search(Search::Remove(-1)));
                     // if always search, execute the search event immediately
                     if self.settings.search.always_search {
-                        events.push(Event::Search(Search::Execute));
+                        events.push(Action::Search(Search::Execute));
                     }
                 }
                 event::KeyCode::Delete => {
-                    events.push(Event::Search(Search::Remove(1)));
+                    events.push(Action::Search(Search::Remove(1)));
                     // if always search, execute the search event immediately
                     if self.settings.search.always_search {
-                        events.push(Event::Search(Search::Execute));
+                        events.push(Action::Search(Search::Execute));
                     }
                 }
                 event::KeyCode::Enter => {
-                    events.push(Event::ItemExecute);
+                    events.push(Action::ItemExecute);
                 }
                 event::KeyCode::Left => {
-                    events.push(Event::Navigate(NavigateDirection::Left, 1));
+                    events.push(Action::Navigate(NavigateDirection::Left, 1));
                 }
                 event::KeyCode::Right => {
-                    events.push(Event::Navigate(NavigateDirection::Right, 1));
+                    events.push(Action::Navigate(NavigateDirection::Right, 1));
                 }
                 event::KeyCode::Up => {
-                    events.push(Event::Navigate(NavigateDirection::Up, 1));
+                    events.push(Action::Navigate(NavigateDirection::Up, 1));
                 }
                 event::KeyCode::Down => {
-                    events.push(Event::Navigate(NavigateDirection::Down, 1));
+                    events.push(Action::Navigate(NavigateDirection::Down, 1));
                 }
                 event::KeyCode::Tab => {
-                    events.push(Event::Navigate(NavigateDirection::Down, 1));
+                    events.push(Action::Navigate(NavigateDirection::Down, 1));
                 }
                 event::KeyCode::BackTab => {
-                    events.push(Event::Navigate(NavigateDirection::Up, 1));
+                    events.push(Action::Navigate(NavigateDirection::Up, 1));
                 }
                 event::KeyCode::PageUp => {
-                    events.push(Event::Navigate(NavigateDirection::Up, 1));
+                    events.push(Action::Navigate(NavigateDirection::Up, 1));
                 }
                 event::KeyCode::PageDown => {
-                    events.push(Event::Navigate(NavigateDirection::Down, 1));
+                    events.push(Action::Navigate(NavigateDirection::Down, 1));
                 }
                 event::KeyCode::Home => {
-                    events.push(Event::Navigate(NavigateDirection::Home, 1));
+                    events.push(Action::Navigate(NavigateDirection::Home, 1));
                 }
                 event::KeyCode::End => {
-                    events.push(Event::Navigate(NavigateDirection::End, 1));
+                    events.push(Action::Navigate(NavigateDirection::End, 1));
                 }
                 _ => {
                     let key = match key_event.code {
@@ -122,12 +122,12 @@ impl EventHandler {
                         } else {
                             0
                         };
-                        events.push(Event::ItemExecute);
+                        events.push(Action::ItemExecute);
                     } else {
-                        events.push(Event::Search(Search::Add(key)));
+                        events.push(Action::Search(Search::Add(key)));
                         // if always search, execute the search event immediately
                         if self.settings.search.always_search {
-                            events.push(Event::Search(Search::Execute));
+                            events.push(Action::Search(Search::Execute));
                         }
                     }
                 }
@@ -138,8 +138,8 @@ impl EventHandler {
     //
     //
     // handle custom events
-    pub fn handle_navigation(&self, event: &Event, state: &mut AppState, settings: &Settings) {
-        if let Event::Navigate(direction, amount) = event {
+    pub fn handle_navigation(&self, event: &Action, state: &mut AppState, settings: &Settings) {
+        if let Action::Navigate(direction, amount) = event {
             match direction {
                 NavigateDirection::Left => {
                     if (state.ui.get_caret_position() - *amount + 1) > 0 {
@@ -194,13 +194,13 @@ impl EventHandler {
 
     pub fn handle_search(
         &self,
-        event: &Event,
+        event: &Action,
         modules: &mut Vec<Box<dyn Module<State = ModuleState>>>,
         state: &mut AppState,
     ) -> Vec<(usize, bool)> {
         let mut candidates: Vec<(usize, bool)> = Vec::new();
 
-        if let Event::Search(search_event) = event {
+        if let Action::Search(search_event) = event {
             match search_event {
                 Search::Execute => {
                     // pass execute function to all modules to determine candidacy

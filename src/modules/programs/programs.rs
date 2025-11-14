@@ -32,8 +32,8 @@ pub fn find_programs() -> Vec<Application> {
                         .unwrap_or_default()
                         .into(),
                     exec: p.to_str().unwrap_or_default().into(),
-                    desktop_file_path: p.clone(),
-                    icon: None,
+                    file_path: p.clone(),
+                    // icon: None,
                     comment: None,
                     categories: vec![],
                     terminal: true,

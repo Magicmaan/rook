@@ -84,7 +84,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
             .unwrap_or_else(|| "Unknown".into()),
 
         exec: exec,
-        icon: options.get("Icon").cloned(),
+        // icon: options.get("Icon").cloned(),
         comment: options.get("Comment").cloned(),
         categories: options
             .get("Categories")
@@ -98,7 +98,7 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
             .get("MimeType")
             .map(|s| s.split(';').map(|s| s.trim().into()).collect())
             .unwrap_or_default(),
-        desktop_file_path: PathBuf::from(path).into(),
+        file_path: PathBuf::from(path).into(),
     }
 }
 

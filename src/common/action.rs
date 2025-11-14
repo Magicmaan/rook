@@ -17,7 +17,7 @@ pub enum Search {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum Event {
+pub enum Action {
     Quit,
     //
     KeyPress(KeyEvent),

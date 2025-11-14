@@ -72,4 +72,7 @@ fn main() {
     let terminal = Terminal::new(CrosstermBackend::new(stdout)).unwrap();
     let mut app = app::App::new(terminal);
     app.run();
+
+    execute!(io::stdout(), LeaveAlternateScreen, DisableMouseCapture).unwrap();
+    disable_raw_mode().unwrap();
 }

@@ -15,6 +15,11 @@ use crate::settings::serialise::{
 };
 use crate::ui::util::IconMode;
 
+pub fn get_settings_path() -> PathBuf {
+    let path = config_dir().expect("Could not find config directory");
+    path.join("rook")
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum VerticalAlignment {
     Top,
@@ -478,8 +483,8 @@ pub struct Settings {
 
 impl Settings {
     pub fn new() -> Self {
-        let path = config_dir().expect("Could not find config directory");
-        let config_file = path.join("rook").join("settings.toml");
+        let path = get_settings_path();
+        let config_file = path.join("settings.toml");
 
         if config_file.exists() {
             println!("loading settings from {:?}", config_file);
@@ -551,8 +556,8 @@ mod tests {
 
     #[test]
     fn test_write_default_settings() {
-        let config_path = config_dir().expect("Could not find config directory");
-        let config_file = config_path.join("rook").join("settings.toml");
+        let config_path = get_settings_path();
+        let config_file = config_path.join("settings.toml");
         let settings = Settings::default();
         settings.write_default_settings(config_file.clone());
 
@@ -562,8 +567,8 @@ mod tests {
     #[test]
     fn test_read_settings() {
         Ftail::new().console(LevelFilter::Trace).init().unwrap();
-        let config_path = config_dir().expect("Could not find config directory");
-        let config_file = config_path.join("rook").join("settings.toml");
+        let config_path = get_settings_path();
+        let config_file = config_path.join("settings.toml");
         let settings = Settings::read_settings(config_file);
 
         // Option A: deserialize to a generic JSON-like value to inspect nested structure
