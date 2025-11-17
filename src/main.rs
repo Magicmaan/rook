@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     crate::errors::init()?;
     Ftail::new()
         .daily_file_env_level(
-            &PathBuf::from("/home/theo/Documents/github/rook-component/.logs"),
+            &PathBuf::from("/home/theo/Documents/github/rook/.logs"),
             // log::LevelFilter::Trace,
         )
         .datetime_format("%Y-%m-%d %H:%M:%S")

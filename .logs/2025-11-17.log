@@ -13414,3 +13414,23 @@
 2025-11-17 14:00:58 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
 2025-11-17 14:00:58 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
 2025-11-17 14:00:58 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-17 14:10:54 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-17 14:10:55 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-17 14:10:55 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-17 14:10:57 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-17 14:10:57 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-17 14:10:57 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-17 14:10:57 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-17 14:10:57 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-17 14:10:57 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-17 14:10:58 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-17 14:10:58 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-17 14:10:58 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-17 14:10:58 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-17 14:10:58 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-17 14:10:58 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-17 14:10:58 INFO rook_component::common::application Launching application: Zen Browser with command: ["gtk-launch", "zen"]
