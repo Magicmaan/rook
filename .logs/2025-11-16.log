@@ -1,0 +1,1779 @@
+2025-11-16 00:33:32 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:33:32 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 00:33:32 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 00:33:32 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 00:34:04 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 00:34:04 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 00:34:04 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:36:59 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:37:00 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:37:00 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:37:00 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:37:00 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:37:01 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:37:01 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:37:01 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:37:02 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:37:02 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:44:42 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:44:42 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 20:44:42 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:44:42 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:44:44 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:44:44 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:44:44 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1
+2025-11-16 20:44:44 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:44:44 INFO rook_component::modules::maths::maths_module Invalid expression: 1+
+2025-11-16 20:44:44 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+
+2025-11-16 20:44:45 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:44:45 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:44:45 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 20:44:46 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:44:46 INFO rook_component::modules::maths::maths_module Invalid expression: 1+
+2025-11-16 20:44:46 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+
+2025-11-16 20:44:46 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:44:46 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:44:46 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1
+2025-11-16 20:44:47 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:44:47 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:44:47 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1
+2025-11-16 20:44:49 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: h
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module Invalid expression: h
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query h
+2025-11-16 20:44:49 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: he
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module Invalid expression: he
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query he
+2025-11-16 20:44:49 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: hel
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module Invalid expression: hel
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query hel
+2025-11-16 20:44:49 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: hell
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module Invalid expression: hell
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query hell
+2025-11-16 20:44:49 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: hello
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module Invalid expression: hello
+2025-11-16 20:44:49 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query hello
+2025-11-16 20:45:27 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: hell
+2025-11-16 20:45:27 INFO rook_component::modules::maths::maths_module Invalid expression: hell
+2025-11-16 20:45:27 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query hell
+2025-11-16 20:45:28 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: hel
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module Invalid expression: hel
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query hel
+2025-11-16 20:45:28 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: he
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module Invalid expression: he
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query he
+2025-11-16 20:45:28 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: h
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module Invalid expression: h
+2025-11-16 20:45:28 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query h
+2025-11-16 20:45:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:45:29 INFO rook_component::modules::maths::maths_module Invalid expression: z
+2025-11-16 20:45:29 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query z
+2025-11-16 20:45:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:45:29 INFO rook_component::modules::maths::maths_module Invalid expression: ze
+2025-11-16 20:45:29 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query ze
+2025-11-16 20:45:30 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:45:30 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:45:30 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:45:50 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:45:50 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:45:50 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:45:53 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:45:53 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:45:53 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:45:54 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:45:54 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:45:54 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:45:55 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:45:55 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:47:15 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:47:15 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 20:47:15 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:47:15 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:47:27 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:47:27 INFO rook_component::modules::maths::maths_module Invalid expression: z
+2025-11-16 20:47:27 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query z
+2025-11-16 20:47:27 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:47:27 INFO rook_component::modules::maths::maths_module Invalid expression: ze
+2025-11-16 20:47:27 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query ze
+2025-11-16 20:47:28 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:47:28 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:47:28 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:49:14 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:49:14 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:49:14 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:49:17 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 20:49:17 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:49:17 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:49:17 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:49:17 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module Invalid expression: z
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query z
+2025-11-16 20:49:17 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module Invalid expression: ze
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query ze
+2025-11-16 20:49:17 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:49:17 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:52:14 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:52:14 INFO rook_component::modules::maths::maths_module Invalid expression: zen
+2025-11-16 20:52:14 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query zen
+2025-11-16 20:52:22 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 20:52:22 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:52:22 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:52:25 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:52:25 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:25 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:52:25 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:25 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:52:25 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:44 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:52:44 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:44 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:52:44 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:45 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:52:45 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:52:45 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:52:45 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1
+2025-11-16 20:52:46 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:52:46 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:52:46 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:52:46 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:52:46 INFO rook_component::app Module maths_module failed to search for query: 1+1: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:54:52 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:54:52 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:54:52 INFO rook_component::app Module maths_module failed to search for query: 1+1: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:04 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:55:04 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:55:04 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:55:05 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:55:05 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:55:05 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:55:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:55:06 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+_
+2025-11-16 20:55:06 INFO rook_component::app Module maths_module failed to search for query: 1+_: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:55:06 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:55:06 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:55:06 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 20:55:07 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:55:07 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:07 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:55:07 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:55:07 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:55:08 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:55:08 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:55:08 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:08 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:55:08 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:09 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:55:09 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:09 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:55:09 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:09 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:55:09 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:10 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:55:10 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:55:10 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:55:10 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:55:10 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:55:10 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:55:10 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:55:10 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:55:10 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 20:55:41 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:55:41 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:55:41 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 20:58:28 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:58:28 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 20:58:28 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 20:58:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:58:29 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:58:29 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:58:29 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:58:29 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:30 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 20:58:30 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 20:58:30 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 20:58:30 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:58:30 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:31 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+2
+2025-11-16 20:58:31 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+2 = 3
+2025-11-16 20:58:31 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+2
+2025-11-16 20:58:32 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:58:32 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:32 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+3
+2025-11-16 20:58:32 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+3 = 4
+2025-11-16 20:58:32 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+3
+2025-11-16 20:58:32 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:58:32 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:33 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+5
+2025-11-16 20:58:33 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+5 = 6
+2025-11-16 20:58:33 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+5
+2025-11-16 20:58:34 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 20:58:34 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:34 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 20:58:34 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 20:58:34 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:58:35 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:58:35 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 20:58:35 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 20:58:35 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:58:35 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2*
+2025-11-16 20:58:35 INFO rook_component::app Module maths_module failed to search for query: 2*: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:36 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2*2
+2025-11-16 20:58:36 INFO rook_component::modules::maths::maths_module Evaluated expression: 2*2 = 4
+2025-11-16 20:58:36 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2*2
+2025-11-16 20:58:36 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2*
+2025-11-16 20:58:36 INFO rook_component::app Module maths_module failed to search for query: 2*: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:37 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 20:58:37 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 20:58:37 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:58:37 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:58:37 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:58:37 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:37 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:58:37 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:38 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 20:58:38 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:53 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 20:58:53 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:53 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 20:58:53 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:54 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 20:58:54 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 20:58:54 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 20:58:54 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 20:58:54 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 20:58:54 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:54 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 20:58:54 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 20:58:54 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 20:58:55 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 20:58:55 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 20:58:55 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 20:58:55 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 20:58:55 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:00:38 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:00:38 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:00:38 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:00:41 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:00:41 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:00:41 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:00:42 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 21:00:42 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 21:00:42 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:00:42 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:00:42 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:00:42 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:00:42 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:00:42 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:00:43 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:00:43 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:00:43 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+2
+2025-11-16 21:00:43 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+2 = 3
+2025-11-16 21:00:43 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+2
+2025-11-16 21:00:43 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:00:43 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:00:44 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+2
+2025-11-16 21:00:44 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+2 = 3
+2025-11-16 21:00:44 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+2
+2025-11-16 21:00:44 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:00:44 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:00:45 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+3
+2025-11-16 21:00:45 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+3 = 4
+2025-11-16 21:00:45 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+3
+2025-11-16 21:00:45 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:00:45 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:00:46 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+5
+2025-11-16 21:00:46 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+5 = 6
+2025-11-16 21:00:46 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+5
+2025-11-16 21:14:52 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+5
+2025-11-16 21:14:52 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+5 = 6
+2025-11-16 21:14:52 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+5
+2025-11-16 21:14:56 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:14:56 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:14:56 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:14:56 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:14:57 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 1
+2025-11-16 21:14:57 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 21:14:57 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:14:57 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:14:57 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:14:57 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:14:57 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:14:57 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:14:58 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:14:58 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:14:58 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:14:58 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:14:58 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:14:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:14:59 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:14:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:14:59 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:14:59 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:15:32 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:15:32 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:15:32 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:15:35 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:15:35 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:15:35 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:15:36 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 21:15:36 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:15:36 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:15:36 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:36 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:36 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:15:36 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:15:36 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:15:37 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:37 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:37 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:15:37 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:15:37 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:15:37 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:15:38 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:38 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:38 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:15:38 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:15:38 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:15:38 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:15:55 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:55 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:56 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:15:56 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:15:56 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:15:56 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:15:56 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:56 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:57 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+3
+2025-11-16 21:15:57 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+3 = 5
+2025-11-16 21:15:57 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+3
+2025-11-16 21:15:58 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:15:58 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:15:58 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:15:58 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:15:58 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:15:58 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:18:19 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:19 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:19 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:18:19 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:18:22 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:18:22 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:18:22 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:18:22 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:18:22 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 21:18:22 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:23 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 21:18:23 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:23 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 21:18:23 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:23 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 21:18:23 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:23 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 21:18:23 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:24 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:18:24 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 21:18:24 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:18:24 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:18:24 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:18:24 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:24 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:24 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:24 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:18:25 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:18:25 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:25 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:25 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:25 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:18:25 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:18:26 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:18:26 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:26 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:26 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:26 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:18:26 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:18:41 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:41 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:41 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:18:41 INFO rook_component::app Module maths_module failed to search for query: 2+2: 
+   0: [91mDuplicate equation[0m
+2025-11-16 21:18:57 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:18:57 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:18:57 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:18:57 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 21:18:57 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:57 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 21:18:57 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:57 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 21:18:57 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:58 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 21:18:58 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:58 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 21:18:58 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:58 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:18:58 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 21:18:58 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:18:58 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:18:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:18:59 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:59 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:59 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:18:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:18:59 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:18:59 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:18:59 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:18:59 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:19:00 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:00 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:00 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+3
+2025-11-16 21:19:00 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+3 = 5
+2025-11-16 21:19:00 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+3
+2025-11-16 21:19:01 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:01 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:01 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+3
+2025-11-16 21:19:01 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+3 = 5
+2025-11-16 21:19:01 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+3 = 5
+2025-11-16 21:19:02 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:02 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:02 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+4
+2025-11-16 21:19:02 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+4 = 6
+2025-11-16 21:19:02 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+4
+2025-11-16 21:19:02 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:02 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:03 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+4
+2025-11-16 21:19:03 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+4 = 6
+2025-11-16 21:19:03 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+4 = 6
+2025-11-16 21:19:03 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:03 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:04 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+1
+2025-11-16 21:19:04 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+1 = 3
+2025-11-16 21:19:04 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+1
+2025-11-16 21:19:05 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:05 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:05 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:19:05 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:19:05 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:19:05 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:05 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:06 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: 2
+2025-11-16 21:19:06 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:19:06 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:19:07 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:19:07 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:19:07 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:19:07 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:19:07 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:27:21 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:27:21 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:27:21 INFO rook_component::modules::maths::maths_module Duplicate equation found: 2+2 = 4
+2025-11-16 21:27:28 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:27:28 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:27:28 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:27:28 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:27:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: z
+2025-11-16 21:27:29 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:27:29 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:27:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: ze
+2025-11-16 21:27:29 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:27:29 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:27:29 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 21:27:29 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:27:29 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:01 INFO rook_component::modules::applications::desktop_files_module Found 0 applications matching the query: zen
+2025-11-16 21:29:01 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:29:01 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:04 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:29:04 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:29:04 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:29:04 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:29:04 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:29:04 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:29:04 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:04 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:29:04 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:29:04 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:05 INFO rook_component::modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:29:05 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:29:05 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:05 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:29:05 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:29:05 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:05 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:29:05 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:29:05 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:05 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:29:06 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:29:06 INFO rook_component::modules::applications::desktop_files_module Found 1 applications matching the query: 1
+2025-11-16 21:29:06 INFO rook_component::app Module desktop_files_module found results for query: 1
+2025-11-16 21:29:06 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 21:29:06 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:29:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:29:06 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:06 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 21:29:06 INFO rook_component::modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 21:29:06 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 21:29:06 INFO rook_component::app Module maths_module found results for query: 1+1
+2025-11-16 21:29:07 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 21:29:07 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:07 INFO rook_component::modules::applications::desktop_files_module Found 1 applications matching the query: 1
+2025-11-16 21:29:07 INFO rook_component::app Module desktop_files_module found results for query: 1
+2025-11-16 21:29:07 INFO rook_component::modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 21:29:07 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:29:07 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:29:08 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:29:08 INFO rook_component::modules::applications::desktop_files_module Found 3 applications matching the query: 2
+2025-11-16 21:29:08 INFO rook_component::app Module desktop_files_module found results for query: 2
+2025-11-16 21:29:08 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:29:08 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:29:08 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:29:08 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:08 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+2
+2025-11-16 21:29:08 INFO rook_component::modules::maths::maths_module Evaluated expression: 2+2 = 4
+2025-11-16 21:29:08 INFO rook_component::modules::maths::maths_module MathsModule is candidate for query 2+2
+2025-11-16 21:29:08 INFO rook_component::app Module maths_module found results for query: 2+2
+2025-11-16 21:29:09 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:29:09 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:10 INFO rook_component::modules::applications::desktop_files_module Found 3 applications matching the query: 2
+2025-11-16 21:29:10 INFO rook_component::app Module desktop_files_module found results for query: 2
+2025-11-16 21:29:10 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:29:10 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:29:11 INFO rook_component::modules::applications::desktop_files_module No applications matched the query: 2+
+2025-11-16 21:29:11 INFO rook_component::app Module maths_module failed to search for query: 2+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:11 INFO rook_component::modules::applications::desktop_files_module Found 3 applications matching the query: 2
+2025-11-16 21:29:11 INFO rook_component::app Module desktop_files_module found results for query: 2
+2025-11-16 21:29:11 INFO rook_component::modules::maths::maths_module Evaluated expression: 2 = 2
+2025-11-16 21:29:11 INFO rook_component::app Module maths_module failed to search for query: 2: 
+   0: [91mExpression is just a number[0m
+2025-11-16 21:29:12 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:29:13 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:29:13 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:29:13 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:13 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:29:13 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:29:13 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:13 INFO rook_component::modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:29:13 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:29:13 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:14 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:29:14 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:29:14 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:14 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:29:14 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:29:14 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:29:14 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:42:44 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:44:07 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:44:07 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:44:07 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:44:07 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:44:07 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:44:07 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:07 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:44:07 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:44:07 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:08 INFO rook_component::modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:44:08 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:44:08 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:09 INFO rook_component::modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:44:09 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:44:09 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:09 INFO rook_component::common::application Launching application: Zen Browser with command: ["gtk-launch", "zen"]
+2025-11-16 21:44:13 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:44:13 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:44:13 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:13 INFO rook_component::modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:44:13 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:44:13 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:44:13 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:44:13 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:45:25 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:45:26 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:53:43 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:53:43 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:53:43 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:56:18 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:56:18 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:56:18 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:56:18 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:56:20 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:56:20 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:56:20 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:56:20 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:56:20 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:56:20 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:56:20 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:56:20 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:56:20 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:56:20 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:56:20 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:56:20 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:56:21 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:56:21 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:56:21 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:56:21 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:57:42 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:57:45 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:57:45 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:57:45 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:58:34 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:58:36 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 21:58:36 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 21:58:36 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 21:58:36 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 21:58:37 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:58:37 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:58:37 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:58:37 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:58:37 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:58:37 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:58:37 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 21:58:37 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 21:58:37 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:58:38 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 21:58:38 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 21:58:38 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:58:38 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 21:58:38 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 21:58:38 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 21:58:38 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 21:58:38 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:06:43 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:06:48 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:06:48 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:06:48 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:06:48 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 22:06:48 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 22:06:48 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:06:48 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 22:06:48 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 22:06:48 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:06:48 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 22:06:48 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 22:06:48 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:06:49 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 22:06:49 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 22:06:49 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:06:49 INFO rook_component::common::application Launching application: Zen Browser with command: ["gtk-launch", "zen"]
+2025-11-16 22:06:53 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 22:06:53 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 22:06:53 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:12:58 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:12:58 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:12:58 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:12:58 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:12:58 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 22:12:58 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 22:12:58 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:12:59 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 22:12:59 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 22:12:59 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:12:59 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 22:12:59 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 22:12:59 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:12:59 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 22:12:59 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 22:12:59 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:00 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 22:13:00 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 22:13:00 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:00 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:13:00 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:13:01 INFO rook_component::search_modules::applications::desktop_files_module Found 1 applications matching the query: 1
+2025-11-16 22:13:01 INFO rook_component::app Module desktop_files_module found results for query: 1
+2025-11-16 22:13:01 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 22:13:01 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 22:13:01 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:01 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:02 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+1
+2025-11-16 22:13:02 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1+1 = 2
+2025-11-16 22:13:02 INFO rook_component::search_modules::maths::maths_module MathsModule is candidate for query 1+1
+2025-11-16 22:13:02 INFO rook_component::app Module maths_module found results for query: 1+1
+2025-11-16 22:13:02 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:02 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:02 INFO rook_component::search_modules::applications::desktop_files_module Found 1 applications matching the query: 1
+2025-11-16 22:13:02 INFO rook_component::app Module desktop_files_module found results for query: 1
+2025-11-16 22:13:02 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 22:13:02 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 22:13:03 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:03 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:03 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+2
+2025-11-16 22:13:03 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1+2 = 3
+2025-11-16 22:13:03 INFO rook_component::search_modules::maths::maths_module MathsModule is candidate for query 1+2
+2025-11-16 22:13:03 INFO rook_component::app Module maths_module found results for query: 1+2
+2025-11-16 22:13:04 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:04 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:04 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+2
+2025-11-16 22:13:04 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1+2 = 3
+2025-11-16 22:13:05 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:05 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:05 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+3
+2025-11-16 22:13:05 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1+3 = 4
+2025-11-16 22:13:05 INFO rook_component::search_modules::maths::maths_module MathsModule is candidate for query 1+3
+2025-11-16 22:13:05 INFO rook_component::app Module maths_module found results for query: 1+3
+2025-11-16 22:13:05 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:05 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:07 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+4
+2025-11-16 22:13:07 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1+4 = 5
+2025-11-16 22:13:07 INFO rook_component::search_modules::maths::maths_module MathsModule is candidate for query 1+4
+2025-11-16 22:13:07 INFO rook_component::app Module maths_module found results for query: 1+4
+2025-11-16 22:13:08 INFO rook_component::search_modules::applications::desktop_files_module No applications matched the query: 1+
+2025-11-16 22:13:08 INFO rook_component::app Module maths_module failed to search for query: 1+: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:08 INFO rook_component::search_modules::applications::desktop_files_module Found 1 applications matching the query: 1
+2025-11-16 22:13:08 INFO rook_component::app Module desktop_files_module found results for query: 1
+2025-11-16 22:13:08 INFO rook_component::search_modules::maths::maths_module Evaluated expression: 1 = 1
+2025-11-16 22:13:08 INFO rook_component::app Module maths_module failed to search for query: 1: 
+   0: [91mExpression is just a number[0m
+2025-11-16 22:13:08 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:13:09 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 22:13:09 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 22:13:09 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:09 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 22:13:09 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 22:13:09 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:10 INFO rook_component::search_modules::applications::desktop_files_module Found 5 applications matching the query: zen
+2025-11-16 22:13:10 INFO rook_component::app Module desktop_files_module found results for query: zen
+2025-11-16 22:13:10 INFO rook_component::app Module maths_module failed to search for query: zen: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:10 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: ze
+2025-11-16 22:13:10 INFO rook_component::app Module desktop_files_module found results for query: ze
+2025-11-16 22:13:10 INFO rook_component::app Module maths_module failed to search for query: ze: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:11 INFO rook_component::search_modules::applications::desktop_files_module Found 7 applications matching the query: z
+2025-11-16 22:13:11 INFO rook_component::app Module desktop_files_module found results for query: z
+2025-11-16 22:13:11 INFO rook_component::app Module maths_module failed to search for query: z: 
+   0: [91mExpression cannot be just a number[0m
+2025-11-16 22:13:11 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:15:45 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:15:48 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:15:48 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:15:48 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:20:53 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:20:57 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:20:57 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:20:57 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:21:24 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:21:26 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:21:26 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:21:26 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:21:55 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:21:58 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:21:58 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 22:21:58 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:21:58 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:22:27 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:22:30 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:22:30 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 22:22:30 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:22:30 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:38:41 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 22:43:21 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:43:21 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:43:21 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:43:27 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:43:27 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 22:43:27 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:43:27 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:44:02 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 22:44:03 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 22:44:03 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 22:44:03 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:44:01 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:44:01 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:44:01 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:46:24 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:46:24 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:46:24 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:48:25 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:48:25 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:48:25 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:48:55 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:48:57 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:48:57 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 23:48:57 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:48:57 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:50:38 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:50:40 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:50:40 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 23:50:40 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:50:40 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:52:44 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:52:46 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:52:46 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:52:46 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:53:36 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:53:39 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:53:39 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 23:53:39 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:53:39 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:54:32 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:54:34 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:54:34 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:54:34 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:55:40 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:55:41 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:55:41 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:55:41 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:56:13 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:56:16 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:56:16 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:56:16 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:56:40 INFO rook_component::app Module maths_module failed to search for query: : 
+   0: [91mEmpty query[0m
+2025-11-16 23:56:42 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-16 23:56:42 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-16 23:56:42 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-16 23:56:42 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
