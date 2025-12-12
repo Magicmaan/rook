@@ -10,6 +10,7 @@ use crate::common::action::Action;
 use crate::{settings::settings::Settings, tui::Event};
 
 pub mod layout;
+pub mod list;
 pub mod results;
 pub mod search;
 pub mod util;

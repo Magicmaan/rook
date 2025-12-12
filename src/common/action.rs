@@ -1,7 +1,7 @@
 use crossterm::event::{KeyEvent, MouseEvent};
 use serde::{Deserialize, Serialize};
 
-use crate::{components::Component, search_modules::SearchResult};
+use crate::{components::Component, search_modules::ListResult};
 
 // use crate::common::module_state::SearchResult;
 
@@ -29,8 +29,8 @@ pub enum Action {
     MouseEvent(MouseEvent),
     //
     Search(Search),
-    SearchResults(Vec<SearchResult>),
-    ItemExecute(SearchResult), // execute selected item in results
+    SearchResults(Vec<ListResult>),
+    ItemExecute(ListResult), // execute selected item in results
     //
     Navigate(NavigateDirection, usize), // direction, number of lines
     // NavigateDown(usize),                // number of lines

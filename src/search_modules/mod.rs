@@ -47,11 +47,11 @@ pub trait SearchModule {
     /// * `bool` - True if this module has results for the query, false otherwise
     fn search(&mut self, query: &str) -> Result<bool>;
 
-    fn execute(&mut self, result: &SearchResult) -> () {
+    fn execute(&mut self, result: &ListResult) -> () {
         let _ = result;
     }
     // fn get_results(&self)
-    fn get_ui_results(&self) -> Vec<SearchResult> {
+    fn get_ui_results(&self) -> Vec<ListResult> {
         vec![]
     }
 }
@@ -66,14 +66,14 @@ fn clone_box<F: Fn() + Send + Sync + 'static>(f: F) -> Box<dyn Fn() + Send + Syn
     Box::new(f)
 }
 
-pub struct SearchResult {
+pub struct ListResult {
     pub result: String,
     pub score: u16,
     pub launch: Rc<dyn Fn() -> bool + Send + Sync>,
     // pub launch: Rc<dyn Fn() -> bool + Send + Sync>,
 }
 
-impl Default for SearchResult {
+impl Default for ListResult {
     fn default() -> Self {
         Self {
             result: String::new(),
@@ -83,7 +83,7 @@ impl Default for SearchResult {
         }
     }
 }
-impl std::fmt::Debug for SearchResult {
+impl std::fmt::Debug for ListResult {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("UIResult")
             .field("result", &self.result)
@@ -92,7 +92,7 @@ impl std::fmt::Debug for SearchResult {
     }
 }
 
-impl Clone for SearchResult {
+impl Clone for ListResult {
     fn clone(&self) -> Self {
         Self {
             result: self.result.clone(),
@@ -102,21 +102,21 @@ impl Clone for SearchResult {
     }
 }
 
-impl PartialEq for SearchResult {
+impl PartialEq for ListResult {
     fn eq(&self, other: &Self) -> bool {
         self.result == other.result && self.score == other.score
     }
 }
 
-impl Eq for SearchResult {}
+impl Eq for ListResult {}
 
-impl std::hash::Hash for SearchResult {
+impl std::hash::Hash for ListResult {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.result.hash(state);
         self.score.hash(state);
     }
 }
-impl Serialize for SearchResult {
+impl Serialize for ListResult {
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -127,7 +127,7 @@ impl Serialize for SearchResult {
         state.end()
     }
 }
-impl<'de> Deserialize<'de> for SearchResult {
+impl<'de> Deserialize<'de> for ListResult {
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -139,7 +139,7 @@ impl<'de> Deserialize<'de> for SearchResult {
         }
 
         let helper = UIResultHelper::deserialize(deserializer)?;
-        Ok(SearchResult {
+        Ok(ListResult {
             result: helper.result,
             score: helper.score,
             launch: Rc::new(|| false),

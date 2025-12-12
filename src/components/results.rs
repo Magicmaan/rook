@@ -8,28 +8,30 @@ use crate::common::module_state::UISection;
 // use crate::common::module_state::{SearchResult, UISection};
 use crate::components::Component;
 use crate::components::layout::get_root_layout;
+use crate::components::list::{List, ListState};
 use crate::effects;
-use crate::search_modules::SearchResult;
+use crate::search_modules::ListResult;
 
-use crate::components::util::{IconMode, collapsed_border, number_to_icon};
+use crate::components::util::{IconMode, calculate_color_fade, collapsed_border, number_to_icon};
 use crate::settings::settings::{Settings, UIResultsSettings};
+use crate::tui::Event;
 use ratatui::layout::{Constraint, Layout, Margin, Offset};
 use ratatui::symbols;
-use ratatui::widgets::{Borders, ListState, Paragraph};
+use ratatui::widgets::{Borders, Paragraph};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
     style::{Color, Style},
     text::{Line, Span},
-    widgets::{Block, List, ListItem, Padding, StatefulWidget, Widget},
+    widgets::{Block, ListItem, Padding, StatefulWidget, Widget},
 };
 use serde_json::Number;
 use tachyonfx::{Duration, EffectManager, EffectTimer, Interpolation, fx, pattern};
 
 #[derive(Debug, Default, Clone)]
 pub struct ResultBoxState {
-    pub results: Vec<SearchResult>,
-    pub previous_results: Vec<SearchResult>,
+    pub results: Vec<ListResult>,
+    pub previous_results: Vec<ListResult>,
 
     pub executing_item: Option<usize>,
     pub list_state: ListState,
@@ -45,10 +47,11 @@ pub struct ResultsBox {
     render_tick: u64,
     last_search_tick: u64,
     delta_time: i32,
-    results: Vec<SearchResult>,
-    previous_results: Vec<SearchResult>,
+    results: Vec<ListResult>,
+    previous_results: Vec<ListResult>,
     total_potential_results: usize,
     list_state: ListState,
+    // list: List,
     action_tx: Option<tokio::sync::mpsc::UnboundedSender<Action>>,
     area: Rect,
     focused: bool,
@@ -69,49 +72,7 @@ impl ResultsBox {
             action_tx: None,
             area: Rect::default(),
             focused: false,
-        }
-    }
-
-    fn multiply_color(&self, color: Color, mult: f64) -> Color {
-        if let Color::Rgb(r, g, b) = color {
-            let r = (r as f64 * mult).round().min(255.0) as u8;
-            let g = (g as f64 * mult).round().min(255.0) as u8;
-            let b = (b as f64 * mult).round().min(255.0) as u8;
-
-            Color::Rgb(r, g, b)
-        } else {
-            color
-        }
-    }
-
-    fn calculate_color_fade(&self, start_color: Color, position: usize, height: usize) -> Color {
-        if let Color::Rgb(_, _, _) = start_color {
-            log::trace!(
-                "Calculating color fade for position {} of {}",
-                position,
-                height
-            );
-            let diff = height.saturating_sub(position);
-            if diff < 5 {
-                let base_brightness = 1.0;
-                let brightness = 1.0
-                    - maths_rs::lerp(
-                        base_brightness,
-                        0.25,
-                        (diff as f32 / height as f32).clamp(0.1, 1.0),
-                    );
-                self.multiply_color(start_color, brightness as f64)
-            } else {
-                start_color
-            }
-        } else {
-            log::trace!(
-                "Color fade not applied for non-RGB color at position {} of {}",
-                position,
-                height
-            );
-            // indexed / ANSI colours aren't supported for fine-grained fading, so just return the
-            start_color
+            // list: List::new(),
         }
     }
 
@@ -130,7 +91,7 @@ impl ResultsBox {
 
     pub fn construct_list(
         &self,
-        results: &Vec<SearchResult>,
+        results: &Vec<ListResult>,
         number_mode: IconMode,
         executing_item: Option<usize>,
         list_state: &ListState,
@@ -190,12 +151,12 @@ impl ResultsBox {
                     .fade_color_at_bottom
                     && available_height >= 10
                 {
-                    text_color = self.calculate_color_fade(
+                    text_color = calculate_color_fade(
                         theme.text.unwrap(),
                         i.saturating_sub(list_state.offset()),
                         available_height,
                     );
-                    muted_color = self.calculate_color_fade(
+                    muted_color = calculate_color_fade(
                         theme.text_muted.unwrap(),
                         i.saturating_sub(list_state.offset()),
                         available_height,
@@ -224,32 +185,6 @@ impl ResultsBox {
         items
     }
 
-    fn scroll_down(&mut self) {
-        let i = match self.list_state.selected() {
-            Some(i) => {
-                if i >= self.results.len().saturating_sub(1) {
-                    self.results.len().saturating_sub(1)
-                } else {
-                    i.saturating_add(1)
-                }
-            }
-            None => 0,
-        };
-        self.list_state.select(Some(i));
-    }
-    fn scroll_up(&mut self) {
-        let i = match self.list_state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    0
-                } else {
-                    i.saturating_sub(1)
-                }
-            }
-            None => 0,
-        };
-        self.list_state.select(Some(i));
-    }
     fn execute_selected(&mut self) {
         if let Some(selected) = self.list_state.selected() {
             if let Some(action_tx) = &self.action_tx {
@@ -274,78 +209,24 @@ impl Component for ResultsBox {
     }
 
     fn register_settings_handler(&mut self, settings: Settings) -> Result<()> {
-        self.settings = Some(settings);
+        self.settings = Some(settings.clone());
+
         Ok(())
     }
 
-    fn handle_key_event(
-        &mut self,
-        key: crossterm::event::KeyEvent,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
-        if key.kind != KeyEventKind::Press {
-            return Ok(None);
-        }
-        match key.code {
-            KeyCode::Up => {
-                if self.focused {
-                    self.scroll_up();
-                }
-                Ok(None)
-            }
-            KeyCode::Down => {
-                if self.focused {
-                    self.scroll_down();
-                }
-                Ok(None)
-            }
-            KeyCode::Enter => {
-                self.execute_selected();
-                Ok(None)
-            }
-            _ => Ok(None),
-        }
+    fn handle_key_event(&mut self, key: crossterm::event::KeyEvent) -> Result<Option<Action>> {
+        return self.list_state.handle_key_event(&key);
     }
     fn handle_mouse_event(
         &mut self,
         mouse: crossterm::event::MouseEvent,
     ) -> Result<Option<Action>> {
-        match mouse.kind {
-            crossterm::event::MouseEventKind::ScrollDown => {
-                if self.focused {
-                    log::info!("Scrolling down results box");
-                    self.scroll_down();
-                }
-                Ok(None)
-            }
-            crossterm::event::MouseEventKind::ScrollUp => {
-                if self.focused {
-                    log::info!("Scrolling up results box");
-                    self.scroll_up();
-                }
-                Ok(None)
-            }
-            MouseEventKind::Moved => {
-                if self.focused {
-                    let relative_y = mouse.row.saturating_sub(
-                        self.area.y + 1 + self.settings.as_ref().unwrap().ui.results.padding,
-                    );
-                    let index = relative_y as usize + self.list_state.offset();
-                    if index < self.results.len() {
-                        self.list_state.select(Some(index));
-                    }
-                }
-                Ok(None)
-            }
-            MouseEventKind::Down(button) => {
-                if self.focused {
-                    if button == MouseButton::Left {
-                        self.execute_selected();
-                    }
-                }
-                Ok(None)
-            }
-            _ => Ok(None),
+        if (!self.focused) {
+            return Ok(None);
         }
+        return self
+            .list_state
+            .handle_mouse_event(&mouse, self.settings.as_ref().unwrap().ui.results.padding);
     }
     fn update(
         &mut self,
@@ -485,28 +366,16 @@ impl Component for ResultsBox {
             );
         }
 
-        let results: &Vec<SearchResult> = &self.results;
-        let total_potential_results = self.total_potential_results;
-        let items = self.construct_list(
-            results,
-            self.settings.as_ref().unwrap().ui.results.number_mode,
-            Some(0),
-            &self.list_state,
-            inner_area,
-            self.render_tick,
-        );
-
-        let list = List::new(items)
-            .style(Style::default().fg(results_theme.text.unwrap()))
-            .highlight_symbol("")
-            .highlight_style(
-                Style::default()
-                    .bg(results_theme.highlight.unwrap())
-                    .fg(results_theme.text_accent.unwrap()),
-            );
+        let results: &Vec<ListResult> = &self.results;
+        // let list = self.list.clone();
+        self.list_state.set_results(results.clone());
 
         // render list with state
-        frame.render_stateful_widget(list, inner_area, &mut self.list_state);
+        frame.render_stateful_widget(
+            List::new(self.settings.clone().unwrap()),
+            inner_area,
+            &mut self.list_state,
+        );
         // StatefulWidget::render(list, inner_area, frame.buffer_mut(), &mut self.list_state);
 
         // fade in effect

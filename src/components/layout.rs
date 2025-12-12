@@ -2,7 +2,7 @@ use std::{collections::HashMap, rc::Rc};
 
 use ratatui::{
     Frame,
-    layout::{Constraint, Layout, Margin, Rect},
+    layout::{Constraint, Layout, Margin, Rect, Size},
 };
 
 use crate::{common::module_state::UISection, settings::settings::Settings};
@@ -68,5 +68,14 @@ pub fn get_root_layout(area: Rect, settings: &Settings) -> RootLayout {
             .get(&UISection::Results)
             .unwrap_or(&Rect::new(0, 0, 0, 0)),
         wizard_box_area: h_layout[0],
+    }
+}
+
+pub fn calculate_minimum_size(settings: &Settings) -> Size {
+    let ui_settings = &settings.ui;
+    let ui_gap = ui_settings.layout.gap;
+    Size {
+        width: 80,
+        height: 24,
     }
 }

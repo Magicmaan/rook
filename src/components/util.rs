@@ -1,5 +1,6 @@
 use ratatui::{
     layout::Rect,
+    style::Color,
     symbols::{self, border},
     widgets::Borders,
 };
@@ -132,4 +133,60 @@ pub fn calculate_minimum_size(settings: &Settings) -> Rect {
     // hardcoded minimum size for now
     // later can be calculated based on font size and ui settings
     Rect::new(0, 0, min_width, min_height)
+}
+
+pub fn loading_spinner(tick: u64) -> String {
+    let remainder = tick % 4;
+    if remainder == 0 {
+        "◜".to_string()
+    } else if remainder == 1 {
+        "◝".to_string()
+    } else if remainder == 2 {
+        "◞".to_string()
+    } else {
+        "◟".to_string()
+    }
+}
+
+pub fn multiply_color(color: Color, mult: f64) -> Color {
+    if let Color::Rgb(r, g, b) = color {
+        let r = (r as f64 * mult).round().min(255.0) as u8;
+        let g = (g as f64 * mult).round().min(255.0) as u8;
+        let b = (b as f64 * mult).round().min(255.0) as u8;
+
+        Color::Rgb(r, g, b)
+    } else {
+        color
+    }
+}
+
+pub fn calculate_color_fade(start_color: Color, position: usize, height: usize) -> Color {
+    if let Color::Rgb(_, _, _) = start_color {
+        log::trace!(
+            "Calculating color fade for position {} of {}",
+            position,
+            height
+        );
+        let diff = height.saturating_sub(position);
+        if diff < 5 {
+            let base_brightness = 1.0;
+            let brightness = 1.0
+                - maths_rs::lerp(
+                    base_brightness,
+                    0.25,
+                    (diff as f32 / height as f32).clamp(0.1, 1.0),
+                );
+            multiply_color(start_color, brightness as f64)
+        } else {
+            start_color
+        }
+    } else {
+        log::trace!(
+            "Color fade not applied for non-RGB color at position {} of {}",
+            position,
+            height
+        );
+        // indexed / ANSI colours aren't supported for fine-grained fading, so just return the
+        start_color
+    }
 }

@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use crate::{
     common::application::Application,
-    search_modules::{ScoredResult, SearchModule, SearchResult},
+    search_modules::{ScoredResult, SearchModule, ListResult},
     settings::settings::Settings,
 };
 use color_eyre::Result;
@@ -64,7 +64,7 @@ impl SearchModule for DesktopFilesModule {
 
         Ok(true)
     }
-    fn get_ui_results(&self) -> Vec<SearchResult> {
+    fn get_ui_results(&self) -> Vec<ListResult> {
         self.results
             .iter()
             .map(|score| {
@@ -74,7 +74,7 @@ impl SearchModule for DesktopFilesModule {
                 let app = self.data.applications.get(idx).unwrap();
 
                 let app_clone = app.clone();
-                SearchResult {
+                ListResult {
                     result: app.name.clone(),
                     score: s,
                     // source_module: self.name().to_string(),
@@ -84,7 +84,7 @@ impl SearchModule for DesktopFilesModule {
             .collect()
     }
 
-    fn execute(&mut self, result: &SearchResult) -> () {
+    fn execute(&mut self, result: &ListResult) -> () {
         let _ = result;
     }
 }

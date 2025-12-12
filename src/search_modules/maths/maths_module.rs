@@ -4,7 +4,7 @@ use nucleo::{Config, Matcher};
 use shunting::ShuntingParser;
 
 use crate::{
-    search_modules::{SearchModule, SearchResult},
+    search_modules::{ListResult, SearchModule},
     settings::settings::Settings,
 };
 use color_eyre::Result;
@@ -141,13 +141,13 @@ impl SearchModule for MathsModule {
         Ok(true)
     }
 
-    fn get_ui_results(&self) -> Vec<SearchResult> {
+    fn get_ui_results(&self) -> Vec<ListResult> {
         self.data
             .equations
             .iter()
             .enumerate()
             .map(|(idx, eq)| {
-                SearchResult {
+                ListResult {
                     result: format!("{} = {}", eq.expression, eq.result),
                     score: idx as u16,
                     // source_module: self.name().to_string(),

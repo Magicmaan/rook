@@ -118,11 +118,6 @@ impl Component for SearchBox {
         Ok(())
     }
 
-    fn init(&mut self, area: ratatui::prelude::Size) -> color_eyre::eyre::Result<()> {
-        let _ = area; // to appease clippy
-        Ok(())
-    }
-
     fn handle_events(
         &mut self,
         event: Option<crate::tui::Event>,
@@ -165,14 +160,6 @@ impl Component for SearchBox {
                 return Ok(None);
             }
         }
-    }
-
-    fn handle_mouse_event(
-        &mut self,
-        mouse: crossterm::event::MouseEvent,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
-        let _ = mouse; // to appease clippy
-        Ok(None)
     }
 
     fn update(

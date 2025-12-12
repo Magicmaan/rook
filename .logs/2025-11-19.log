@@ -1,0 +1,48 @@
+2025-11-19 15:08:23 INFO rook_component::settings::settings Reading settings from "/home/theo/.config/rook/settings.toml"
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserialized alignment from string: center to Center
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserialized alignment from string: right to Right
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing alignment...
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserialized alignment from string: left to Left
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: Black
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: 200,200,200
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: DarkGray
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: Blue
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: Reset
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing optional color: Some("blue")
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: 150,150,150
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: White
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: blue
+2025-11-19 15:08:23 INFO rook_component::settings::serialise Deserializing color: Cyan
+2025-11-19 15:08:23 ERROR rook_component::settings::settings Could not deserialize config file "/home/theo/.config/rook/settings.toml" into Settings struct: missing field `keybinds`
+2025-11-19 15:08:23 INFO rook_component::settings::settings Successfully built config from file "/home/theo/.config/rook/settings.toml"
+2025-11-19 15:08:29 INFO rook_component::app Mouse moved to (0, 5)
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 27, y: 1, width: 39, height: 3 }
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 27, y: 4, width: 39, height: 2 }
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 2, y: 1, width: 25, height: 5 }
+2025-11-19 15:08:29 INFO rook_component::app Mouse moved to (1, 2)
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 27, y: 1, width: 39, height: 3 }
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 27, y: 4, width: 39, height: 2 }
+2025-11-19 15:08:29 INFO rook_component::app Component area: Rect { x: 2, y: 1, width: 25, height: 5 }
