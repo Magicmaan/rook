@@ -1,19 +1,25 @@
 pub mod applications;
 pub mod maths;
 
-use std::rc::Rc;
+use std::{rc::Rc, sync::Arc};
 
-use crate::settings::settings::Settings;
+use crate::{database::Database, settings::settings::Settings};
 use color_eyre::Result;
 use serde::{Deserialize, Serialize, ser::SerializeStruct};
+use tokio::sync::Mutex;
 
 pub trait SearchModule {
     fn name(&self) -> &str {
         "Unnamed Module"
     }
+    // Initialize the module if necessary.
+    // used once all action and settings handlers have been registered.
+    fn init(&mut self) -> Result<()> {
+        Ok(())
+    }
     fn register_action_handler(
         &mut self,
-        handler: tokio::sync::mpsc::UnboundedSender<crate::common::action::Action>,
+        handler: tokio::sync::mpsc::UnboundedSender<crate::action::Action>,
     ) -> color_eyre::eyre::Result<()> {
         let _ = handler;
         Ok(())
@@ -30,6 +36,10 @@ pub trait SearchModule {
     /// * `Result<()>` - An Ok result or an error.
     fn register_settings_handler(&mut self, settings: Settings) -> Result<()> {
         let _ = settings; // to appease clippy
+        Ok(())
+    }
+    fn register_database_handler(&mut self, database: Arc<Mutex<Database>>) -> Result<()> {
+        let _ = database; // to appease clippy
         Ok(())
     }
     /// Processes a search query and determines module candidacy.
@@ -52,6 +62,9 @@ pub trait SearchModule {
     }
     // fn get_results(&self)
     fn get_ui_results(&self) -> Vec<ListResult> {
+        vec![]
+    }
+    fn get_applications(&self) -> Vec<Rc<crate::common::application::Application>> {
         vec![]
     }
 }

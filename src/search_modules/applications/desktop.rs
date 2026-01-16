@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use std::thread::sleep;
 use std::{collections::HashMap, os::unix::process::CommandExt};
 use xdg::BaseDirectories;
+use xdgkit::desktop_entry::DesktopEntry;
 
 pub fn find_desktop_files() -> Vec<Application> {
     let xdg = BaseDirectories::with_prefix("");
@@ -44,63 +45,11 @@ pub fn parse_desktop_file(path: &PathBuf) -> Application {
     // parse a .desktop file at path
     let content: String = fs::read_to_string(path).expect("Failed to read desktop file");
 
-    // map to a hashmap of key-value pairs
-    // only parse the [Desktop Entry] section for now
-    // some desktop files have alternate sections like [Desktop Action ...]
-    // we will ignore those for now
-    let mut options: HashMap<String, String> = HashMap::new();
-    for line in content.lines() {
-        // ignore comments and empty lines
-        if line.starts_with('#') || line.trim().is_empty() {
-            continue;
-        }
-        // only parse main section
-        if line.starts_with('[') && line.ends_with(']') {
-            if line != "[Desktop Entry]" {
-                break; // only parse the main section
-            } else {
-                continue;
-            }
-        }
-        let (k, v) = line.split_once('=').unwrap_or((line, ""));
-        match k.trim() {
-            // MimeType = <mime_type>;<mime_type>;...
-            "MimeType" => {
-                let types: Vec<String> = v.split(';').map(|s| s.trim().into()).collect();
-                options.insert("MimeType".into(), types.join(";"));
-                continue;
-            }
-            _ => {
-                options.insert(k.trim().into(), v.trim().into());
-            }
-        }
-    }
-
-    let exec = options.get("Exec").cloned().unwrap_or_else(|| "".into());
-    let path = path.to_str().unwrap_or("").to_string();
-    Application {
-        name: options
-            .get("Name")
-            .cloned()
-            .unwrap_or_else(|| "Unknown".into()),
-
-        exec: exec,
-        // icon: options.get("Icon").cloned(),
-        comment: options.get("Comment").cloned(),
-        categories: options
-            .get("Categories")
-            .map(|s| s.split(';').map(|s| s.trim().into()).collect())
-            .unwrap_or_default(),
-        terminal: options
-            .get("Terminal")
-            .map(|s| s == "true")
-            .unwrap_or(false),
-        mime_types: options
-            .get("MimeType")
-            .map(|s| s.split(';').map(|s| s.trim().into()).collect())
-            .unwrap_or_default(),
-        file_path: PathBuf::from(path).into(),
-    }
+    let path = path.to_str().unwrap().to_string();
+    // log::info!("Reading desktop file at path: {}", path);
+    let desktop_entry: DesktopEntry = DesktopEntry::new(path.clone());
+    // log::info!("Parsed desktop file: {:?}", desktop_entry);
+    Application::DesktopFile(desktop_entry, path)
 }
 
 fn parse_executable_name(exec: &str) -> String {
@@ -120,8 +69,8 @@ use nucleo::{Config, Matcher};
 // use crate::common::module_state::ScoredResult;
 
 pub fn resolve_same_score(app_1: &Application, app_2: &Application, query: &str) -> i32 {
-    let app_1_name = app_1.name.to_lowercase();
-    let app_2_name = app_2.name.to_lowercase();
+    let app_1_name = app_1.name().to_lowercase();
+    let app_2_name = app_2.name().to_lowercase();
 
     let split_1 = app_1_name.split_whitespace().collect::<Vec<&str>>();
     let split_2 = app_2_name.split_whitespace().collect::<Vec<&str>>();
@@ -158,12 +107,12 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<Scored
     for (index, app) in apps.iter().enumerate() {
         // get score from fuzzy match
         if let Some(score) = matcher.fuzzy_match(
-            nucleo::Utf32Str::new(&app.name.to_lowercase(), &mut Vec::new()),
+            nucleo::Utf32Str::new(&app.name().to_lowercase(), &mut Vec::new()),
             nucleo::Utf32Str::new(query, &mut Vec::new()),
         ) {
-            if let std::collections::hash_map::Entry::Vacant(e) = results.entry(score) {
+            if let std::collections::hash_map::Entry::Vacant(empty_entry) = results.entry(score) {
                 // no collision, insert normally
-                e.insert(vec![index]);
+                empty_entry.insert(vec![index]);
             } else {
                 // Compare current app against existing entries in this score bucket.
                 // If current clearly beats any existing entry, promote current to score+1.
@@ -180,8 +129,11 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<Scored
                 // considering language, if i type zen, i want something with exactly "zen" in the name to be at the top
                 // even if zenity has the same fuzzy score, it's not as good a match
 
+                // side note: fuzzy partial matching is a curse, I hate it 
+
                 // this method still ensures normal matching
                 // i.e. if type "browser", multiple browsers with same score will be kept at same score as they are all equally relevant
+                // Zen browser vs Firefox vs Chrome, all equally relevant for "browser"br
 
                 let mut existing_beats_current = None;
                 let mut current_beats_existing = false;
@@ -243,7 +195,7 @@ mod tests {
         let files: Vec<Application> = find_desktop_files();
         assert!(!files.is_empty());
         for f in files {
-            println!("{:?}", f.name);
+            println!("{:?}", f.name());
         }
     }
 
@@ -262,12 +214,22 @@ mod tests {
         for scored_result in sorted {
             println!(
                 "Score: {}, App: {:?}",
-                scored_result.score, apps[scored_result.index].name
+                scored_result.score,
+                apps[scored_result.index].name()
             );
             if i >= 10 {
                 break;
             }
             i += 1;
         }
+    }
+
+    #[test]
+    fn size_of_application() {
+        let app = Application::DesktopFile(DesktopEntry::default(), "".to_string());
+        println!(
+            "Size of Application struct: {}",
+            std::mem::size_of_val(&app)
+        );
     }
 }

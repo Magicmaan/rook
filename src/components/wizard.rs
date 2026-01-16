@@ -5,7 +5,7 @@ use std::rc::Rc;
 use std::result;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
-use crate::common::action::Action;
+use crate::action::Action;
 use crate::common::module_state::UISection;
 // use crate::common::module_state::{SearchResult, UISection};
 use crate::components::Component;
@@ -16,6 +16,7 @@ use crate::search_modules::ListResult;
 
 use crate::components::util::{IconMode, collapsed_border, number_to_icon};
 use crate::settings::settings::{Settings, UIResultsSettings};
+use crate::tui::Event;
 use ratatui::layout::{Constraint, Layout, Margin, Offset, Position};
 use ratatui::symbols;
 use ratatui::widgets::{Borders, Paragraph};
@@ -129,9 +130,12 @@ impl Component for WizardBox {
     fn area(&self) -> Rect {
         self.area
     }
+    fn focus_area(&self) -> crate::app::FocusArea {
+        crate::app::FocusArea::WizardBox
+    }
     fn register_action_handler(
         &mut self,
-        tx: tokio::sync::mpsc::UnboundedSender<crate::common::action::Action>,
+        tx: tokio::sync::mpsc::UnboundedSender<crate::action::Action>,
     ) -> color_eyre::eyre::Result<()> {
         self.action_tx = Some(tx);
         Ok(())
@@ -141,29 +145,32 @@ impl Component for WizardBox {
         self.settings = Some(settings);
         Ok(())
     }
+    fn handle_events(&mut self, event: Option<Event>) -> Result<Option<Action>> {
+        if event.is_none() {
+            return Ok(None);
+        }
+
+        match event.unwrap() {
+            Event::Key(key) => {
+                return self.handle_key_event(key);
+            }
+            Event::Mouse(mouse) => {
+                return self.handle_mouse_event(mouse);
+            }
+            _ => {}
+        }
+
+        Ok(None)
+    }
 
     fn handle_key_event(
         &mut self,
         key: crossterm::event::KeyEvent,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
-        if key.kind != KeyEventKind::Press {
+    ) -> color_eyre::eyre::Result<Option<crate::action::Action>> {
+        if !self.focused {
             return Ok(None);
         }
-        match key.code {
-            KeyCode::Down => {
-                if self.focused {
-                    self.list_state.scroll_down_by(1);
-                }
-                Ok(None)
-            }
-            KeyCode::Up => {
-                if self.focused {
-                    self.list_state.scroll_up_by(1);
-                }
-                Ok(None)
-            }
-            _ => Ok(None),
-        }
+        return self.list_state.handle_key_event(&key);
     }
     fn handle_mouse_event(
         &mut self,
@@ -178,20 +185,20 @@ impl Component for WizardBox {
 
     fn update(
         &mut self,
-        action: crate::common::action::Action,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
+        action: crate::action::Action,
+    ) -> color_eyre::eyre::Result<Option<crate::action::Action>> {
         match action {
             Action::Render => {
                 self.render_tick = self.render_tick.saturating_add(1);
                 self.delta_time = 16; // assume ~60fps for now
             }
-            Action::Focus => {
-                log::trace!("Wizard box focused");
-                self.focused = true;
-            }
-            Action::Unfocus => {
-                log::trace!("Wizard box unfocused");
-                self.focused = false;
+            Action::Focus(focus) => {
+                if focus == self.focus_area() && !self.focused {
+                    self.focused = true;
+                } else if focus != self.focus_area() && self.focused {
+                    self.focused = false;
+                    self.list_state.select(None);
+                }
             }
 
             _ => {}

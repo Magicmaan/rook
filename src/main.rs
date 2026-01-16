@@ -13,6 +13,8 @@ mod cli;
 mod common;
 mod components;
 // mod config;
+mod action;
+mod database;
 mod effects;
 mod errors;
 mod logging;
@@ -25,17 +27,36 @@ mod tui;
 async fn main() -> Result<()> {
     crate::errors::init()?;
     Ftail::new()
-        .daily_file_env_level(
-            &PathBuf::from("/home/theo/Documents/github/rook/.logs"),
+        .single_file_env_level(
+            &PathBuf::from(format!(
+                "/home/theo/Documents/github/rook/.logs/{}.log",
+                chrono::Local::now().format("%Y-%m-%d-%H-%M-%S")
+            )),
             // log::LevelFilter::Trace,
+            true,
         )
-        .datetime_format("%Y-%m-%d %H:%M:%S")
+        .datetime_format("%Y-%m-%d-%H:%M:%S")
         .max_file_size(10)
         .init()
         .unwrap();
 
     let args = Cli::parse();
-    let mut app = App::new(args.tick_rate, args.frame_rate)?;
+    let mut app = App::new(args.tick_rate, args.frame_rate).await?;
     app.run().await?;
     Ok(())
+}
+
+mod test {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+    #[test]
+    fn get_size() {
+        if let Some((w, h)) = term_size::dimensions() {
+            println!("Width: {}\nHeight: {}", w, h);
+        } else {
+            println!("Unable to get term size :(")
+        }
+    }
 }

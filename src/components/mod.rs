@@ -1,12 +1,14 @@
+use std::sync::Arc;
+
 use color_eyre::Result;
 use crossterm::event::{KeyEvent, MouseEvent};
 use ratatui::{
     Frame,
     layout::{Rect, Size},
 };
-use tokio::sync::mpsc::UnboundedSender;
+use tokio::sync::{Mutex, mpsc::UnboundedSender};
 
-use crate::common::action::Action;
+use crate::{action::Action, app::FocusArea, database::Database};
 use crate::{settings::settings::Settings, tui::Event};
 
 pub mod layout;
@@ -20,6 +22,9 @@ pub mod wizard;
 /// Implementors of this trait can be registered with the main application loop and will be able to
 /// receive events, update state, and be rendered on the screen.
 pub trait Component {
+    fn focus_area(&self) -> FocusArea {
+        FocusArea::Search
+    }
     /// Register an action handler that can send actions for processing if necessary.
     ///
     /// # Arguments
@@ -44,6 +49,10 @@ pub trait Component {
     /// * `Result<()>` - An Ok result or an error.
     fn register_settings_handler(&mut self, settings: Settings) -> Result<()> {
         let _ = settings; // to appease clippy
+        Ok(())
+    }
+    fn register_database_handler(&mut self, database: Arc<Mutex<Database>>) -> Result<()> {
+        let _ = database; // to appease clippy
         Ok(())
     }
     /// Initialize the component with a specified area if necessary.

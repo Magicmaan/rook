@@ -1,20 +1,68 @@
 use color_eyre::Result;
 use crossterm::event::{KeyEvent, MouseEvent, MouseEventKind};
 use ratatui::{layout::Position, prelude::Rect};
+use rusqlite::params;
 use serde::{Deserialize, Serialize};
-use tokio::sync::mpsc;
+use std::{
+    ops::{Add, Sub},
+    rc::Rc,
+    sync::Arc,
+};
+use tokio::sync::{Mutex, mpsc};
 use tracing::{debug, info};
 
 use crate::{
-    common::action::{Action, Search},
+    action::{Action, Search},
     components::{Component, results::ResultsBox, search::SearchBox, wizard::WizardBox},
+    database::Database,
     search_modules::{
         SearchModule, applications::desktop_files_module::DesktopFilesModule,
         maths::maths_module::MathsModule,
     },
-    settings::settings::Settings,
+    settings::settings::{SerializableKeyEvent, Settings},
     tui::{Event, Tui},
 };
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum FocusArea {
+    WizardBox = 0,
+    Search = 1,
+}
+impl FocusArea {
+    pub const fn length() -> u8 {
+        2
+    }
+}
+
+impl From<u8> for FocusArea {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => FocusArea::WizardBox,
+            1 => FocusArea::Search,
+            _ => FocusArea::Search, // default to Search if out of range
+        }
+    }
+}
+
+impl Add<u8> for FocusArea {
+    type Output = FocusArea;
+
+    fn add(self, rhs: u8) -> FocusArea {
+        let i = ((self as u8).saturating_add(rhs) % FocusArea::length()) as u8;
+        let s = FocusArea::from(i);
+        s
+    }
+}
+
+impl Sub<u8> for FocusArea {
+    type Output = FocusArea;
+
+    fn sub(self, rhs: u8) -> FocusArea {
+        let i = ((self as u8).saturating_sub(rhs) % FocusArea::length()) as u8;
+        let s = FocusArea::from(i);
+        s
+    }
+}
 
 pub struct App {
     settings: Settings,
@@ -26,8 +74,11 @@ pub struct App {
     should_suspend: bool,
     mode: Mode,
     last_tick_key_events: Vec<KeyEvent>,
+    last_tick_mouse_events: Vec<MouseEvent>,
     action_tx: mpsc::UnboundedSender<Action>,
     action_rx: mpsc::UnboundedReceiver<Action>,
+    focused_area: Option<FocusArea>,
+    database: Arc<Mutex<Database>>,
 }
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -37,8 +88,11 @@ pub enum Mode {
 }
 
 impl App {
-    pub fn new(tick_rate: f64, frame_rate: f64) -> Result<Self> {
+    pub async fn new(tick_rate: f64, frame_rate: f64) -> Result<Self> {
         let (action_tx, action_rx) = mpsc::unbounded_channel();
+        let settings = Settings::new();
+        let database = Arc::new(Mutex::new(Database::new("rook.db")?));
+        database.lock().await.initialise()?;
         Ok(Self {
             tick_rate,
             frame_rate,
@@ -53,15 +107,25 @@ impl App {
             ],
             should_quit: false,
             should_suspend: false,
-            settings: Settings::new(),
+            settings,
             mode: Mode::Home,
             last_tick_key_events: Vec::new(),
+            last_tick_mouse_events: Vec::new(),
             action_tx,
             action_rx,
+            focused_area: Some(FocusArea::Search),
+            database,
         })
     }
 
     pub async fn run(&mut self) -> Result<()> {
+        for module in self.search_modules.iter_mut() {
+            module.register_database_handler(self.database.clone())?;
+            module.register_settings_handler(self.settings.clone())?;
+
+            module.init()?;
+        }
+
         let mut tui = Tui::new()?
             // .mouse(true) // uncomment this line to enable mouse support
             .tick_rate(self.tick_rate)
@@ -97,6 +161,22 @@ impl App {
         Ok(())
     }
 
+    fn update_focus(&mut self, focused_area: Option<FocusArea>) -> Result<()> {
+        if focused_area.is_none() {
+            return Ok(());
+        }
+        // no change in focus
+        if self.focused_area == focused_area {
+            return Ok(());
+        }
+        self.focused_area = focused_area.clone();
+        let action_tx = self.action_tx.clone();
+        action_tx
+            .send(Action::Focus(focused_area.unwrap()))
+            .unwrap();
+        Ok(())
+    }
+
     async fn handle_events(&mut self, tui: &mut Tui) -> Result<()> {
         let Some(event) = tui.next_event().await else {
             return Ok(());
@@ -123,69 +203,69 @@ impl App {
 
         fn contains(component: &Box<dyn Component>, mouse: &MouseEvent) -> bool {
             let area = component.area();
-            log::info!("Component area: {:?}", area);
+            // log::info!("Component area: {:?}", area);
             area.contains(Position {
                 x: mouse.column,
                 y: mouse.row,
             })
         }
-
+        let mut region: Option<FocusArea> = None;
+        // self.last_tick_mouse_events.push(mouse.clone());
         // Currently, no mouse events are handled.
         match mouse.kind {
             MouseEventKind::Down(button) => {
-                log::info!(
-                    "Mouse button {:?} down at ({}, {})",
-                    button,
-                    mouse.column,
-                    mouse.row
-                );
                 for component in self.components.iter_mut() {
                     if contains(component, &mouse) {
-                        // info!("Component {:?} focused", component);
-                        component.update(Action::Focus).unwrap();
-                    } else {
-                        // info!("Component {:?} unfocused", component);
-                        // action_tx.send(Action::Unfocus).unwrap();
-                        component.update(Action::Unfocus).unwrap();
+                        region = Some(component.focus_area());
+                        break;
                     }
                 }
             }
             MouseEventKind::Moved => {
-                log::info!("Mouse moved to ({}, {})", mouse.column, mouse.row);
+                // log::info!("Mouse moved to ({}, {})", mouse.column, mouse.row);
                 for component in self.components.iter_mut() {
                     if contains(component, &mouse) {
-                        // info!("Component {:?} focused", component);
-                        // action_tx.send(Action::Focus).unwrap();
-                        component.update(Action::Focus).unwrap();
-                    } else {
-                        // info!("Component {:?} unfocused", component);
-                        component.update(Action::Unfocus).unwrap();
+                        region = Some(component.focus_area());
+                        log::info!("Mouse moved in region: {:?}", region);
+                        break;
                     }
                 }
             }
             _ => {}
         }
+        self.update_focus(region)?;
         Ok(())
     }
 
     fn handle_key_event(&mut self, key: KeyEvent) -> Result<()> {
         let action_tx = self.action_tx.clone();
-        let keymap = self.settings.keybinds.clone().keybinds;
-        match keymap.get(&vec![key]) {
+        let keymap = self.settings.keybinds.clone();
+
+        let m = keymap.get_event_mapping();
+        log::info!("map {:?}", m);
+        let keyL: SerializableKeyEvent = key.into();
+        log::info!("Key pressed: {:?}", serde_json::to_string(&keyL.clone()));
+        // let res = m.get(&keyL);
+        // log::info!("Mapped action: {:?}", res);
+        match m.get(&keyL) {
             Some(action) => {
                 info!("Got action: {action:?}");
                 action_tx.send(action.clone()).unwrap();
             }
             _ => {
-                // If the key was not handled as a single key action,
-                // then consider it for multi-key combinations.
+                // // If the key was not handled as a single key action,
+                // // then consider it for multi-key combinations.
                 self.last_tick_key_events.push(key);
 
-                // Check for multi-key combinations
-                if let Some(action) = keymap.get(&self.last_tick_key_events) {
-                    info!("Got action: {action:?}");
-                    action_tx.send(action.clone()).unwrap();
-                }
+                // // Check for multi-key combinations
+                // if let Some(action) = m.get(&self.last_tick_key_events[0].into()) {
+                //     info!("Got action: {action:?}");
+                //     action_tx.send(action.clone()).unwrap();
+                // }
+                log::info!(
+                    "No action mapped for key: {:?}",
+                    serde_json::to_string(&keyL)
+                );
             }
             None => {}
         }
@@ -235,6 +315,16 @@ impl App {
                     info!("Executing result: {:?}", result);
                     result.launch.as_ref()();
                 }
+
+                Action::FocusNext => {
+                    let new = self.focused_area.clone().unwrap_or(FocusArea::Search) + 1;
+                    self.update_focus(Some(new))?;
+                }
+                Action::FocusPrevious => {
+                    let new = self.focused_area.clone().unwrap_or(FocusArea::Search) - 1;
+                    self.update_focus(Some(new))?;
+                }
+
                 _ => {}
             }
             for component in self.components.iter_mut() {

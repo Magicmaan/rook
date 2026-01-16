@@ -39,7 +39,7 @@ where
             };
             serializer.serialize_some(s)
         }
-        None => serializer.serialize_str(""),
+        None => serializer.serialize_none(),
     }
 }
 
@@ -100,7 +100,7 @@ where
                     Err(serde::de::Error::custom("Invalid RGB format"))
                 }
             } else {
-                Ok(Color::Red)// fallback for single number
+                Ok(Color::Red) // fallback for single number
             }
             // Ok(Color::Indexed(index))
         }
@@ -114,7 +114,7 @@ where
 {
     match color {
         Some(c) => serialize_color(c, serializer),
-        None => serializer.serialize_str(""),
+        None => serializer.serialize_none(),
     }
 }
 
@@ -235,4 +235,12 @@ where
             Ok(ratatui::layout::Alignment::Left)
         }
     }
+}
+
+pub fn deserialize_optional_field<'de, T, D>(deserializer: D) -> Result<Option<Option<T>>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Ok(Some(Option::deserialize(deserializer)?))
 }

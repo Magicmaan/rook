@@ -1,7 +1,8 @@
 use crossterm::event::{KeyEvent, MouseEvent};
 use serde::{Deserialize, Serialize};
+use strum::EnumString;
 
-use crate::{components::Component, search_modules::ListResult};
+use crate::{app::FocusArea, components::Component, search_modules::ListResult};
 
 // use crate::common::module_state::SearchResult;
 
@@ -22,6 +23,7 @@ pub enum Search {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Action {
     Quit,
     //
@@ -33,12 +35,6 @@ pub enum Action {
     ItemExecute(ListResult), // execute selected item in results
     //
     Navigate(NavigateDirection, usize), // direction, number of lines
-    // NavigateDown(usize),                // number of lines
-    // NavigateUp(usize),                  // number of lines
-    // NavigateLeft(usize),                // number of lines
-    // NavigateRight(usize),               // number of lines
-    // NavigateHome,
-    // NavigateEnd,
     Tick,
     Render,
     Resize(u16, u16), // width, height
@@ -46,6 +42,9 @@ pub enum Action {
     ClearScreen,
     Suspend,
     Error(String),
-    Focus,
+    Focus(FocusArea),
+    FocusNext,
+    FocusPrevious,
+    FocusToggle,
     Unfocus,
 }

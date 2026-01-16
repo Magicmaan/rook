@@ -1,5 +1,6 @@
 use crate::{
-    common::{action::Action, module_state::UISection},
+    action::Action,
+    common::module_state::UISection,
     components::{Component, layout::get_root_layout, util::collapsed_border},
     effects::{self, rainbow},
     settings::settings::{Settings, UISearchSettings},
@@ -16,28 +17,13 @@ use ratatui::{
 use ratatui::{layout::Constraint, widgets::Borders};
 use tui_textarea::TextArea;
 
-use std::{rc::Rc, time::SystemTime};
-use tachyonfx::{Duration, EffectManager, fx, pattern::SweepPattern};
-
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
-pub struct SearchBoxState {
-    pub post_fix: String,
-    pub query: String,
-    pub caret_position: usize,
-    pub last_search_tick: u64,
-    pub tick: u64,
-    pub delta_time: i32,
-}
-
 #[derive(Clone)]
 pub struct SearchBox {
     settings: Option<Settings>,
     render_tick: u64,
-    query: String,
-    caret_position: usize,
-    post_fix: String,
     text_area: TextArea<'static>,
     area: Rect,
+    focused: bool,
 }
 
 impl SearchBox {
@@ -45,59 +31,10 @@ impl SearchBox {
         Self {
             settings: None,
             render_tick: 0,
-            query: String::new(),
-            caret_position: 0,
-            post_fix: String::new(),
+            focused: true,
             text_area: TextArea::default(),
             area: Rect::default(),
         }
-    }
-
-    fn construct_line(
-        &mut self,
-        pre_query: &str,
-        pre_caret: &str,
-        caret: &str,
-        post_caret: &str,
-        post_fix: &str,
-        flash_caret: bool,
-    ) -> Line<'static> {
-        let theme = self.settings.as_ref().unwrap().ui.theme.get_search_colors();
-        let line: Line<'static> = Line::from(vec![
-            // pre_query span
-            Span::styled(
-                pre_query.to_owned(),
-                Style::default().fg(theme.pre_query_text.unwrap()),
-            ),
-            Span::raw(" ".to_owned()),
-            // query span with caret
-            Span::styled(
-                pre_caret.to_owned(),
-                Style::default().fg(theme.text.unwrap()),
-            ),
-            Span::styled(
-                if flash_caret {
-                    " ".to_owned()
-                } else {
-                    caret.to_owned()
-                },
-                Style::default().fg(theme.caret.unwrap()),
-            ),
-            Span::styled(
-                post_caret.to_owned(),
-                Style::default().fg(theme.text.unwrap()),
-            ),
-            Span::raw(" ".to_owned()),
-            Span::styled(
-                post_fix.to_owned(),
-                Style::default().fg(theme.text_muted.unwrap()),
-            ),
-            Span::styled(
-                " ".repeat(pre_query.chars().count()),
-                Style::default().fg(Color::Reset),
-            ),
-        ]);
-        line
     }
 }
 
@@ -105,9 +42,12 @@ impl Component for SearchBox {
     fn area(&self) -> Rect {
         self.area
     }
+    fn focus_area(&self) -> crate::app::FocusArea {
+        crate::app::FocusArea::Search
+    }
     fn register_action_handler(
         &mut self,
-        tx: tokio::sync::mpsc::UnboundedSender<crate::common::action::Action>,
+        tx: tokio::sync::mpsc::UnboundedSender<crate::action::Action>,
     ) -> color_eyre::eyre::Result<()> {
         let _ = tx; // to appease clippy
         Ok(())
@@ -118,31 +58,22 @@ impl Component for SearchBox {
         Ok(())
     }
 
-    fn handle_events(
-        &mut self,
-        event: Option<crate::tui::Event>,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
-        let action = match event {
-            Some(crate::tui::Event::Key(key_event)) => self.handle_key_event(key_event)?,
-            Some(crate::tui::Event::Mouse(mouse_event)) => self.handle_mouse_event(mouse_event)?,
-            _ => None,
-        };
-        Ok(action)
-    }
-
     fn handle_key_event(
         &mut self,
         key: crossterm::event::KeyEvent,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
+    ) -> color_eyre::eyre::Result<Option<crate::action::Action>> {
         // key handling is different for OS. windows sends press/release events seperately
         if key.kind != KeyEventKind::Press {
             return Ok(None);
         }
+        if !self.focused {
+            return Ok(None);
+        }
         match key.code {
             KeyCode::Enter => {
-                return Ok(Some(Action::Search(
-                    crate::common::action::Search::Execute(self.text_area.lines().concat()),
-                )));
+                return Ok(Some(Action::Search(crate::action::Search::Execute(
+                    self.text_area.lines().concat(),
+                ))));
             }
             KeyCode::Up => {
                 return Ok(None);
@@ -150,12 +81,18 @@ impl Component for SearchBox {
             KeyCode::Down => {
                 return Ok(None);
             }
+            KeyCode::BackTab => {
+                return Ok(None);
+            }
+            KeyCode::Tab => {
+                return Ok(None);
+            }
             _ => {
                 self.text_area.input(key);
                 if self.settings.as_ref().unwrap().search.always_search {
-                    return Ok(Some(Action::Search(
-                        crate::common::action::Search::Execute(self.text_area.lines().concat()),
-                    )));
+                    return Ok(Some(Action::Search(crate::action::Search::Execute(
+                        self.text_area.lines().concat(),
+                    ))));
                 }
                 return Ok(None);
             }
@@ -164,15 +101,22 @@ impl Component for SearchBox {
 
     fn update(
         &mut self,
-        action: crate::common::action::Action,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
+        action: crate::action::Action,
+    ) -> color_eyre::eyre::Result<Option<crate::action::Action>> {
         match action {
-            crate::common::action::Action::Tick => {
+            crate::action::Action::Tick => {
                 // add any logic here that should run on every tick
             }
-            crate::common::action::Action::Render => {
+            crate::action::Action::Render => {
                 // add any logic here that should run on every render
                 self.render_tick += 1;
+            }
+            Action::Focus(focus) => {
+                if (focus == self.focus_area()) {
+                    self.focused = true;
+                } else {
+                    self.focused = false;
+                }
             }
             _ => {}
         }
@@ -250,38 +194,13 @@ impl Component for SearchBox {
         // Search Box text rendering
         //
 
-        // splice the query to insert the caret
-        let caret_query = self.query.clone();
-        let (before_caret, after_caret) =
-            caret_query.split_at(self.caret_position.min(caret_query.len()));
-
-        // get caret and blink state
-        let caret = &search_settings.caret_text;
-        let now = SystemTime::now()
-            .duration_since(SystemTime::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as u32;
-        let flash_caret =
-            search_settings.caret_visible && (now / search_settings.caret_blink_rate) % 2 == 0;
-
-        // construct line with styled spans
-        // i.e. >> hello wor▋ld
-        let line = self.construct_line(
-            search_settings.pre_query.as_str(),
-            before_caret,
-            &caret,
-            after_caret,
-            self.post_fix.clone().as_str(),
-            flash_caret,
-        );
-
         let paragraph = Paragraph::new(search_settings.pre_query.clone())
             .alignment(self.settings.as_ref().unwrap().ui.search.text_alignment)
             .style(Style::default().bg(search_theme.background.unwrap()));
 
         let mut text_region = inner_area.clone();
-        text_region.x += 3;
-        text_region.width -= 3;
+        text_region.x = text_region.x.saturating_add(3);
+        text_region.width = text_region.width.saturating_sub(3);
 
         frame.render_widget(&self.text_area, text_region);
 

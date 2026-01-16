@@ -3,7 +3,7 @@ use crossterm::event::{KeyCode, KeyEventKind, MouseButton, MouseEventKind};
 use std::cmp::min;
 use std::result;
 
-use crate::common::action::Action;
+use crate::action::Action;
 use crate::common::module_state::UISection;
 // use crate::common::module_state::{SearchResult, UISection};
 use crate::components::Component;
@@ -71,7 +71,7 @@ impl ResultsBox {
             list_state: ListState::default(),
             action_tx: None,
             area: Rect::default(),
-            focused: false,
+            focused: true,
             // list: List::new(),
         }
     }
@@ -200,9 +200,12 @@ impl Component for ResultsBox {
     fn area(&self) -> Rect {
         self.area
     }
+    fn focus_area(&self) -> crate::app::FocusArea {
+        crate::app::FocusArea::Search
+    }
     fn register_action_handler(
         &mut self,
-        tx: tokio::sync::mpsc::UnboundedSender<crate::common::action::Action>,
+        tx: tokio::sync::mpsc::UnboundedSender<crate::action::Action>,
     ) -> color_eyre::eyre::Result<()> {
         self.action_tx = Some(tx);
         Ok(())
@@ -213,25 +216,46 @@ impl Component for ResultsBox {
 
         Ok(())
     }
+    fn handle_events(&mut self, event: Option<Event>) -> Result<Option<Action>> {
+        if event.is_none() {
+            return Ok(None);
+        }
+
+        match event.unwrap() {
+            Event::Key(key) => {
+                return self.handle_key_event(key);
+            }
+            Event::Mouse(mouse) => {
+                return self.handle_mouse_event(mouse);
+            }
+            _ => {}
+        }
+
+        Ok(None)
+    }
 
     fn handle_key_event(&mut self, key: crossterm::event::KeyEvent) -> Result<Option<Action>> {
+        if (!self.focused) {
+            return Ok(None);
+        }
         return self.list_state.handle_key_event(&key);
     }
     fn handle_mouse_event(
         &mut self,
         mouse: crossterm::event::MouseEvent,
     ) -> Result<Option<Action>> {
-        if (!self.focused) {
+        if !self.focused {
             return Ok(None);
         }
+        log::info!("Mouse event received results: {:?}", mouse);
         return self
             .list_state
             .handle_mouse_event(&mouse, self.settings.as_ref().unwrap().ui.results.padding);
     }
     fn update(
         &mut self,
-        action: crate::common::action::Action,
-    ) -> color_eyre::eyre::Result<Option<crate::common::action::Action>> {
+        action: crate::action::Action,
+    ) -> color_eyre::eyre::Result<Option<crate::action::Action>> {
         match action {
             Action::Render => {
                 self.render_tick = self.render_tick.saturating_add(1);
@@ -243,12 +267,15 @@ impl Component for ResultsBox {
                 self.total_potential_results = self.results.len();
                 self.list_state.select(Some(0));
             }
-            Action::Focus => {
-                self.focused = true;
+            Action::Focus(focus) => {
+                if focus == self.focus_area() && !self.focused {
+                    self.focused = true;
+                } else if focus != self.focus_area() && self.focused {
+                    self.focused = false;
+                    self.list_state.select(None);
+                }
             }
-            Action::Unfocus => {
-                self.focused = false;
-            }
+
             _ => {}
         }
         Ok(None)

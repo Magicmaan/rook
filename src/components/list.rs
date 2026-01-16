@@ -9,7 +9,7 @@ use ratatui::{
 };
 
 use crate::{
-    common::action::Action,
+    action::Action,
     components::{
         list,
         util::{IconMode, calculate_color_fade, loading_spinner, number_to_icon},
@@ -43,6 +43,7 @@ impl ListState {
     }
     pub fn select(&mut self, index: Option<usize>) {
         self.selected = index;
+        log::info!("Selected index: {:?}", self.selected);
         if index.is_none() {
             self.offset = 0;
         }
@@ -126,21 +127,35 @@ impl ListState {
                 Ok(None)
             }
             MouseEventKind::Moved => {
-                let relative_y = mouse_event.row.saturating_sub(self.area.y + padding);
+                log::info!("Mouse moved in results box");
+                log::info!("Mouse at {}, {}", mouse_event.column, mouse_event.row);
+                let relative_y = mouse_event.row.saturating_sub(self.area.y);
                 if !self.area.contains(Position {
                     x: mouse_event.column,
                     y: mouse_event.row,
                 }) {
+                    self.select(None);
                     return Ok(None);
                 }
                 let index = relative_y as usize + self.offset();
+                log::info!("Calculated index: {}", index);
                 if index < results.len() {
                     self.select(Some(index));
+                } else {
+                    self.select(None);
                 }
                 // }
                 Ok(None)
             }
             MouseEventKind::Down(button) => {
+                if button == MouseButton::Right {
+                    log::trace!("Right click, ignoring");
+                    return Ok(None);
+                }
+                if button == MouseButton::Middle {
+                    log::trace!("Middle click, ignoring");
+                    return Ok(None);
+                }
                 if !self.area.contains(Position {
                     x: mouse_event.column,
                     y: mouse_event.row,
@@ -186,19 +201,17 @@ impl List {
         let items: Vec<ListItem<'static>> = results
             .iter()
             // .map(|(score, idx)| {
-            .map(|r| {
-                let result = &r.result;
-                let score = &r.score;
-
-                // space out sections to fit the width
-                // let app = &state.data.applications[*idx];
-
-                let score_text = score.to_string();
+            .map(|item| {
+                let result = &item.result;
+                // let score = &r.score;
+                let score = &item.score.to_string();
+                let mut text_color = theme.text.unwrap();
+                let mut muted_color = theme.text_muted.unwrap();
+                let mut selected_color = theme.accent.unwrap();
 
                 // get number icon
                 // mode configurable in settings
                 let mut prepend_icon = number_to_icon(i, number_mode);
-                // let executing_item = state.executing_item;
                 // if executing, use loading spinner
                 if executing_item.is_some() && i == executing_item.unwrap() + 1 {
                     prepend_icon = loading_spinner(tick);
@@ -206,16 +219,13 @@ impl List {
 
                 // pad score to end i.e. "App Name       123"
                 let line_width = area.width as usize;
-                let mut name_width = line_width.saturating_sub(score_text.len() - 1);
+                let mut name_width = line_width.saturating_sub(score.len() - 1);
                 if prepend_icon.trim().is_empty() {
                     name_width = name_width.saturating_sub(4); // extra space if no icon
                 } else {
                     name_width = name_width.saturating_sub(prepend_icon.len() + 1); // +1 for space
                 }
                 let padded_name = format!("{:<width$}", result, width = name_width);
-
-                let mut text_color = theme.text.unwrap();
-                let mut muted_color = theme.text_muted.unwrap();
 
                 // calculate list color fade
                 if settings.ui.results.fade_color_at_bottom && available_height >= 10 {
@@ -236,18 +246,18 @@ impl List {
                     // number index
                     Span::styled(
                         format!("{} ", prepend_icon),
-                        Style::default().fg(theme.accent.unwrap()),
+                        Style::default().fg(selected_color),
                     ),
                     Span::styled(padded_name.clone(), Style::default().fg(text_color)), // name
                     if settings.ui.results.show_scores {
-                        Span::styled(score_text.clone(), Style::default().fg(muted_color))
+                        Span::styled(score.clone(), Style::default().fg(muted_color))
                     } else {
                         Span::raw("")
                     },
                 ])
                 .style(Style::default().bg(
                     if list_state.selected() == Some(i.saturating_sub(1)) {
-                        Color::Red
+                        selected_color
                     } else {
                         theme.background.unwrap()
                     },
