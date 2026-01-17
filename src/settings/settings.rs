@@ -610,53 +610,136 @@ impl Default for SearchSettings {
         }
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct KeyBindings {
     #[serde(default)]
-    quit: SerializableKeyEvent,
+    pub quit: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_down: SerializableKeyEvent,
+    pub navigate_down: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_up: SerializableKeyEvent,
+    pub navigate_up: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_left: SerializableKeyEvent,
+    pub navigate_left: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_right: SerializableKeyEvent,
+    pub navigate_right: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_home: SerializableKeyEvent,
+    pub navigate_home: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    navigate_end: SerializableKeyEvent,
+    pub navigate_end: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    focus_next: SerializableKeyEvent,
+    pub focus_next: Vec<SerializableKeyEvent>,
     #[serde(default)]
-    focus_previous: SerializableKeyEvent,
+    pub focus_previous: Vec<SerializableKeyEvent>,
+    #[serde(default)]
+    pub toggle_wizard: Vec<SerializableKeyEvent>,
 }
 impl KeyBindings {
     pub fn get_event_mapping(&self) -> HashMap<SerializableKeyEvent, Action> {
-        let str = toml::to_string(&self.clone()).unwrap_or_default();
+        let mut mapping = HashMap::new();
 
-        let mapping: HashMap<Action, SerializableKeyEvent> = toml::from_str(&str).unwrap();
+        let bindings = [
+            (&self.quit, "quit"),
+            (&self.navigate_down, "navigate_down"),
+            (&self.navigate_up, "navigate_up"),
+            (&self.navigate_left, "navigate_left"),
+            (&self.navigate_right, "navigate_right"),
+            (&self.navigate_home, "navigate_home"),
+            (&self.navigate_end, "navigate_end"),
+            (&self.focus_next, "focus_next"),
+            (&self.focus_previous, "focus_previous"),
+            (&self.toggle_wizard, "toggle_wizard"),
+        ];
 
-        return mapping
-            .into_iter()
-            .map(|(action, key_event)| (key_event, action))
-            .collect();
+        for (keys, action_str) in bindings {
+            for key in keys {
+                mapping.insert(key.clone(), Action::from(action_str));
+            }
+        }
+
+        mapping
     }
 }
-
 impl Default for KeyBindings {
     fn default() -> Self {
         Self {
-            quit: keybinding("Ctrl + q"),
-            navigate_down: SerializableKeyEvent::default(),
-            navigate_up: SerializableKeyEvent::default(),
-            navigate_left: SerializableKeyEvent::default(),
-            navigate_right: SerializableKeyEvent::default(),
-            navigate_home: SerializableKeyEvent::default(),
-            navigate_end: SerializableKeyEvent::default(),
-            focus_next: keybinding("Tab"),
-            focus_previous: keybinding("Shift + Tab"),
+            quit: vec![keybinding("Ctrl + q"), keybinding("Esc")],
+            navigate_down: vec![SerializableKeyEvent::default()],
+            navigate_up: vec![SerializableKeyEvent::default()],
+            navigate_left: vec![SerializableKeyEvent::default()],
+            navigate_right: vec![SerializableKeyEvent::default()],
+            navigate_home: vec![SerializableKeyEvent::default()],
+            navigate_end: vec![SerializableKeyEvent::default()],
+            focus_next: vec![keybinding("Tab")],
+            focus_previous: vec![keybinding("Shift + Tab")],
+            toggle_wizard: vec![keybinding("Ctrl + b")],
         }
+    }
+}
+
+impl<'de> Deserialize<'de> for KeyBindings {
+    // deserialise from a mapping of action to Vec<keys>
+    //
+    // in toml this is
+    // [keybindings]
+    // quit = ["Ctrl + q", "Esc"]
+    //
+    // this maps to a HashMap<Action, Vec<SerializableKeyEvent>>
+    // if value is missing, use default keybinding for that action
+    //
+    // this function only gets run when [keybindings] is present in the toml, other it just uses default as defined by #[serde(default)] in settings struct
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mapping: HashMap<Action, Vec<SerializableKeyEvent>> =
+            Deserialize::deserialize(deserializer)?;
+        let default = KeyBindings::default();
+
+        let keybindings = Self {
+            quit: mapping.get(&Action::Quit).cloned().unwrap_or(default.quit),
+            navigate_down: mapping
+                .get(&Action::Navigate(crate::action::NavigateDirection::Down, 1))
+                .cloned()
+                .unwrap_or(default.navigate_down),
+            navigate_up: mapping
+                .get(&Action::Navigate(crate::action::NavigateDirection::Up, 1))
+                .cloned()
+                .unwrap_or(default.navigate_up),
+            navigate_left: mapping
+                .get(&Action::Navigate(crate::action::NavigateDirection::Left, 1))
+                .cloned()
+                .unwrap_or(default.navigate_left),
+            navigate_right: mapping
+                .get(&Action::Navigate(
+                    crate::action::NavigateDirection::Right,
+                    1,
+                ))
+                .cloned()
+                .unwrap_or(default.navigate_right),
+            navigate_home: mapping
+                .get(&Action::Navigate(crate::action::NavigateDirection::Home, 1))
+                .cloned()
+                .unwrap_or(default.navigate_home),
+            navigate_end: mapping
+                .get(&Action::Navigate(crate::action::NavigateDirection::End, 1))
+                .cloned()
+                .unwrap_or(default.navigate_end),
+            focus_next: mapping
+                .get(&Action::FocusNext)
+                .cloned()
+                .unwrap_or(default.focus_next),
+            focus_previous: mapping
+                .get(&Action::FocusPrevious)
+                .cloned()
+                .unwrap_or(default.focus_previous),
+            toggle_wizard: mapping
+                .get(&Action::ToggleWizard)
+                .cloned()
+                .unwrap_or(default.toggle_wizard),
+        };
+
+        log::debug!("Deserialized KeyBindings: {:#?}", keybindings);
+        Ok(keybindings)
     }
 }
 
@@ -672,7 +755,7 @@ pub struct Settings {
     pub search: SearchSettings,
     #[serde(default)]
     pub ui: UISettings,
-
+    #[serde(default)]
     pub keybinds: KeyBindings,
 }
 
@@ -682,12 +765,8 @@ impl Settings {
         let config_file = path.join("settings.toml");
 
         if config_file.exists() {
-            println!("loading settings from {:?}", config_file);
             return Self::read_settings(config_file);
         } else {
-            println!("no config file found at {:?}", config_file);
-            println!("generating default settings");
-            // Self::write_default_settings(config_file.clone());
             Self::read_settings(config_file);
         }
 
@@ -710,7 +789,6 @@ impl Settings {
                     .expect("Could not serialize default settings")
             }
         };
-        println!("settings file content: {:?}", settings);
 
         let structure: Settings =
             toml::from_str(&settings).expect("Could not deserialize settings");

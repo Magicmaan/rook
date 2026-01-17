@@ -1,4 +1,4 @@
-use std::{rc::Rc, sync::Arc};
+use std::{rc::Rc, sync::Arc, time::Instant};
 
 use crate::{
     app::App,
@@ -54,9 +54,56 @@ impl SearchModule for DesktopFilesModule {
         }
         let mut db_applications: Vec<Application> = vec![];
         {
-            let mut database = self.get_database().unwrap();
+            let mut entry_count = 0;
+            {
+                let mut db = self.get_database().unwrap();
+                let conn = db.get_connection_mut();
+                let mut has_entries_stmt = conn
+                    .prepare(
+                        "
+                SELECT COUNT(*) FROM applications WHERE file_type = 'desktop_file';
+        ",
+                    )
+                    .unwrap();
+                entry_count = has_entries_stmt
+                    .query_row([], |row| row.get(0))
+                    .unwrap_or(0);
+            }
 
-            let conn = database.get_connection_mut();
+            if entry_count == 0 {
+                let apps = crate::search_modules::applications::desktop::find_desktop_files();
+
+                {
+                    let mut database = self.get_database().unwrap();
+                    let transaction = database.start_transaction()?;
+
+                    for app in apps.iter() {
+                        if let Application::DesktopFile(desktop_entry, path) = app {
+                            let default_name = "Unnamed Application".to_string();
+                            let name = desktop_entry
+                                .name
+                                .as_ref()
+                                .unwrap_or(&default_name)
+                                .as_str();
+                            let path = desktop_entry.path.as_ref().unwrap_or(&path).as_str();
+
+                            let type_ = "desktop_file";
+                            let terminal = desktop_entry.terminal.unwrap_or_default();
+
+                            let _ = transaction.execute("INSERT INTO applications (name, file_path, file_type, terminal, modified_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![name,
+                                path,
+                                type_,
+                                terminal,
+                                Instant::now().elapsed().as_secs().to_string().as_str()]);
+                        }
+                    }
+                    transaction.commit()?;
+                }
+                // log::info!("Inserted desktop file entries into database.");
+            }
+            let mut db = self.get_database().unwrap();
+            let conn = db.get_connection_mut();
             let mut stmt = conn
                 .prepare(
                     "
@@ -73,19 +120,19 @@ impl SearchModule for DesktopFilesModule {
             for app_name_result in apps_iter.unwrap() {
                 match app_name_result {
                     Ok(path) => {
-                        log::info!("App matched in database: {}", path);
+                        // log::info!("App matched in database: {}", path);
                         let app =
                             Application::DesktopFile(DesktopEntry::new(path.clone()), path.clone());
                         db_applications.push(app);
                         // You may want to construct your Application here
                     }
                     Err(e) => {
-                        log::error!("Failed to get app name from row: {}", e);
+                        // log::error!("Failed to get app name from row: {}", e);
                     }
                 }
             }
         }
-        log::info!("{}, {:?}", db_applications.len(), db_applications);
+        // log::info!("{}, {:?}", db_applications.len(), db_applications);
         self.data = Some(Box::new(DesktopData {
             applications: db_applications.clone(),
         }));

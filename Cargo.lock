@@ -3169,7 +3169,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rook-component"
+name = "rook"
 version = "0.1.0"
 dependencies = [
  "anyhow",

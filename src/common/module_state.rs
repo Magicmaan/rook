@@ -7,4 +7,5 @@ use serde::{Deserialize, Serialize, ser::SerializeStruct};
 pub enum UISection {
     Search,
     Results,
+    Wizard,
 }

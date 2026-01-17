@@ -1,8 +1,8 @@
 [package]
-name = "rook-component"
+name = "rook"
 version = "0.1.0"
 edition = "2024"
-description = "rook component template"
+description = "rook"
 authors = ["Magicmaan <theobaker99@gmail.com>"]
 build = "build.rs"
 

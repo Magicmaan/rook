@@ -46,6 +46,13 @@ impl ListState {
         log::info!("Selected index: {:?}", self.selected);
         if index.is_none() {
             self.offset = 0;
+        } else if let Some(selected) = self.selected {
+            let area_height = self.area.height as usize;
+            if selected < self.offset {
+                self.offset = selected;
+            } else if selected >= self.offset + area_height {
+                self.offset = selected.saturating_sub(area_height).saturating_add(1);
+            }
         }
     }
     pub const fn selected(&self) -> Option<usize> {
@@ -62,21 +69,10 @@ impl ListState {
         self.results.as_ref()
     }
 
-    // pub fn handle_events(&mut self, event: &tui::Event) -> Result<Option<Action>> {
-    //     // TODO!: fix the mouse event to adjust for padding etc.
-    //     if Some(&self.results()).is_none() {
-    //         return Ok(None);
-    //     }
-    //     match event {
-    //         Event::Key(key_event) => self.handle_key_event(key_event),
-    //         Event::Mouse(mouse_event) => self.handle_mouse_event(mouse_event),
-    //         _ => Ok(None),
-    //     }
-    // }
-
     pub fn handle_key_event(
         &mut self,
         key_event: &crossterm::event::KeyEvent,
+        settings: &settings::settings::Settings,
     ) -> Result<Option<Action>> {
         if key_event.kind != KeyEventKind::Press {
             return Ok(None);
@@ -107,28 +103,21 @@ impl ListState {
     pub fn handle_mouse_event(
         &mut self,
         mouse_event: &crossterm::event::MouseEvent,
-        padding: u16,
+        settings: &settings::settings::Settings,
     ) -> Result<Option<Action>> {
         let results = &self.results().unwrap();
         match mouse_event.kind {
             crossterm::event::MouseEventKind::ScrollDown => {
-                // if self.focused {
-                log::info!("Scrolling down results box");
                 self.scroll_down_by(1);
                 // }
                 Ok(None)
             }
             crossterm::event::MouseEventKind::ScrollUp => {
-                // if self.focused {
-                log::info!("Scrolling up results box");
-
                 self.scroll_up_by(1);
                 // }
                 Ok(None)
             }
             MouseEventKind::Moved => {
-                log::info!("Mouse moved in results box");
-                log::info!("Mouse at {}, {}", mouse_event.column, mouse_event.row);
                 let relative_y = mouse_event.row.saturating_sub(self.area.y);
                 if !self.area.contains(Position {
                     x: mouse_event.column,
@@ -138,13 +127,14 @@ impl ListState {
                     return Ok(None);
                 }
                 let index = relative_y as usize + self.offset();
-                log::info!("Calculated index: {}", index);
+
+                // Adjust the index based on the current offset
                 if index < results.len() {
                     self.select(Some(index));
                 } else {
                     self.select(None);
                 }
-                // }
+
                 Ok(None)
             }
             MouseEventKind::Down(button) => {

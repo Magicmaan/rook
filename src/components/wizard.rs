@@ -3,13 +3,14 @@ use crossterm::event::{KeyCode, KeyEventKind, MouseEventKind};
 use std::cmp::min;
 use std::rc::Rc;
 use std::result;
+use std::time::Instant;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 use crate::action::Action;
 use crate::common::module_state::UISection;
 // use crate::common::module_state::{SearchResult, UISection};
 use crate::components::Component;
-use crate::components::layout::get_root_layout;
+// use crate::components::layout::get_root_layout;
 use crate::components::list::{List, ListState};
 use crate::effects;
 use crate::search_modules::ListResult;
@@ -40,6 +41,7 @@ pub struct WizardBox {
     action_tx: Option<tokio::sync::mpsc::UnboundedSender<Action>>,
     focused: bool,
     area: Rect,
+    root_layout: crate::common::layout::RootLayout,
 }
 
 impl WizardBox {
@@ -52,7 +54,9 @@ impl WizardBox {
             list_state: ListState::default(),
             action_tx: None,
             focused: false,
+
             area: Rect::default(),
+            root_layout: crate::common::layout::RootLayout::default(),
         }
     }
 
@@ -170,7 +174,9 @@ impl Component for WizardBox {
         if !self.focused {
             return Ok(None);
         }
-        return self.list_state.handle_key_event(&key);
+        return self
+            .list_state
+            .handle_key_event(&key, self.settings.as_ref().unwrap());
     }
     fn handle_mouse_event(
         &mut self,
@@ -180,7 +186,9 @@ impl Component for WizardBox {
             return Ok(None);
         }
 
-        return self.list_state.handle_mouse_event(&mouse, 1);
+        return self
+            .list_state
+            .handle_mouse_event(&mouse, self.settings.as_ref().unwrap());
     }
 
     fn update(
@@ -200,14 +208,20 @@ impl Component for WizardBox {
                     self.list_state.select(None);
                 }
             }
-
+            Action::UpdateLayout(layout) => {
+                self.root_layout = layout;
+            }
             _ => {}
         }
         Ok(None)
     }
 
     fn draw(&mut self, frame: &mut ratatui::Frame, area: Rect) -> Result<()> {
-        let area = get_root_layout(area, &self.settings.as_ref().unwrap()).wizard_box_area;
+        let area = self.root_layout.wizard_box_area;
+        if area.width == 0 || area.height == 0 {
+            return Ok(());
+        }
+        // area.width = 2;
         self.area = area;
         let results_settings: UIResultsSettings =
             self.settings.as_ref().unwrap().ui.results.clone();

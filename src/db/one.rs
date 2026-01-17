@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS applications (
+pub const MIGRATION: &str = "CREATE TABLE IF NOT EXISTS applications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     file_path TEXT UNIQUE NOT NULL,
@@ -10,7 +10,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS applications_fts USING fts5(
     name,
     content='applications',
     content_rowid='id',
-    tokenize='ascii trigram'
+    // tokenize='ascii trigram'
 );
 
 CREATE INDEX IF NOT EXISTS idx_applications_name ON applications (name);
@@ -27,4 +27,4 @@ CREATE TABLE IF NOT EXISTS application_tags (
     tag_id INTEGER NOT NULL,
     FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
+);";

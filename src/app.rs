@@ -1,6 +1,9 @@
 use color_eyre::Result;
 use crossterm::event::{KeyEvent, MouseEvent, MouseEventKind};
-use ratatui::{layout::Position, prelude::Rect};
+use ratatui::{
+    layout::{Constraint, Position},
+    prelude::Rect,
+};
 use rusqlite::params;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -19,7 +22,7 @@ use crate::{
         SearchModule, applications::desktop_files_module::DesktopFilesModule,
         maths::maths_module::MathsModule,
     },
-    settings::settings::{SerializableKeyEvent, Settings},
+    settings::settings::{SerializableKeyEvent, Settings, get_settings_path},
     tui::{Event, Tui},
 };
 
@@ -79,6 +82,7 @@ pub struct App {
     action_rx: mpsc::UnboundedReceiver<Action>,
     focused_area: Option<FocusArea>,
     database: Arc<Mutex<Database>>,
+    root_layout: crate::common::layout::RootLayout,
 }
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -91,8 +95,14 @@ impl App {
     pub async fn new(tick_rate: f64, frame_rate: f64) -> Result<Self> {
         let (action_tx, action_rx) = mpsc::unbounded_channel();
         let settings = Settings::new();
-        let database = Arc::new(Mutex::new(Database::new("rook.db")?));
+        let database_path = get_settings_path()
+            .join("rook.db")
+            .to_string_lossy()
+            .to_string();
+        log::info!("Database path: {:?}", database_path);
+        let database = Arc::new(Mutex::new(Database::new(&database_path)?));
         database.lock().await.initialise()?;
+
         Ok(Self {
             tick_rate,
             frame_rate,
@@ -115,6 +125,7 @@ impl App {
             action_rx,
             focused_area: Some(FocusArea::Search),
             database,
+            root_layout: crate::common::layout::RootLayout::default(),
         })
     }
 
@@ -134,11 +145,7 @@ impl App {
 
         for component in self.components.iter_mut() {
             component.register_action_handler(self.action_tx.clone())?;
-        }
-        for component in self.components.iter_mut() {
             component.register_settings_handler(self.settings.clone())?;
-        }
-        for component in self.components.iter_mut() {
             component.init(tui.size()?)?;
         }
 
@@ -201,30 +208,20 @@ impl App {
     fn handle_mouse_event(&mut self, mouse: MouseEvent) -> Result<()> {
         let action_tx = self.action_tx.clone();
 
-        fn contains(component: &Box<dyn Component>, mouse: &MouseEvent) -> bool {
-            let area = component.area();
-            // log::info!("Component area: {:?}", area);
-            area.contains(Position {
-                x: mouse.column,
-                y: mouse.row,
-            })
-        }
         let mut region: Option<FocusArea> = None;
-        // self.last_tick_mouse_events.push(mouse.clone());
-        // Currently, no mouse events are handled.
+
         match mouse.kind {
             MouseEventKind::Down(button) => {
                 for component in self.components.iter_mut() {
-                    if contains(component, &mouse) {
+                    if component.contains(&mouse) {
                         region = Some(component.focus_area());
                         break;
                     }
                 }
             }
             MouseEventKind::Moved => {
-                // log::info!("Mouse moved to ({}, {})", mouse.column, mouse.row);
                 for component in self.components.iter_mut() {
-                    if contains(component, &mouse) {
+                    if component.contains(&mouse) {
                         region = Some(component.focus_area());
                         log::info!("Mouse moved in region: {:?}", region);
                         break;
@@ -239,15 +236,10 @@ impl App {
 
     fn handle_key_event(&mut self, key: KeyEvent) -> Result<()> {
         let action_tx = self.action_tx.clone();
-        let keymap = self.settings.keybinds.clone();
+        let keymap = self.settings.keybinds.clone().get_event_mapping();
 
-        let m = keymap.get_event_mapping();
-        log::info!("map {:?}", m);
-        let keyL: SerializableKeyEvent = key.into();
-        log::info!("Key pressed: {:?}", serde_json::to_string(&keyL.clone()));
-        // let res = m.get(&keyL);
-        // log::info!("Mapped action: {:?}", res);
-        match m.get(&keyL) {
+        let key_serialised: SerializableKeyEvent = key.into();
+        match keymap.get(&key_serialised) {
             Some(action) => {
                 info!("Got action: {action:?}");
                 action_tx.send(action.clone()).unwrap();
@@ -262,12 +254,8 @@ impl App {
                 //     info!("Got action: {action:?}");
                 //     action_tx.send(action.clone()).unwrap();
                 // }
-                log::info!(
-                    "No action mapped for key: {:?}",
-                    serde_json::to_string(&keyL)
-                );
-            }
-            None => {}
+                log::info!("No action mapped for key: {:?}", key_serialised);
+            } // None => {}
         }
         Ok(())
     }
@@ -314,6 +302,8 @@ impl App {
                 Action::ItemExecute(result) => {
                     info!("Executing result: {:?}", result);
                     result.launch.as_ref()();
+                    // sleep::sleep(std::time::Duration::from_millis(100));
+                    action_tx.send(Action::Quit).unwrap();
                 }
 
                 Action::FocusNext => {
@@ -323,6 +313,14 @@ impl App {
                 Action::FocusPrevious => {
                     let new = self.focused_area.clone().unwrap_or(FocusArea::Search) - 1;
                     self.update_focus(Some(new))?;
+                }
+                Action::ToggleWizard => {
+                    if self.root_layout.left_right_split > 0 {
+                        self.root_layout.set_left_right_split(0);
+                    } else {
+                        self.root_layout.set_left_right_split(25);
+                    }
+                    self.root_layout.queue_update();
                 }
 
                 _ => {}
@@ -344,6 +342,15 @@ impl App {
 
     fn render(&mut self, tui: &mut Tui) -> Result<()> {
         tui.draw(|frame| {
+            let has_layout_changed = self
+                .root_layout
+                .calculate_split(frame.area(), &self.settings);
+            if has_layout_changed {
+                let action_tx = self.action_tx.clone();
+                action_tx
+                    .send(Action::UpdateLayout(self.root_layout.clone()))
+                    .unwrap();
+            }
             for component in self.components.iter_mut() {
                 if let Err(err) = component.draw(frame, frame.area()) {
                     let _ = self

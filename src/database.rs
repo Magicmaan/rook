@@ -19,14 +19,8 @@ impl Database {
         })
     }
     pub fn initialise(&self) -> Result<()> {
-        let migration_sql =
-            fs::read_to_string("src/db/migrations/001_initial.sqlite").map_err(|e| {
-                rusqlite::Error::FromSqlConversionFailure(
-                    0,
-                    rusqlite::types::Type::Text,
-                    Box::new(e),
-                )
-            })?;
+        use crate::db::one;
+        let migration_sql = one::MIGRATION;
         self.connection.execute_batch(&migration_sql)?;
         log::info!("Database initialised.");
         Ok(())

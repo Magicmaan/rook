@@ -129,7 +129,7 @@ pub fn sort_applications(apps: &mut Vec<Application>, query: &str) -> Vec<Scored
                 // considering language, if i type zen, i want something with exactly "zen" in the name to be at the top
                 // even if zenity has the same fuzzy score, it's not as good a match
 
-                // side note: fuzzy partial matching is a curse, I hate it 
+                // side note: fuzzy partial matching is a curse, I hate it
 
                 // this method still ensures normal matching
                 // i.e. if type "browser", multiple browsers with same score will be kept at same score as they are all equally relevant

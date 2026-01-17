@@ -1,7 +1,7 @@
 use crate::{
     action::Action,
     common::module_state::UISection,
-    components::{Component, layout::get_root_layout, util::collapsed_border},
+    components::{Component, util::collapsed_border},
     effects::{self, rainbow},
     settings::settings::{Settings, UISearchSettings},
 };
@@ -24,6 +24,7 @@ pub struct SearchBox {
     text_area: TextArea<'static>,
     area: Rect,
     focused: bool,
+    root_layout: crate::common::layout::RootLayout,
 }
 
 impl SearchBox {
@@ -34,6 +35,7 @@ impl SearchBox {
             focused: true,
             text_area: TextArea::default(),
             area: Rect::default(),
+            root_layout: crate::common::layout::RootLayout::default(),
         }
     }
 }
@@ -118,13 +120,16 @@ impl Component for SearchBox {
                     self.focused = false;
                 }
             }
+            Action::UpdateLayout(layout) => {
+                self.root_layout = layout;
+            }
             _ => {}
         }
         Ok(None)
     }
 
     fn draw(&mut self, frame: &mut ratatui::Frame, area: Rect) -> Result<()> {
-        let area = get_root_layout(area, &self.settings.as_ref().unwrap()).search_box_area;
+        let area = self.root_layout.search_box_area;
         self.area = area;
         let theme = self.settings.as_ref().unwrap().ui.theme.clone();
         let search_theme = theme.get_search_colors();

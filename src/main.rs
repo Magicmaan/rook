@@ -12,6 +12,7 @@ mod app;
 mod cli;
 mod common;
 mod components;
+mod db;
 // mod config;
 mod action;
 mod database;

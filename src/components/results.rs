@@ -6,8 +6,8 @@ use std::result;
 use crate::action::Action;
 use crate::common::module_state::UISection;
 // use crate::common::module_state::{SearchResult, UISection};
+
 use crate::components::Component;
-use crate::components::layout::get_root_layout;
 use crate::components::list::{List, ListState};
 use crate::effects;
 use crate::search_modules::ListResult;
@@ -55,6 +55,7 @@ pub struct ResultsBox {
     action_tx: Option<tokio::sync::mpsc::UnboundedSender<Action>>,
     area: Rect,
     focused: bool,
+    root_layout: crate::common::layout::RootLayout,
 }
 
 impl ResultsBox {
@@ -72,6 +73,7 @@ impl ResultsBox {
             action_tx: None,
             area: Rect::default(),
             focused: true,
+            root_layout: crate::common::layout::RootLayout::default(),
             // list: List::new(),
         }
     }
@@ -238,7 +240,9 @@ impl Component for ResultsBox {
         if (!self.focused) {
             return Ok(None);
         }
-        return self.list_state.handle_key_event(&key);
+        return self
+            .list_state
+            .handle_key_event(&key, self.settings.as_ref().unwrap());
     }
     fn handle_mouse_event(
         &mut self,
@@ -250,7 +254,7 @@ impl Component for ResultsBox {
         log::info!("Mouse event received results: {:?}", mouse);
         return self
             .list_state
-            .handle_mouse_event(&mouse, self.settings.as_ref().unwrap().ui.results.padding);
+            .handle_mouse_event(&mouse, self.settings.as_ref().unwrap());
     }
     fn update(
         &mut self,
@@ -275,6 +279,9 @@ impl Component for ResultsBox {
                     self.list_state.select(None);
                 }
             }
+            Action::UpdateLayout(layout) => {
+                self.root_layout = layout;
+            }
 
             _ => {}
         }
@@ -282,7 +289,7 @@ impl Component for ResultsBox {
     }
 
     fn draw(&mut self, frame: &mut ratatui::Frame, area: Rect) -> Result<()> {
-        let area = get_root_layout(area, &self.settings.as_ref().unwrap()).results_box_area;
+        let area = self.root_layout.results_box_area;
         self.area = area;
 
         let results_settings: UIResultsSettings =

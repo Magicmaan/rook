@@ -11,7 +11,6 @@ use tokio::sync::{Mutex, mpsc::UnboundedSender};
 use crate::{action::Action, app::FocusArea, database::Database};
 use crate::{settings::settings::Settings, tui::Event};
 
-pub mod layout;
 pub mod list;
 pub mod results;
 pub mod search;
@@ -113,6 +112,13 @@ pub trait Component {
     fn handle_mouse_event(&mut self, mouse: MouseEvent) -> Result<Option<Action>> {
         let _ = mouse; // to appease clippy
         Ok(None)
+    }
+    fn contains(&self, mouse: &MouseEvent) -> bool {
+        let area = self.area();
+        mouse.column >= area.x
+            && mouse.column < area.x + area.width
+            && mouse.row >= area.y
+            && mouse.row < area.y + area.height
     }
     /// Update the state of the component based on a received action. (REQUIRED)
     ///
